@@ -8,10 +8,13 @@
 import SwiftUI
 
 @main
-struct WWDCApp: App {
+struct MyApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+        }
+        .commands {
+            SidebarCommands() // 添加一些默认的侧边栏命令，例如“显示/隐藏侧边栏”
         }
     }
 }
