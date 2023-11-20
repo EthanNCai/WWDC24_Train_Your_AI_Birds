@@ -1,0 +1,25 @@
+# Xcode
+.DS_Store
+build/
+DerivedData/
+*.pbxuser
+!default.pbxuser
+*.xcworkspace
+!*.xcworkspace
+xcuserdata/
+profile
+*.moved-aside
+*.xcuserstate
+
+# macOS
+*.swp
+*~
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+__MACOSX/
+```
