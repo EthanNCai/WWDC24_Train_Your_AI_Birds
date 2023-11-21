@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B155B592B0C803700D3ACF7 /* PageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B155B582B0C803700D3ACF7 /* PageController.swift */; };
 		8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */; };
 		8BCCDCE02B0B40F500040744 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCDCDF2B0B40F500040744 /* ContentView.swift */; };
 		8BCCDCE22B0B40F600040744 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE12B0B40F600040744 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8B155B582B0C803700D3ACF7 /* PageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageController.swift; sourceTree = "<group>"; };
 		8BCCDCDA2B0B40F500040744 /* WWDC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WWDC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WWDCApp.swift; sourceTree = "<group>"; };
 		8BCCDCDF2B0B40F500040744 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 		8BCCDCDC2B0B40F500040744 /* WWDC */ = {
 			isa = PBXGroup;
 			children = (
+				8B155B582B0C803700D3ACF7 /* PageController.swift */,
 				8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */,
 				8BCCDCDF2B0B40F500040744 /* ContentView.swift */,
 				8BCCDCE12B0B40F600040744 /* Assets.xcassets */,
@@ -141,6 +144,7 @@
 			files = (
 				8BCCDCE02B0B40F500040744 /* ContentView.swift in Sources */,
 				8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */,
+				8B155B592B0C803700D3ACF7 /* PageController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

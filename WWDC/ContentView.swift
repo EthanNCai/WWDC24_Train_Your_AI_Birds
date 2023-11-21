@@ -2,89 +2,115 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selection: String? = "Home"
+    @ObservedObject var viewModel = PageController()
+    
+    var sec_1 = [Page.home, Page.profile]
+    var sec_2 = [Page.settings, Page.help]
+    var sec_1_page_1 = ["hello","nive"]
+    var sec_2_page_2 = ["asd","help"]
+    
     
     var body: some View {
+        
         NavigationView {
-            List(selection: $selection) {
-                Section(header: Text("Section 1")) {
-                    NavigationLink(
-                        destination: HomeView(),
-                        tag: "Home",
-                        selection: $selection,
-                        label: {
-                            Label("Home", systemImage: "house")
+            List(selection: $viewModel.currentPage) {
+                Section(header: Text("Introduction")) {
+                    ForEach(sec_1.indices, id: \.self) { pageIndex in
+                        if pageIndex < sec_1_page_1.count {
+                            let page = sec_1[pageIndex]
+                            let title = sec_1_page_1[pageIndex]
+                            
+                            NavigationLink(
+                                destination: mainView(viewModel: viewModel, title: title.lowercased()),
+                                tag: page,
+                                selection: $viewModel.currentPage,
+                                label: {
+                                    Label(page.rawValue, systemImage: page.systemImageName())
+                                }
+                            )
                         }
-                    )
-                    
-                    NavigationLink(
-                        destination: ProfileView(),
-                        tag: "Profile",
-                        selection: $selection,
-                        label: {
-                            Label("Profile", systemImage: "person")
-                        }
-                    )
+                    }
                 }
                 
-                Section(header: Text("Section 2")) {
-                    NavigationLink(
-                        destination: SettingsView(),
-                        tag: "Settings",
-                        selection: $selection,
-                        label: {
-                            Label("Settings", systemImage: "gear")
+                Section(header: Text("Experiment")) {
+                    ForEach(sec_2.indices, id: \.self) { pageIndex in
+                        if pageIndex < sec_2_page_2.count {
+                            let page = sec_2[pageIndex]
+                            let title = sec_2_page_2[pageIndex]
+                            
+                            NavigationLink(
+                                destination: mainView(viewModel: viewModel, title: title.lowercased()),
+                                tag: page,
+                                selection: $viewModel.currentPage,
+                                label: {
+                                    Label(page.rawValue, systemImage: page.systemImageName())
+                                }
+                            )
                         }
-                    )
-                    
-                    NavigationLink(
-                        destination: HelpView(),
-                        tag: "Help",
-                        selection: $selection,
-                        label: {
-                            Label("Help", systemImage: "questionmark.circle")
-                        }
-                    )
+                    }
                 }
             }
             .listStyle(SidebarListStyle())
-            .frame(minWidth: 200) // 设置侧边栏的宽度
+            .frame(minWidth: 200)
+        
             
-            Text("Select an option")
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .frame(minWidth: 800, minHeight: 600) // 设置窗口的最小尺寸
-
     }
 }
 
-struct HomeView: View {
+struct mainView: View {
+    @ObservedObject var viewModel: PageController
+    var title: String = ""
     var body: some View {
-        Text("Home")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack {
+            Text(title)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            
+            HStack {
+                
+                HStack{
+                    Button(action: {
+                        if let previousPage = viewModel.currentPage?.previous() {
+                            viewModel.currentPage = previousPage
+                        }
+                    }) {
+                        HStack
+                        {
+                            Image(systemName: "arrow.left")
+                                .fontWeight(.black)
+                            Text("Previous Page")
+                        }
+                        
+                    }
+                    .disabled(viewModel.currentPage?.isFirstPage() ?? true)
+                    
+                    Text("P1: Getting Started")
+                        .padding()
+
+                    Button(action: {
+                        if let nextPage = viewModel.currentPage?.next() {
+                            viewModel.currentPage = nextPage
+                        }
+                    }) {
+                        HStack
+                        {
+                            Text("Next Page")
+                            Image(systemName: "arrow.right")
+                                .foregroundColor(.blue)
+                                .fontWeight(.black)
+                        }
+                        
+                    }
+                    .disabled(viewModel.currentPage?.isLastPage() ?? true)
+                }
+                .padding(.horizontal)
+            }
+            .font(.headline)
+            .padding()
+        }
     }
 }
 
-struct ProfileView: View {
-    var body: some View {
-        Text("Profile")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct SettingsView: View {
-    var body: some View {
-        Text("Settings")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
-
-struct HelpView: View {
-    var body: some View {
-        Text("Help")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
