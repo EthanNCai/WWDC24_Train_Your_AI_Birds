@@ -7,12 +7,50 @@
 import SwiftUI
 
 enum Page: String, CaseIterable {
-    case home = "Home"
+    case intro_1_view = "Home"
     case profile = "Profile"
+    case new = "this is new"
     case settings = "Settings"
     case help = "Help"
+}
+
+extension Page {
+    func PageIconFile() -> String {
+        switch self {
+        case .intro_1_view:
+            return "house"
+        case .profile:
+            return "person"
+        case .settings:
+            return "gear"
+        case .help:
+            return "questionmark.circle"
+        case .new:
+            return "square.and.arrow.up.fill"
+        }
+    }
+}
+
+extension Page {
+    func pageTitle() -> String {
+        switch self {
+        case .intro_1_view:
+            return "page1"
+        case .profile:
+            return "page2"
+        case .settings:
+            return "page3"
+        case .help:
+            return "page4"
+        case .new:
+            return "page5"
+        }
+    }
+}
+
+//  page flip control
+extension Page {
     
-    // 定义下一个页面
     func next() -> Page? {
         guard let currentIndex = Page.allCases.firstIndex(of: self) else { return nil }
         let nextIndex = currentIndex + 1
@@ -23,7 +61,6 @@ enum Page: String, CaseIterable {
         }
     }
     
-    // 定义前一个页面
     func previous() -> Page? {
         guard let currentIndex = Page.allCases.firstIndex(of: self) else { return nil }
         let previousIndex = currentIndex - 1
@@ -39,28 +76,12 @@ enum Page: String, CaseIterable {
             return currentIndex == 0
         }
 
-        // 判断当前页面是否是最后一个页面
         func isLastPage() -> Bool {
             guard let currentIndex = Page.allCases.firstIndex(of: self) else { return false }
             return currentIndex == Page.allCases.count - 1
         }
 }
 
-extension Page {
-    func systemImageName() -> String {
-        switch self {
-        case .home:
-            return "house"
-        case .profile:
-            return "person"
-        case .settings:
-            return "gear"
-        case .help:
-            return "questionmark.circle"
-        }
-    }
-}
-
 class PageController: ObservableObject {
-    @Published var currentPage: Page? = .home
+    @Published var currentPage: Page? = .intro_1_view
 }

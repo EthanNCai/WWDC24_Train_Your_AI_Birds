@@ -1,49 +1,52 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct StageView: View {
     @ObservedObject var viewModel = PageController()
     
-    var sec_1 = [Page.home, Page.profile]
-    var sec_2 = [Page.settings, Page.help]
-    var sec_1_page_1 = ["hello","nive"]
-    var sec_2_page_2 = ["asd","help"]
+    var intro_name = [Page.intro_1_view, Page.profile, Page.new]
+    var intro_viewpages = [AnyView(Intro_1_View()),
+                        AnyView(Intro_2_View()),
+                        AnyView(Intro_2_View())] as [AnyView]
+    
+    var experiment_name = [Page.settings, Page.help]
+    var experiment_viewpages = [AnyView(Intro_3_View()),
+                        AnyView(Intro_1_View())] as [AnyView]
     
     
     var body: some View {
-        
         NavigationView {
             List(selection: $viewModel.currentPage) {
                 Section(header: Text("Introduction")) {
-                    ForEach(sec_1.indices, id: \.self) { pageIndex in
-                        if pageIndex < sec_1_page_1.count {
-                            let page = sec_1[pageIndex]
-                            let title = sec_1_page_1[pageIndex]
-                            
+                    ForEach(intro_name.indices, id: \.self) { pageIndex in
+                        if pageIndex < intro_viewpages.count {
+                            let page = intro_name[pageIndex]
+                            let view = intro_viewpages[pageIndex]
                             NavigationLink(
-                                destination: mainView(viewModel: viewModel, title: title.lowercased()),
+                                destination: StageContentView(viewModel: viewModel, view: view,title: page.pageTitle()),
                                 tag: page,
                                 selection: $viewModel.currentPage,
                                 label: {
-                                    Label(page.rawValue, systemImage: page.systemImageName())
+                                    Label(page.rawValue, systemImage: page.PageIconFile())
                                 }
                             )
                         }
                     }
                 }
                 
-                Section(header: Text("Experiment")) {
-                    ForEach(sec_2.indices, id: \.self) { pageIndex in
-                        if pageIndex < sec_2_page_2.count {
-                            let page = sec_2[pageIndex]
-                            let title = sec_2_page_2[pageIndex]
+                
+                Section(header: Text("Experiments")) {
+                    ForEach(experiment_name.indices, id: \.self) { pageIndex in
+                        if pageIndex < experiment_viewpages.count {
+                            let page = experiment_name[pageIndex]
+                            let view = experiment_viewpages[pageIndex]
                             
                             NavigationLink(
-                                destination: mainView(viewModel: viewModel, title: title.lowercased()),
+                                destination: StageContentView(viewModel: viewModel, view: view,title: page.pageTitle()),
                                 tag: page,
                                 selection: $viewModel.currentPage,
                                 label: {
-                                    Label(page.rawValue, systemImage: page.systemImageName())
+                                    Label(page.rawValue, systemImage: page.PageIconFile())
                                 }
                             )
                         }
@@ -52,20 +55,17 @@ struct ContentView: View {
             }
             .listStyle(SidebarListStyle())
             .frame(minWidth: 200)
-        
-            
         }
     }
 }
 
-struct mainView: View {
+struct StageContentView<Content: View>: View {
     @ObservedObject var viewModel: PageController
-    var title: String = ""
+    var view: Content
+    var title: String
     var body: some View {
         VStack {
-            Text(title)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            
+                view.frame(maxWidth: .infinity, maxHeight: .infinity)
             HStack {
                 
                 HStack{
@@ -80,11 +80,10 @@ struct mainView: View {
                                 .fontWeight(.black)
                             Text("Previous Page")
                         }
-                        
                     }
                     .disabled(viewModel.currentPage?.isFirstPage() ?? true)
                     
-                    Text("P1: Getting Started")
+                    Text(title)
                         .padding()
 
                     Button(action: {
@@ -114,6 +113,6 @@ struct mainView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        StageView()
     }
 }
