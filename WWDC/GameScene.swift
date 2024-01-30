@@ -15,7 +15,22 @@ class GameScene: SKScene{
     var gameTickTimer: TimeInterval =  0.0
     var onscreen_cols: [Int] = []
     var newest_col_index = 0
+    
+    //  indexs
+    var difficulty_index: CGFloat = 0.3
     var speed_index: CGFloat = 0.005
+    var colTimeInterval: Double = 3.0
+    var gameTickInterval: Double = 0.02
+    var ballRadius:CGFloat = 15.0
+    var colDistanceInterval: CGFloat {
+        
+        return CGFloat((colTimeInterval / gameTickInterval) * speed_index) * self.size.width
+    }
+    var ballXPosition: CGFloat {
+        return self.size.width*(1/5)
+    }
+
+    
     
     init(viewController: PageContentController) {
             self.pageContentController = viewController
@@ -32,7 +47,7 @@ class GameScene: SKScene{
         
         makeBackgrounds()
         makeBall()
-        //generateDefaultCols
+        //generateDefaultCol()
         //generateNewCol(col_index: 1)
     }
     
@@ -43,11 +58,9 @@ class GameScene: SKScene{
     
     
     func makeBall(){
-        let ballRadius: CGFloat = 15.0
-        let ball = SKShapeNode(circleOfRadius: ballRadius)
+        let ball = SKShapeNode(circleOfRadius: self.ballRadius)
         ball.fillColor = .red
-        ball.position = CGPoint(x: self.size.width*(1/5), y: self.size.height - (ballRadius + 5))
-        ball.physicsBody = SKPhysicsBody(circleOfRadius: ballRadius)
+        ball.position = CGPoint(x: self.ballXPosition, y: self.size.height/2)
         ball.name = "ba0"
         addChild(ball)
     }
@@ -57,9 +70,7 @@ class GameScene: SKScene{
         background.position = CGPoint.zero
         addChild(background)
     }
-    func generateDefaultCol(){
-        
-    }
+    
     
     func moveColLeft() {
             
@@ -98,17 +109,25 @@ class GameScene: SKScene{
         
     }
     
-    func generateNewCol(){
+    
+    func generateNewCol(provided_position: CGFloat = -1){
         
         self.newest_col_index += 1
         let col_index = newest_col_index
         let (iu,id) = colPositionGenerator()
         let colwidth: CGFloat = 8.0
         let colheight: CGFloat = self.size.height
+        var position: CGFloat {
+            if(provided_position != -1){
+                return provided_position
+            }else{
+                return self.size.width
+            }
+        }
         
         let colu = SKSpriteNode(color: .green, size: CGSize(width: colwidth, height: colheight))
         colu.anchorPoint = CGPoint.zero
-        colu.position = CGPoint(x: self.size.width*(4/5) , y: self.size.height * iu)
+        colu.position = CGPoint(x: position , y: self.size.height * iu)
         //colu.physicsBody = SKPhysicsBody(rectangleOf: colu.size)
         //colu.physicsBody?.isDynamic = false
         colu.name = "colu" + String(col_index)
@@ -118,7 +137,7 @@ class GameScene: SKScene{
         
         let cold = SKSpriteNode(color: .red, size: CGSize(width: colwidth, height: colheight))
         cold.anchorPoint = CGPoint.zero
-        cold.position = CGPoint(x: self.size.width*(4/5) , y: self.size.height * id)
+        cold.position = CGPoint(x: position , y: self.size.height * id)
         //cold.physicsBody = SKPhysicsBody(rectangleOf: cold.size)
         //cold.physicsBody?.isDynamic = false
         cold.name = "cold" + String(col_index)
@@ -129,8 +148,8 @@ class GameScene: SKScene{
         
     }
     func colPositionGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: 0.25...1)
-        let id = iu - 1.2
+        let iu = CGFloat.random(in: (self.difficulty_index*1.1)...1)
+        let id = iu - (1+self.difficulty_index)
         return (iu, id)
     }
 }
@@ -141,20 +160,25 @@ class GameScene: SKScene{
 
 extension GameScene{
     override func update(_ currentTime: TimeInterval) {
-        let dt = currentTime - self.colGeneratorTimer
-
-            if dt >= 0.02 {
-                moveColLeft()
-                checkForCollision()
-                self.colGeneratorTimer = currentTime
+        let dt_sm = currentTime - self.colGeneratorTimer
+        
+        if self.pageContentController.isTapBegin{
+            
+            if dt_sm >= self.gameTickInterval {
+                    moveColLeft()
+                    checkForCollision()
+                    self.colGeneratorTimer = currentTime
             }
 
-        let dtCol = currentTime - self.gameTickTimer
+            let dt_lg = currentTime - self.gameTickTimer
 
-            if dtCol >= 3.0 {
-                generateNewCol()
-                self.gameTickTimer = currentTime
+            if dt_lg >= self.colTimeInterval {
+                    generateNewCol()
+                    self.gameTickTimer = currentTime
             }
+        }
+
+        
     }
 }
 
@@ -164,8 +188,21 @@ extension GameScene{
 extension GameScene{
     
     override func mouseDown(with event: NSEvent) {
-        let ball = self.childNode(withName: "ba0")
-        ball?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+        // tap to start
+        if self.pageContentController.isTapBegin == false{
+            self.pageContentController.isTapBegin = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + colTimeInterval*0.5) {
+                let ball = self.childNode(withName: "ba0")!
+                ball.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
+                self.pageContentController.isBegin = true
+            }
+        }
+        // tap to fly
+        if self.pageContentController.isBegin {
+            let ball = self.childNode(withName: "ba0")
+            ball?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+        }
+        
     }
     override func touchesBegan(with event: NSEvent) {
         let ball = self.childNode(withName: "ba0")

@@ -10,4 +10,6 @@ import Foundation
 
 class PageContentController: ObservableObject {
     @Published var size:CGSize = .zero
+    @Published var isBegin:Bool = false
+    @Published var isTapBegin:Bool = false
 }
