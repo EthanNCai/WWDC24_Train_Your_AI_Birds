@@ -7,11 +7,12 @@
 import SwiftUI
 
 enum Page: String, CaseIterable {
-    case intro_1_view = "Home"
-    case profile = "Profile"
-    case new = "this is new"
-    case settings = "Settings"
-    case help = "Help"
+    case intro_1_view = "What's this APP do?"
+    case profile = "Our Target"
+    case new = "Genetic Algorithm"
+    case settings = "Random spwan"
+    case help = "Selecting the best gene"
+    
 }
 
 extension Page {
@@ -35,7 +36,7 @@ extension Page {
     func pageTitle() -> String {
         switch self {
         case .intro_1_view:
-            return "page1"
+            return "Introduction"
         case .profile:
             return "page2"
         case .settings:
@@ -84,4 +85,6 @@ extension Page {
 
 class PageController: ObservableObject {
     @Published var currentPage: Page? = .intro_1_view
+    @Published var window_width: CGFloat = 0
+    @Published var window_height: CGFloat = 0
 }

@@ -35,7 +35,7 @@ struct StageView: View {
                 }
                 
                 
-                Section(header: Text("Experiments")) {
+                Section(header: Text("Genetic Algorithm")) {
                     ForEach(experiment_name.indices, id: \.self) { pageIndex in
                         if pageIndex < experiment_viewpages.count {
                             let page = experiment_name[pageIndex]
