@@ -152,6 +152,8 @@ class GameScene: SKScene{
         let id = iu - (1+self.difficulty_index)
         return (iu, id)
     }
+    
+    
 }
 
 
@@ -162,9 +164,11 @@ extension GameScene{
     override func update(_ currentTime: TimeInterval) {
         let dt_sm = currentTime - self.colGeneratorTimer
         
-        if self.pageContentController.isTapBegin{
+        
+        if self.pageContentController.isBegin{
             
             if dt_sm >= self.gameTickInterval {
+                //print(self.children.count)
                     moveColLeft()
                     checkForCollision()
                     self.colGeneratorTimer = currentTime
@@ -176,6 +180,9 @@ extension GameScene{
                     generateNewCol()
                     self.gameTickTimer = currentTime
             }
+        }
+        if self.pageContentController.isReset{
+            resetGame()
         }
 
         
@@ -190,6 +197,7 @@ extension GameScene{
     override func mouseDown(with event: NSEvent) {
         countingDown()
         fly()
+        
     }
     func fly(){
         // tap to fly
@@ -207,7 +215,18 @@ extension GameScene{
                 ball.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
             }
         }
+    }
+    func resetGame() {
         
+        self.pageContentController.reset()
+        self.onscreen_cols.removeAll()
+        self.removeAllChildren()
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        
+        makeBackgrounds()
+        makeBall()
     }
     override func touchesBegan(with event: NSEvent) {
         let ball = self.childNode(withName: "ba0")
@@ -222,25 +241,3 @@ extension GameScene{
     
 }
 
-// MARK: - RESET
-extension GameScene {
-    func resetGame() {
-        removeAllChildren()
-        removeAllActions()
-        onscreen_cols.removeAll()
-        newest_col_index = 0
-        
-        // 重新设置所有属性和状态
-        colGeneratorTimer = 0.0
-        gameTickTimer = 0.0
-        difficulty_index = 0.3
-        speed_index = 0.005
-        colTimeInterval = 3.0
-        gameTickInterval = 0.02
-        ballRadius = 15.0
-        self.pageContentController.reset()
-        
-        makeBackgrounds()
-        makeBall()
-    }
-}

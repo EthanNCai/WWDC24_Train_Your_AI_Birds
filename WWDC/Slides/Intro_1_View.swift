@@ -10,8 +10,10 @@ import SwiftUI
 struct Intro_1_View: View {
     
     @ObservedObject var pageContentController = PageContentController()
-    var scene: SKScene{
+    @State var isSpeeded = false
+    var scene: GameScene{
         let scene = GameScene(viewController:pageContentController)
+
         scene.size = CGSize(width: pageContentController.size.width*3/5, height: pageContentController.size.height)
         return scene
     }
@@ -48,6 +50,8 @@ struct Intro_1_View: View {
                         
                         // gauges
                         VStack{
+                            
+                            // gauges Top
                             HStack{
                                 Text("Scores: 0")
                                     .padding()
@@ -55,6 +59,25 @@ struct Intro_1_View: View {
                             }
                             .padding(.vertical)
                             Spacer()
+                            
+                            
+                            // gauges Buttom
+                            HStack{
+                                Button(action: {
+                                    self.pageContentController.isReset = true
+                                    //self.scene.resetGame()
+                                    }) {
+                                        Text("Reset")
+                                    }
+                                    .background(Color.red) // 设置背景颜色为红色
+                                    .cornerRadius(10) // 设置按钮的圆角半径
+                                
+                                
+                                Toggle(isOn: $isSpeeded) {
+                                    Text("10x Fast forward")
+                                }.toggleStyle(SwitchToggleStyle())
+                            }
+                            .padding()
                         }
                     }
                 }
