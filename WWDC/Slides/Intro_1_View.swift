@@ -20,16 +20,43 @@ struct Intro_1_View: View {
         GeometryReader { geometry in
             ZStack {
                 HStack {
-                    
                     Text("text_field")
                         .frame(width: pageContentController.size.width*2/5,
                                height: pageContentController.size.height)
                     .background(.blue)
-                    SpriteView(scene: scene)
                     
-                    .mask(RoundedRectangle(cornerRadius: 15))
-                    .padding(.vertical,10)
-                    .padding(.trailing,10)
+                    
+                    ZStack{
+                        
+                        // gamelayer
+                        SpriteView(scene: scene)
+                            .mask(RoundedRectangle(cornerRadius: 15))
+                            .padding(.vertical,10)
+                            .padding(.trailing,10)
+                        
+                        // banner
+                        
+                        if !pageContentController.isBegin {
+                            Text(pageContentController.bannerContent)
+                                .padding()
+                                .background(.ultraThinMaterial)
+                                .mask(RoundedRectangle(cornerRadius: 10))
+                                
+                        }
+                        
+                        
+                        
+                        // gauges
+                        VStack{
+                            HStack{
+                                Text("Scores: 0")
+                                    .padding()
+                                Spacer()
+                            }
+                            .padding(.vertical)
+                            Spacer()
+                        }
+                    }
                 }
             }
             .onAppear {

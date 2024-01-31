@@ -188,19 +188,24 @@ extension GameScene{
 extension GameScene{
     
     override func mouseDown(with event: NSEvent) {
-        // tap to start
-        if self.pageContentController.isTapBegin == false{
-            self.pageContentController.isTapBegin = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + colTimeInterval*0.5) {
-                let ball = self.childNode(withName: "ba0")!
-                ball.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
-                self.pageContentController.isBegin = true
-            }
-        }
+        countingDown()
+        fly()
+    }
+    func fly(){
         // tap to fly
         if self.pageContentController.isBegin {
             let ball = self.childNode(withName: "ba0")
             ball?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+        }
+    }
+    func countingDown(){
+        // tap to start
+        if self.pageContentController.isTapBegin == false{
+            self.pageContentController.startCountingDown()
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pageContentController.count_down)) {
+                let ball = self.childNode(withName: "ba0")!
+                ball.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
+            }
         }
         
     }
@@ -215,4 +220,27 @@ extension GameScene{
         //
     }
     
+}
+
+// MARK: - RESET
+extension GameScene {
+    func resetGame() {
+        removeAllChildren()
+        removeAllActions()
+        onscreen_cols.removeAll()
+        newest_col_index = 0
+        
+        // 重新设置所有属性和状态
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        difficulty_index = 0.3
+        speed_index = 0.005
+        colTimeInterval = 3.0
+        gameTickInterval = 0.02
+        ballRadius = 15.0
+        self.pageContentController.reset()
+        
+        makeBackgrounds()
+        makeBall()
+    }
 }
