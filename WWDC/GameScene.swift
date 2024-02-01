@@ -15,6 +15,7 @@ class GameScene: SKScene{
     var gameTickTimer: TimeInterval =  0.0
     var onscreen_cols: [Int] = []
     var newest_col_index = 0
+    var currently_focus = 1
     
     //  indexs
     var difficulty_index: CGFloat = 0.3
@@ -74,8 +75,8 @@ class GameScene: SKScene{
     
     func moveColLeft() {
             
+        self.pageContentController.distance_score += Float(self.speed_index * self.size.width)
         for col_index in self.onscreen_cols {
-            
             if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
                 col.position.x -= self.speed_index * self.size.width
                 if col.position.x < -col.size.width-10 {
@@ -114,7 +115,7 @@ class GameScene: SKScene{
         
         self.newest_col_index += 1
         let col_index = newest_col_index
-        let (iu,id) = colPositionGenerator()
+        let (pos_index_u,pos_index_d) = colPositionIndexGenerator()
         let colwidth: CGFloat = 8.0
         let colheight: CGFloat = self.size.height
         var position: CGFloat {
@@ -127,7 +128,7 @@ class GameScene: SKScene{
         
         let colu = SKSpriteNode(color: .green, size: CGSize(width: colwidth, height: colheight))
         colu.anchorPoint = CGPoint.zero
-        colu.position = CGPoint(x: position , y: self.size.height * iu)
+        colu.position = CGPoint(x: position , y: self.size.height * pos_index_u)
         //colu.physicsBody = SKPhysicsBody(rectangleOf: colu.size)
         //colu.physicsBody?.isDynamic = false
         colu.name = "colu" + String(col_index)
@@ -137,7 +138,7 @@ class GameScene: SKScene{
         
         let cold = SKSpriteNode(color: .red, size: CGSize(width: colwidth, height: colheight))
         cold.anchorPoint = CGPoint.zero
-        cold.position = CGPoint(x: position , y: self.size.height * id)
+        cold.position = CGPoint(x: position , y: self.size.height * pos_index_d)
         //cold.physicsBody = SKPhysicsBody(rectangleOf: cold.size)
         //cold.physicsBody?.isDynamic = false
         cold.name = "cold" + String(col_index)
@@ -147,13 +148,49 @@ class GameScene: SKScene{
         self.onscreen_cols.append(col_index)
         
     }
-    func colPositionGenerator() -> (CGFloat, CGFloat) {
+    func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
         let iu = CGFloat.random(in: (self.difficulty_index*1.1)...1)
         let id = iu - (1+self.difficulty_index)
         return (iu, id)
     }
     
+    func getFocusIndex() -> Int{
+        for col_index in self.onscreen_cols{
+            let col_name = "cold" + String(col_index)
+            let col_node = self.childNode(withName: col_name)!
+            if col_node.position.x > self.ballXPosition{
+                return col_index
+            }
+        }
+        return 0
+    }
     
+    func get_distance() -> (Float, Float) {
+        
+        let ball = self.childNode(withName: "ba0")!
+        let colu_index = self.pageContentController.current_focus
+        
+        if colu_index == 0{
+            return (99999,99999)
+        }
+        let colu_name = "colu" + String(colu_index)
+        let colu = self.childNode(withName: colu_name)!
+        
+        // ball x,y
+        let ball_x = ball.position.x
+        let ball_y = ball.position.y
+        // upper x,y
+        let colu_x = colu.position.x
+        let colu_y = colu.position.y
+        // downer x,y
+        let cold_x = colu_x
+        let cold_y = colu_y - self.size.height * self.difficulty_index
+        
+        let ball_cold_distance = Float(sqrt(pow(ball_x - cold_x, 2) + pow(ball_y - cold_y, 2)))
+        let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
+    
+        return (ball_colu_distance, ball_cold_distance)
+    }
 }
 
 
@@ -167,13 +204,28 @@ extension GameScene{
         
         if self.pageContentController.isBegin{
             
+            /* tick update*/
             if dt_sm >= self.gameTickInterval {
-                //print(self.children.count)
-                    moveColLeft()
-                    checkForCollision()
-                    self.colGeneratorTimer = currentTime
+                
+                // update col position
+                moveColLeft()
+                
+                // check collision
+                checkForCollision()
+                
+                // get focus
+                self.pageContentController.current_focus = self.getFocusIndex()
+                
+                // get distance
+                let (distance_u, distance_d) = self.get_distance()
+                self.pageContentController.distance_u = distance_u
+                self.pageContentController.distance_d = distance_d
+                
+                // reset time
+                self.colGeneratorTimer = currentTime
             }
 
+            /* non-tick update*/
             let dt_lg = currentTime - self.gameTickTimer
 
             if dt_lg >= self.colTimeInterval {

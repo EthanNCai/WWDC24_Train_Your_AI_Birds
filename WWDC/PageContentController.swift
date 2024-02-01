@@ -18,6 +18,11 @@ class PageContentController: ObservableObject {
     @Published var size:CGSize = .zero
     @Published var score: Int = 0
     @Published var bannerContent: String = "~ Tap to begin ~"
+    @Published var distance_score:Float = 0.123
+    @Published var velocity:Float = 1.23
+    @Published var current_focus:Int = 1
+    @Published var distance_u:Float = 0.123
+    @Published var distance_d:Float = 0.123
     
     
     let count_down: Float = 1.3

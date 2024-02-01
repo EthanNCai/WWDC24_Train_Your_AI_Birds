@@ -35,6 +35,9 @@ struct Intro_1_View: View {
                             .mask(RoundedRectangle(cornerRadius: 15))
                             .padding(.vertical,10)
                             .padding(.trailing,10)
+                            .onDisappear(){
+                                self.pageContentController.reset()
+                            }
                         
                         // banner
                         
@@ -50,7 +53,7 @@ struct Intro_1_View: View {
                         
                         // gauges
                         VStack{
-                            
+                        
                             // gauges Top
                             HStack{
                                 Text("Scores: 0")
@@ -67,18 +70,46 @@ struct Intro_1_View: View {
                                     self.pageContentController.isReset = true
                                     //self.scene.resetGame()
                                     }) {
+                                        Image(systemName: "arrow.clockwise.circle")
                                         Text("Reset")
                                     }
-                                    .background(Color.red) // 设置背景颜色为红色
-                                    .cornerRadius(10) // 设置按钮的圆角半径
-                                
-                                
                                 Toggle(isOn: $isSpeeded) {
                                     Text("10x Fast forward")
                                 }.toggleStyle(SwitchToggleStyle())
+                                    .padding(.horizontal)
+                                    .background(.ultraThinMaterial)
+                                    .cornerRadius(5) // 设置按钮的圆角半径
                             }
                             .padding()
+                            
+                         
+                        
                         }
+                        //debug info
+                        HStack{
+                            Spacer()
+                            VStack{
+                                VStack(alignment: .leading){
+                                
+                                    Text("__Debug infos__")
+                                        .foregroundColor(.green)
+                                    Text("Current Focus -> " + String(self.pageContentController.current_focus))
+                                    Text("Distanse Upper -> " + String(format: "%.1f", self.pageContentController.distance_u))
+                                    Text("Distanse Downer -> " + String(format: "%.1f", self.pageContentController.distance_d))
+                                    Text("Velocity -> ")
+                                    Text("Decision -> ")
+                                    Text("Distance -> " + String(format: "%.1f", self.pageContentController.distance_score))
+                                }
+                                .padding()
+                                .background(.gray.opacity(0.2))
+                                .mask(RoundedRectangle(cornerRadius: 15))
+                                
+                                Spacer()
+                            }
+                            .padding()
+                        
+                        }
+                        
                     }
                 }
             }
