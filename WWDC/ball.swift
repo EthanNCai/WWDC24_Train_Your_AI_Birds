@@ -16,7 +16,7 @@ class Ball{
     
     var focus:Int = 3
     var distance_score:Float = 0.12
-    var isActive:Bool = true
+    var isActive:Bool = false
     
     
     // parameter
@@ -61,7 +61,7 @@ class Ball{
         self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
     }
     
-    func get_ball() -> SKNode{
+    func get_ball_node() -> SKNode{
         return self.ball_node
     }
     

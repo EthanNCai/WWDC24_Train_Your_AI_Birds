@@ -25,7 +25,7 @@ class PageContentController: ObservableObject {
     @Published var distance_d:Float = 0.123
     
     
-    let count_down: Float = 1.3
+    let count_down: Float = 2.0
     
     func reset() {
         isReset = false

@@ -16,6 +16,7 @@ class GameScene: SKScene{
     var onscreen_cols: [Int] = []
     var newest_col_index = 0
     var currently_focus = 1
+    var ball:[Ball] = []
     
     //  indexs
     var difficulty_index: CGFloat = 0.3
@@ -34,13 +35,13 @@ class GameScene: SKScene{
     
     
     init(viewController: PageContentController) {
-            self.pageContentController = viewController
-            super.init(size: viewController.size)
-        }
+        self.pageContentController = viewController
+        super.init(size: viewController.size)
+    }
         
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func didMove(to view: SKView) {
         
@@ -59,11 +60,11 @@ class GameScene: SKScene{
     
     
     func makeBall(){
-        let ball = SKShapeNode(circleOfRadius: self.ballRadius)
-        ball.fillColor = .red
-        ball.position = CGPoint(x: self.ballXPosition, y: self.size.height/2)
-        ball.name = "ba0"
-        addChild(ball)
+        
+        self.ball.removeAll()
+        self.ball.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
+        let ball_node = self.ball[0].ball_node
+        addChild(ball_node)
     }
     func makeBackgrounds(){
         let background = SKSpriteNode(color: .gray, size: self.size)
@@ -167,7 +168,7 @@ class GameScene: SKScene{
     
     func get_distance() -> (Float, Float) {
         
-        let ball = self.childNode(withName: "ba0")!
+        let ball = self.ball[0].get_ball_node()
         let colu_index = self.pageContentController.current_focus
         
         if colu_index == 0{
@@ -202,7 +203,7 @@ extension GameScene{
         let dt_sm = currentTime - self.colGeneratorTimer
         
         
-        if self.pageContentController.isBegin{
+        if self.pageContentController.isTapBegin{
             
             /* tick update*/
             if dt_sm >= self.gameTickInterval {
@@ -254,8 +255,7 @@ extension GameScene{
     func fly(){
         // tap to fly
         if self.pageContentController.isBegin {
-            let ball = self.childNode(withName: "ba0")
-            ball?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+            self.ball[0].jump()
         }
     }
     func countingDown(){
@@ -263,8 +263,7 @@ extension GameScene{
         if self.pageContentController.isTapBegin == false{
             self.pageContentController.startCountingDown()
             DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pageContentController.count_down)) {
-                let ball = self.childNode(withName: "ba0")!
-                ball.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
+                self.ball[0].set_active()
             }
         }
     }
@@ -281,8 +280,7 @@ extension GameScene{
         makeBall()
     }
     override func touchesBegan(with event: NSEvent) {
-        let ball = self.childNode(withName: "ba0")
-        ball?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+        //
     }
     override func touchesMoved(with event: NSEvent) {
         //
