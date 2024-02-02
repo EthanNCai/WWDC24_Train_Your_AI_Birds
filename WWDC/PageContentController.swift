@@ -24,6 +24,9 @@ class PageContentController: ObservableObject {
     @Published var distance_u:Float = 0.123
     @Published var distance_d:Float = 0.123
     
+    @Published var jump_prob: Float = -1
+    @Published var not_jump_prob: Float = -1
+    
     
     let count_down: Float = 2.0
     

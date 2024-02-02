@@ -222,6 +222,18 @@ extension GameScene{
                 self.pageContentController.distance_u = distance_u
                 self.pageContentController.distance_d = distance_d
                 
+                //get prob
+                _ = self.ball[0].get_dicision_is_jump()
+                let (jump_prob, not_jump_prob) = self.ball[0].get_prob_test()
+                
+                self.pageContentController.jump_prob = jump_prob
+                self.pageContentController.not_jump_prob = not_jump_prob
+                /*
+                 self.pageContentController.jump_prob = self.ball[0].jump_probability
+                 self.pageContentController.not_jump_prob = self.ball[0].not_jump_probability
+                 */
+                
+                
                 // reset time
                 self.colGeneratorTimer = currentTime
             }
@@ -288,6 +300,7 @@ extension GameScene{
     override func touchesEnded(with event: NSEvent) {
         //
     }
+    
     
 }
 

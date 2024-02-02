@@ -14,7 +14,7 @@ struct Intro_1_View: View {
     var scene: GameScene{
         let scene = GameScene(viewController:pageContentController)
 
-        scene.size = CGSize(width: pageContentController.size.width*3/5, height: pageContentController.size.height)
+        scene.size = CGSize(width: pageContentController.size.width*1/2, height: pageContentController.size.height)
         return scene
     }
     
@@ -22,10 +22,199 @@ struct Intro_1_View: View {
         GeometryReader { geometry in
             ZStack {
                 HStack {
-                    Text("text_field")
-                        .frame(width: pageContentController.size.width*2/5,
+                    
+                    VStack(alignment:.leading){
+                            Text("Birds")
+                            .font(.title2)
+                            .fontWeight(.heavy)
+                            
+                        
+                        LazyVGrid(columns: [GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible()),GridItem(.flexible())]){
+                            
+                                VStack{
+                                    HStack{
+                                        Image(systemName: "bird.fill")
+                                        Text("Alive")
+                                            .font(.caption)
+                                    }
+                                    HStack{
+                                        Image(systemName: "road.lanes.curved.left")
+                                            .font(.caption2)
+                                        Text("1023.2")
+                                            .font(.caption)
+                                    }
+                                }
+                                .padding(2)
+                                .background(.green.opacity(0.6))
+                                .mask(RoundedRectangle(cornerRadius: 3))
+                            
+                            
+                                
+                                
+                                VStack{
+                                    HStack{
+                                        Image(systemName: "bird.fill")
+                                        Text("Alive")
+                                            .font(.caption)
+                                    }
+                                    HStack{
+                                        Image(systemName: "road.lanes.curved.left")
+                                            .font(.caption2)
+                                        Text("1023.2")
+                                            .font(.caption)
+                                    }
+                                }
+                                .padding(2)
+                                .background(.green.opacity(0.6))
+                                .mask(RoundedRectangle(cornerRadius: 3))
+                            
+                            
+                                
+                                VStack{
+                                    HStack{
+                                        Image(systemName: "bird.fill")
+                                        Text("Alive")
+                                            .font(.caption)
+                                    }
+                                    HStack{
+                                        Image(systemName: "road.lanes.curved.left")
+                                            .font(.caption2)
+                                        Text("1023.2")
+                                            .font(.caption)
+                                    }
+                                }
+                                .padding(2)
+                                .background(.green.opacity(0.6))
+                                .mask(RoundedRectangle(cornerRadius: 3))
+                            
+                            VStack{
+                                HStack{
+                                    Image(systemName: "bird.fill")
+                                    Text("Alive")
+                                        .font(.caption)
+                                }
+                                HStack{
+                                    Image(systemName: "road.lanes.curved.left")
+                                        .font(.caption2)
+                                    Text("1023.2")
+                                        .font(.caption)
+                                }
+                            }
+                            .padding(2)
+                            .background(.green.opacity(0.6))
+                            .mask(RoundedRectangle(cornerRadius: 3))
+                            VStack{
+                                HStack{
+                                    Image(systemName: "bird.fill")
+                                    Text("Alive")
+                                        .font(.caption)
+                                }
+                                HStack{
+                                    Image(systemName: "road.lanes.curved.left")
+                                        .font(.caption2)
+                                    Text("1023.2")
+                                        .font(.caption)
+                                }
+                            }
+                            .padding(2)
+                            .background(.green.opacity(0.6))
+                            .mask(RoundedRectangle(cornerRadius: 3))
+                        
+                            VStack{
+                                HStack{
+                                    Image(systemName: "bird.fill")
+                                    Text("Alive")
+                                        .font(.caption)
+                                }
+                                HStack{
+                                    Image(systemName: "road.lanes.curved.left")
+                                        .font(.caption2)
+                                    Text("1023.2")
+                                        .font(.caption)
+                                }
+                            }
+                            .padding(2)
+                            .background(.green.opacity(0.6))
+                            .mask(RoundedRectangle(cornerRadius: 3))
+                        
+                            VStack{
+                                HStack{
+                                    Image(systemName: "bird.fill")
+                                    Text("Alive")
+                                        .font(.caption)
+                                }
+                                HStack{
+                                    Image(systemName: "road.lanes.curved.left")
+                                        .font(.caption2)
+                                    Text("1023.2")
+                                        .font(.caption)
+                                }
+                            }
+                            .padding(2)
+                            .background(.green.opacity(0.6))
+                            .mask(RoundedRectangle(cornerRadius: 3))
+                        
+                            VStack{
+                                HStack{
+                                    Image(systemName: "bird.fill")
+                                    Text("Alive")
+                                        .font(.caption)
+                                }
+                                HStack{
+                                    Image(systemName: "road.lanes.curved.left")
+                                        .font(.caption2)
+                                    Text("1023.2")
+                                        .font(.caption)
+                                }
+                            }
+                            .padding(2)
+                            .background(.green.opacity(0.6))
+                            .mask(RoundedRectangle(cornerRadius: 3))
+                        
+                        
+                            
+                            
+                        }
+                            
+                        
+                        
+                        
+                        Divider()
+                        Text("Best Genes")
+                            .font(.title2)
+                            .fontWeight(.heavy)
+                        HStack{
+                            Spacer()
+                            Text("Top 1")
+                            Spacer()
+                            ParamVisulizer()
+                            Text("...")
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            Text("Top 2")
+                            Spacer()
+                            ParamVisulizer()
+                            Text("...")
+                            Spacer()
+                        }
+                        HStack{
+                            Spacer()
+                            Text("Top 3")
+                            Spacer()
+                            ParamVisulizer()
+                            Text("...")
+                            Spacer()
+                        }
+                        Divider()
+                        
+                            
+                        
+                    }
+                    .padding()
+                        .frame(width: pageContentController.size.width*1/2,
                                height: pageContentController.size.height)
-                    .background(.blue)
                     
                     
                     ZStack{
@@ -36,6 +225,9 @@ struct Intro_1_View: View {
                             .padding(.vertical,10)
                             .padding(.trailing,10)
                             .onDisappear(){
+                                self.pageContentController.reset()
+                            }
+                            .onChange(of: scene.size) { newSize in
                                 self.pageContentController.reset()
                             }
                         
@@ -99,6 +291,8 @@ struct Intro_1_View: View {
                                     Text("Velocity -> ")
                                     Text("Decision -> ")
                                     Text("Distance -> " + String(format: "%.1f", self.pageContentController.distance_score))
+                                    Text("jump_probabiliry -> " + String(format: "%.2f",self.pageContentController.jump_prob))
+                                    Text("idle_probabiliry -> " + String(format: "%.2f",self.pageContentController.not_jump_prob))
                                 }
                                 .padding()
                                 .background(.gray.opacity(0.2))
@@ -121,9 +315,7 @@ struct Intro_1_View: View {
                 pageContentController.size = geometry.size
             }
             
-            Text("父视图的大小：\(Int(pageContentController.size.width)) x \(Int(pageContentController.size.height))")
-                .foregroundColor(.white)
-                .padding()
+            
         }
     }
 }
