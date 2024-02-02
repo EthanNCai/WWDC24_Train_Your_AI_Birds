@@ -26,9 +26,15 @@ class PageContentController: ObservableObject {
     
     @Published var jump_prob: Float = -1
     @Published var not_jump_prob: Float = -1
+    @Published var balls: [Ball] = []
     
     
     let count_down: Float = 2.0
+    
+    func acc_distance_score(new_score:Float){
+        self.balls[0].distance_score += new_score
+  
+    }
     
     func reset() {
         isReset = false

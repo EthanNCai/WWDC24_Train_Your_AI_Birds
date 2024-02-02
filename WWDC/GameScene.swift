@@ -16,7 +16,6 @@ class GameScene: SKScene{
     var onscreen_cols: [Int] = []
     var newest_col_index = 0
     var currently_focus = 1
-    var ball:[Ball] = []
     
     //  indexs
     var difficulty_index: CGFloat = 0.3
@@ -61,9 +60,9 @@ class GameScene: SKScene{
     
     func makeBall(){
         
-        self.ball.removeAll()
-        self.ball.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
-        let ball_node = self.ball[0].ball_node
+        self.pageContentController.balls.removeAll()
+        self.pageContentController.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
+        let ball_node = self.pageContentController.balls[0].ball_node
         addChild(ball_node)
     }
     func makeBackgrounds(){
@@ -75,8 +74,10 @@ class GameScene: SKScene{
     
     
     func moveColLeft() {
-            
-        self.pageContentController.distance_score += Float(self.speed_index * self.size.width)
+        
+        self.pageContentController.balls[0].distance_score += Float(self.speed_index * self.size.width)
+        
+       
         for col_index in self.onscreen_cols {
             if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
                 col.position.x -= self.speed_index * self.size.width
@@ -168,7 +169,7 @@ class GameScene: SKScene{
     
     func get_distance() -> (Float, Float) {
         
-        let ball = self.ball[0].get_ball_node()
+        let ball = self.pageContentController.balls[0].get_ball_node()
         let colu_index = self.pageContentController.current_focus
         
         if colu_index == 0{
@@ -191,6 +192,10 @@ class GameScene: SKScene{
         let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
     
         return (ball_colu_distance, ball_cold_distance)
+    }
+    
+    func update_status(){
+        
     }
 }
 
@@ -223,8 +228,8 @@ extension GameScene{
                 self.pageContentController.distance_d = distance_d
                 
                 //get prob
-                _ = self.ball[0].get_dicision_is_jump()
-                let (jump_prob, not_jump_prob) = self.ball[0].get_prob_test()
+                _ = self.pageContentController.balls[0].get_dicision_is_jump()
+                let (jump_prob, not_jump_prob) = self.pageContentController.balls[0].get_prob_test()
                 
                 self.pageContentController.jump_prob = jump_prob
                 self.pageContentController.not_jump_prob = not_jump_prob
@@ -267,7 +272,7 @@ extension GameScene{
     func fly(){
         // tap to fly
         if self.pageContentController.isBegin {
-            self.ball[0].jump()
+            self.pageContentController.balls[0].jump()
         }
     }
     func countingDown(){
@@ -275,7 +280,7 @@ extension GameScene{
         if self.pageContentController.isTapBegin == false{
             self.pageContentController.startCountingDown()
             DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pageContentController.count_down)) {
-                self.ball[0].set_active()
+                self.pageContentController.balls[0].set_active()
             }
         }
     }

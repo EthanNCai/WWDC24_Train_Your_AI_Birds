@@ -8,8 +8,9 @@ import SpriteKit
 import SwiftUI
 
 
-class Ball{
+struct Ball:Identifiable{
     
+    var id = UUID()
     
     // neural network
     var jump_probability: Float = -1
@@ -21,8 +22,8 @@ class Ball{
     var ball_node:SKSpriteNode
     
     var focus:Int = 3
-    var distance_score:Float = 0.12
-    var isActive:Bool = false
+    var distance_score:Float = 0
+    var isActive:Bool = true
     
     
     // parameter
@@ -47,7 +48,7 @@ class Ball{
     }
      
     
-    func get_dicision_is_jump() -> Bool{
+    mutating func get_dicision_is_jump() -> Bool{
         
         var jump: Float = 0
         var not_jump: Float = 0
@@ -90,17 +91,17 @@ class Ball{
         return (self.jump_probability,self.not_jump_probability)
     }
     
-    func set_active(){
+    mutating func set_active(){
         self.ball_node.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
         self.isActive = true
     }
     
-    func set_inactive(){
+    mutating func set_inactive(){
         self.ball_node.physicsBody = nil
         self.isActive = false
     }
     
-    func jump(){
+    mutating func jump(){
         assert(self.isActive == true,"inactive ball jump ERROR")
         self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
     }

@@ -15,7 +15,7 @@ struct ParamVisulizer: View {
             HStack(spacing: 0){
                 ForEach(0..<weights.count/2, id: \.self) { index in
                     
-                        Text(String(format: "%8.2f",weights[index]))
+                        Text(String(format: "%4.2f",weights[index]))
                             .font(.system(size: 10))
                             .padding(2)
                             .background(weights[index]>0 ? .red.opacity(Double(weights[index])) : .green.opacity(Double(abs(weights[index]))))
