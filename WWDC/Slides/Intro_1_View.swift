@@ -153,7 +153,7 @@ struct Intro_1_View: View {
                                     Text("Current Focus -> " + String(self.pageContentController.current_focus))
                                     Text("Distanse Upper -> " + String(format: "%.1f", self.pageContentController.distance_u))
                                     Text("Distanse Downer -> " + String(format: "%.1f", self.pageContentController.distance_d))
-                                    Text("Velocity -> ")
+                                    Text("Velocity -> " + String(format: "%.1f", self.pageContentController.velocity))
                                     Text("Decision -> ")
                                     Text("Distance -> " + String(format: "%.1f", self.pageContentController.distance_score))
                                     Text("jump_probabiliry -> " + String(format: "%.2f",self.pageContentController.jump_prob))

@@ -12,7 +12,7 @@ class GameScene: SKScene{
     
     
     // controller
-    @ObservedObject var pageContentController: PageContentController
+    @ObservedObject var pc_ctrler: PageContentController
     
     //  hyper-params
     var difficulty_index: CGFloat = 0.3
@@ -20,6 +20,7 @@ class GameScene: SKScene{
     var colTimeInterval: Double = 3.0
     var gameTickInterval: Double = 0.02
     var ballRadius:CGFloat = 15.0
+    var outed_tolerance: CGFloat = 5
     var colDistanceInterval: CGFloat {
         
         return CGFloat((colTimeInterval / gameTickInterval) * speed_index) * self.size.width
@@ -38,7 +39,7 @@ class GameScene: SKScene{
    
     
     init(viewController: PageContentController) {
-        self.pageContentController = viewController
+        self.pc_ctrler = viewController
         super.init(size: viewController.size)
     }
         
@@ -56,32 +57,51 @@ class GameScene: SKScene{
     
     func checkRestrictedZone() {
         
+        if self.currently_focus == 0{
+            return
+        }
+        let colu = childNode(withName: "colu" + String(self.currently_focus))!
+        if abs(colu.position.x - self.ballXPosition) < outed_tolerance {
+            self.is_on_restricted_area = true
+        }else
+        {
+            self.is_on_restricted_area = false
+        }
         
     }
     
     
     func updateCollisionStatus() {
-        let ball = self.pageContentController.balls[0]
-        let ball_node = ball.ball_node
+        let ball = self.pc_ctrler.balls[0]
         
         // check for cell and floor
         
         let y = ball.ball_node.position.y
-        let y_lower_boundary = 0 + ball.ballRadius + 4
-        let y_higher_boundary = self.size.height - ball.ballRadius - 4
+        let y_lower_boundary = 0 + ball.ballRadius + outed_tolerance
+        let y_higher_boundary = self.size.height - ball.ballRadius - outed_tolerance
         
         if y < y_lower_boundary || y > y_higher_boundary{
-            self.pageContentController.balls[0].isActive = false
+            self.pc_ctrler.balls[0].isActive = false
         }
         
         // check for column
+        
+        if self.is_on_restricted_area{
+            let colu = childNode(withName: "colu" + String(self.currently_focus))!
+            let col_upper_bounds = colu.position.y
+            let col_lower_bounds = col_upper_bounds - self.size.height * self.difficulty_index
+            
+            if y < col_lower_bounds || y > col_upper_bounds{
+                self.pc_ctrler.balls[0].isActive = false
+            }
+        }
     }
     
     func makeBall(){
         
-        self.pageContentController.balls.removeAll()
-        self.pageContentController.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
-        let ball_node = self.pageContentController.balls[0].ball_node
+        self.pc_ctrler.balls.removeAll()
+        self.pc_ctrler.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
+        let ball_node = self.pc_ctrler.balls[0].ball_node
         addChild(ball_node)
     }
     
@@ -93,7 +113,9 @@ class GameScene: SKScene{
     }
     
     func updateBallDistScore(){
-        self.pageContentController.balls[0].distance_score += Float(self.speed_index * self.size.width)
+        if self.pc_ctrler.balls[0].isActive {
+            self.pc_ctrler.balls[0].distance_score += Float(self.speed_index * self.size.width)
+        }
     }
     
     func shiftColLeft() {
@@ -103,7 +125,6 @@ class GameScene: SKScene{
                 col.position.x -= self.speed_index * self.size.width
                 if col.position.x < -col.size.width-10 {
                     self.removeCol(col_index: col_index)
-                    
                 }
             }
             
@@ -145,9 +166,16 @@ class GameScene: SKScene{
         cold.position = CGPoint(x: position , y: self.size.height * pos_index_d)
         cold.name = "cold" + String(col_index)
         
+        
         addChild(cold)
         self.onscreen_cols.append(col_index)
         
+    }
+    
+    func update_velocity(){
+        if self.pc_ctrler.balls[0].isActive && pc_ctrler.isBegin {
+            self.pc_ctrler.velocity = Float(self.pc_ctrler.balls[0].ball_node.physicsBody!.velocity.dy)
+        }
     }
     
     
@@ -158,12 +186,12 @@ class GameScene: SKScene{
             let col_node = self.childNode(withName: col_name)!
             if col_node.position.x > self.ballXPosition{
                 self.currently_focus =  col_index
-                self.pageContentController.current_focus = col_index
+                self.pc_ctrler.current_focus = col_index
                 return
             }
         }
         self.currently_focus =  0
-        self.pageContentController.current_focus = 0
+        self.pc_ctrler.current_focus = 0
     }
     
     func updateColDistance() {
@@ -172,15 +200,15 @@ class GameScene: SKScene{
         let colu_index = self.currently_focus
         
         if colu_index == 0{
-            self.pageContentController.balls[0].set_distance(distance_u: -1, distance_d: -1)
+            self.pc_ctrler.balls[0].set_distance(distance_u: -1, distance_d: -1)
             return
         }
         let colu_name = "colu" + String(colu_index)
         let colu = self.childNode(withName: colu_name)!
         
         // ball x,y
-        let ball_x = self.pageContentController.balls[0].ball_node.position.x
-        let ball_y = self.pageContentController.balls[0].ball_node.position.y
+        let ball_x = self.pc_ctrler.balls[0].ball_node.position.x
+        let ball_y = self.pc_ctrler.balls[0].ball_node.position.y
         // upper x,y
         let colu_x = colu.position.x
         let colu_y = colu.position.y
@@ -191,13 +219,13 @@ class GameScene: SKScene{
         let ball_cold_distance = Float(sqrt(pow(ball_x - cold_x, 2) + pow(ball_y - cold_y, 2)))
         let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
     
-        self.pageContentController.balls[0].set_distance(distance_u: ball_colu_distance, distance_d: ball_cold_distance)
+        self.pc_ctrler.balls[0].set_distance(distance_u: ball_colu_distance, distance_d: ball_cold_distance)
         
     }
     
     func cleanOutedBirds() {
-        if !self.pageContentController.balls.isEmpty && !self.pageContentController.balls[0].isActive {
-            let ball_node = self.pageContentController.balls[0].ball_node
+        if !self.pc_ctrler.balls.isEmpty && !self.pc_ctrler.balls[0].isActive {
+            let ball_node = self.pc_ctrler.balls[0].ball_node
             let scaleAction = SKAction.scale(to: 0.0, duration: 0.2)
             let removeAction = SKAction.removeFromParent()
             let sequence = SKAction.sequence([scaleAction, removeAction])
@@ -213,7 +241,7 @@ class GameScene: SKScene{
 extension GameScene{
     func resetGame() {
         
-        self.pageContentController.reset()
+        self.pc_ctrler.reset()
         self.onscreen_cols.removeAll()
         self.removeAllChildren()
         newest_col_index = 0
@@ -253,7 +281,7 @@ extension GameScene{
         let dt_sm = currentTime - self.colGeneratorTimer
         
         
-        if self.pageContentController.isTapBegin{
+        if self.pc_ctrler.isTapBegin{
             
             /* tick update*/
             if dt_sm >= self.gameTickInterval {
@@ -263,6 +291,8 @@ extension GameScene{
                 
                 // update ball distance
                 self.updateBallDistScore()
+                
+                self.update_velocity()
                 
                 // update focus to *game scene*
                 self.updateFocusIndex()
@@ -280,7 +310,7 @@ extension GameScene{
                 self.cleanOutedBirds()
                 
                 // get jump prob
-                _ = self.pageContentController.balls[0].get_dicision_is_jump()
+                _ = self.pc_ctrler.balls[0].get_dicision_is_jump()
                 
                 // apply jump
                 
@@ -299,7 +329,7 @@ extension GameScene{
                     self.gameTickTimer = currentTime
             }
         }
-        if self.pageContentController.isReset{
+        if self.pc_ctrler.isReset{
             resetGame()
         }
 
@@ -319,16 +349,16 @@ extension GameScene{
     }
     func jump(){
         // tap to fly
-        if self.pageContentController.isBegin {
-            self.pageContentController.balls[0].jump()
+        if self.pc_ctrler.isBegin {
+            self.pc_ctrler.balls[0].jump()
         }
     }
     func countingDown(){
         // tap to start
-        if self.pageContentController.isTapBegin == false{
-            self.pageContentController.startCountingDown()
-            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pageContentController.count_down)) {
-                self.pageContentController.balls[0].set_active()
+        if self.pc_ctrler.isTapBegin == false{
+            self.pc_ctrler.startCountingDown()
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pc_ctrler.count_down)) {
+                self.pc_ctrler.balls[0].set_active()
             }
         }
     }
