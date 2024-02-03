@@ -10,14 +10,11 @@ import SpriteKit
 
 class GameScene: SKScene{
     
-    @ObservedObject var pageContentController: PageContentController
-    var colGeneratorTimer: TimeInterval = 0.0
-    var gameTickTimer: TimeInterval =  0.0
-    var onscreen_cols: [Int] = []
-    var newest_col_index = 0
-    var currently_focus = 1
     
-    //  indexs
+    // controller
+    @ObservedObject var pageContentController: PageContentController
+    
+    //  hyper-params
     var difficulty_index: CGFloat = 0.3
     var speed_index: CGFloat = 0.005
     var colTimeInterval: Double = 3.0
@@ -30,8 +27,15 @@ class GameScene: SKScene{
     var ballXPosition: CGFloat {
         return self.size.width*(1/5)
     }
-
     
+    // on-going variables
+    var colGeneratorTimer: TimeInterval = 0.0
+    var gameTickTimer: TimeInterval =  0.0
+    var onscreen_cols: [Int] = []
+    var newest_col_index = 0
+    var currently_focus = 0
+    var is_on_restricted_area = false
+   
     
     init(viewController: PageContentController) {
         self.pageContentController = viewController
@@ -45,18 +49,33 @@ class GameScene: SKScene{
     override func didMove(to view: SKView) {
         
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
-        
         makeBackgrounds()
         makeBall()
-        //generateDefaultCol()
-        //generateNewCol(col_index: 1)
+        
+    }
+    
+    func checkRestrictedZone() {
+        
+        
     }
     
     
-    func checkForCollision() {
-           
+    func updateCollisionStatus() {
+        let ball = self.pageContentController.balls[0]
+        let ball_node = ball.ball_node
+        
+        // check for cell and floor
+        
+        let y = ball.ball_node.position.y
+        let y_lower_boundary = 0 + ball.ballRadius + 4
+        let y_higher_boundary = self.size.height - ball.ballRadius - 4
+        
+        if y < y_lower_boundary || y > y_higher_boundary{
+            self.pageContentController.balls[0].isActive = false
+        }
+        
+        // check for column
     }
-    
     
     func makeBall(){
         
@@ -65,6 +84,7 @@ class GameScene: SKScene{
         let ball_node = self.pageContentController.balls[0].ball_node
         addChild(ball_node)
     }
+    
     func makeBackgrounds(){
         let background = SKSpriteNode(color: .gray, size: self.size)
         background.anchorPoint = CGPoint.zero
@@ -72,12 +92,12 @@ class GameScene: SKScene{
         addChild(background)
     }
     
-    
-    func moveColLeft() {
-        
+    func updateBallDistScore(){
         self.pageContentController.balls[0].distance_score += Float(self.speed_index * self.size.width)
-        
-       
+    }
+    
+    func shiftColLeft() {
+
         for col_index in self.onscreen_cols {
             if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
                 col.position.x -= self.speed_index * self.size.width
@@ -98,22 +118,8 @@ class GameScene: SKScene{
         }
     }
     
-    func removeCol(col_index: Int){
-        
-        if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
-            col.removeFromParent()
-        }
-        if let col = childNode(withName: "cold" + String(col_index)) as? SKSpriteNode {
-            col.removeFromParent()
-        }
-        if let index = self.onscreen_cols.firstIndex(of: col_index) {
-            onscreen_cols.remove(at: index)
-        }
-        
-    }
     
-    
-    func generateNewCol(provided_position: CGFloat = -1){
+    func makeCol(provided_position: CGFloat = -1){
         
         self.newest_col_index += 1
         let col_index = newest_col_index
@@ -131,56 +137,50 @@ class GameScene: SKScene{
         let colu = SKSpriteNode(color: .green, size: CGSize(width: colwidth, height: colheight))
         colu.anchorPoint = CGPoint.zero
         colu.position = CGPoint(x: position , y: self.size.height * pos_index_u)
-        //colu.physicsBody = SKPhysicsBody(rectangleOf: colu.size)
-        //colu.physicsBody?.isDynamic = false
         colu.name = "colu" + String(col_index)
-        
         addChild(colu)
-        
         
         let cold = SKSpriteNode(color: .red, size: CGSize(width: colwidth, height: colheight))
         cold.anchorPoint = CGPoint.zero
         cold.position = CGPoint(x: position , y: self.size.height * pos_index_d)
-        //cold.physicsBody = SKPhysicsBody(rectangleOf: cold.size)
-        //cold.physicsBody?.isDynamic = false
         cold.name = "cold" + String(col_index)
         
         addChild(cold)
-        
         self.onscreen_cols.append(col_index)
         
     }
-    func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: (self.difficulty_index*1.1)...1)
-        let id = iu - (1+self.difficulty_index)
-        return (iu, id)
-    }
     
-    func getFocusIndex() -> Int{
+    
+    
+    func updateFocusIndex(){
         for col_index in self.onscreen_cols{
             let col_name = "cold" + String(col_index)
             let col_node = self.childNode(withName: col_name)!
             if col_node.position.x > self.ballXPosition{
-                return col_index
+                self.currently_focus =  col_index
+                self.pageContentController.current_focus = col_index
+                return
             }
         }
-        return 0
+        self.currently_focus =  0
+        self.pageContentController.current_focus = 0
     }
     
-    func get_distance() -> (Float, Float) {
+    func updateColDistance() {
         
-        let ball = self.pageContentController.balls[0].get_ball_node()
-        let colu_index = self.pageContentController.current_focus
+        
+        let colu_index = self.currently_focus
         
         if colu_index == 0{
-            return (99999,99999)
+            self.pageContentController.balls[0].set_distance(distance_u: -1, distance_d: -1)
+            return
         }
         let colu_name = "colu" + String(colu_index)
         let colu = self.childNode(withName: colu_name)!
         
         // ball x,y
-        let ball_x = ball.position.x
-        let ball_y = ball.position.y
+        let ball_x = self.pageContentController.balls[0].ball_node.position.x
+        let ball_y = self.pageContentController.balls[0].ball_node.position.y
         // upper x,y
         let colu_x = colu.position.x
         let colu_y = colu.position.y
@@ -191,14 +191,59 @@ class GameScene: SKScene{
         let ball_cold_distance = Float(sqrt(pow(ball_x - cold_x, 2) + pow(ball_y - cold_y, 2)))
         let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
     
-        return (ball_colu_distance, ball_cold_distance)
+        self.pageContentController.balls[0].set_distance(distance_u: ball_colu_distance, distance_d: ball_cold_distance)
+        
     }
     
-    func update_status(){
-        
+    func cleanOutedBirds() {
+        if !self.pageContentController.balls.isEmpty && !self.pageContentController.balls[0].isActive {
+            let ball_node = self.pageContentController.balls[0].ball_node
+            let scaleAction = SKAction.scale(to: 0.0, duration: 0.2)
+            let removeAction = SKAction.removeFromParent()
+            let sequence = SKAction.sequence([scaleAction, removeAction])
+            ball_node.run(sequence)
+        }
     }
 }
 
+
+
+// MARK: - Utilities
+
+extension GameScene{
+    func resetGame() {
+        
+        self.pageContentController.reset()
+        self.onscreen_cols.removeAll()
+        self.removeAllChildren()
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        
+        makeBackgrounds()
+        makeBall()
+    }
+    
+    func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
+        let iu = CGFloat.random(in: (self.difficulty_index*1.1)...1)
+        let id = iu - (1+self.difficulty_index)
+        return (iu, id)
+    }
+    
+    func removeCol(col_index: Int){
+        
+        if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
+            col.removeFromParent()
+        }
+        if let col = childNode(withName: "cold" + String(col_index)) as? SKSpriteNode {
+            col.removeFromParent()
+        }
+        if let index = self.onscreen_cols.firstIndex(of: col_index) {
+            onscreen_cols.remove(at: index)
+        }
+        
+    }
+}
 
 
 //MARK: - Update
@@ -214,40 +259,43 @@ extension GameScene{
             if dt_sm >= self.gameTickInterval {
                 
                 // update col position
-                moveColLeft()
+                self.shiftColLeft()
                 
-                // check collision
-                checkForCollision()
+                // update ball distance
+                self.updateBallDistScore()
                 
-                // get focus
-                self.pageContentController.current_focus = self.getFocusIndex()
+                // update focus to *game scene*
+                self.updateFocusIndex()
                 
-                // get distance
-                let (distance_u, distance_d) = self.get_distance()
-                self.pageContentController.distance_u = distance_u
-                self.pageContentController.distance_d = distance_d
+                // update distance to *ball matrics*
+                self.updateColDistance()
                 
-                //get prob
+                // check restricted zone
+                self.checkRestrictedZone()
+                
+                // update is_active statu
+                self.updateCollisionStatus()
+                
+                // clean birds
+                self.cleanOutedBirds()
+                
+                // get jump prob
                 _ = self.pageContentController.balls[0].get_dicision_is_jump()
-                let (jump_prob, not_jump_prob) = self.pageContentController.balls[0].get_prob_test()
                 
-                self.pageContentController.jump_prob = jump_prob
-                self.pageContentController.not_jump_prob = not_jump_prob
-                /*
-                 self.pageContentController.jump_prob = self.ball[0].jump_probability
-                 self.pageContentController.not_jump_prob = self.ball[0].not_jump_probability
-                 */
+                // apply jump
+                
                 
                 
                 // reset time
                 self.colGeneratorTimer = currentTime
             }
+            
 
             /* non-tick update*/
             let dt_lg = currentTime - self.gameTickTimer
 
             if dt_lg >= self.colTimeInterval {
-                    generateNewCol()
+                    makeCol()
                     self.gameTickTimer = currentTime
             }
         }
@@ -266,10 +314,10 @@ extension GameScene{
     
     override func mouseDown(with event: NSEvent) {
         countingDown()
-        fly()
+        jump()
         
     }
-    func fly(){
+    func jump(){
         // tap to fly
         if self.pageContentController.isBegin {
             self.pageContentController.balls[0].jump()
@@ -283,18 +331,6 @@ extension GameScene{
                 self.pageContentController.balls[0].set_active()
             }
         }
-    }
-    func resetGame() {
-        
-        self.pageContentController.reset()
-        self.onscreen_cols.removeAll()
-        self.removeAllChildren()
-        newest_col_index = 0
-        colGeneratorTimer = 0.0
-        gameTickTimer = 0.0
-        
-        makeBackgrounds()
-        makeBall()
     }
     override func touchesBegan(with event: NSEvent) {
         //

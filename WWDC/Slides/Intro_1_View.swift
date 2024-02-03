@@ -21,45 +21,69 @@ struct Intro_1_View: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                HStack {
-                    
-                    VStack{
-                        ScrollView{
+                HStack { // info panal & game scene
+                    ScrollView{
+                        
+                        VStack(alignment: .leading){
                             HStack{
-                                Text("Bird Status")
+                                Button(action: {}){
+                                    HStack{
+                                        Image(systemName: "chevron.left")
+                                        Text("Adjust training settings")
+                                    }
+                                }
+                                Spacer()
+                            }
+                            HStack{
+                                Text("Round Info.")
                                     .font(.title2)
                                     .fontWeight(.heavy)
                                     .padding(2)
                                 Spacer()
                             }
-                            BallBoard(balls: self.$pageContentController.balls)
-                                Divider()
-                            
+                            Text("this section displayed some round informations")
+                                .font(.caption2)
+                                .fontWeight(.ultraLight)
+                            HStack{
+                                
+                                Text("Round Counts : 13")
+                            }.padding(.horizontal,5)
+                            HStack{
+                                Image(systemName: "bird.fill")
+                                Text("Remaining : 8")
+                            }.padding(.horizontal,5)
                         }
-                        .padding()
-                            .frame(width: pageContentController.size.width*1/2,
-                                   height: pageContentController.size.height*(1/2))
                         
-                        ScrollView{
-                            HStack{
-                                Text("Gene:")
-                                ParamVisulizer()
-                                Image(systemName: "ellipsis")
-                            }
-                            
-                            HStack{
-                                Text("Gene:")
-                                ParamVisulizer()
-                                Image(systemName: "ellipsis")
-                            }
-                            
+                        
+                        Divider()
+                        HStack{
+                            Text("Bird Status")
+                                .font(.title2)
+                                .fontWeight(.heavy)
+                                .padding(2)
+                            Spacer()
                         }
-                        .padding()
-                            .frame(width: pageContentController.size.width*1/2,
-                                   height: pageContentController.size.height*(1/2))
+                        Text("this section displayed some round informations, indicating the on-screen bird situation")
+                            .font(.caption2)
+                            .fontWeight(.light)
+                        BallBoard(balls: self.$pageContentController.balls)
+                            Divider()
+                        HStack{
+                            Text("BestGenes")
+                                .font(.title2)
+                                .fontWeight(.heavy)
+                                .padding(2)
+                            Spacer()
+                        }
+                        Text("this place will count the farest bird and display visulize it's gene segment this section displayed some round informations, indicating the on-screen bird situation")
+                            .font(.caption2)
+                            .fontWeight(.light)
+                        GeneBoard()
+                        
                     }
-                    
-                    
+                    .padding()
+                        .frame(width: pageContentController.size.width*1/2,
+                               height: pageContentController.size.height)
                     
                     ZStack{
                         
@@ -84,8 +108,6 @@ struct Intro_1_View: View {
                                 .mask(RoundedRectangle(cornerRadius: 10))
                                 
                         }
-                        
-                        
                         
                         // gauges
                         VStack{

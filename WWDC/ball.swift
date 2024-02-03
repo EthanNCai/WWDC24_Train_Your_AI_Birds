@@ -21,7 +21,6 @@ struct Ball:Identifiable{
     let ballRadius:CGFloat
     var ball_node:SKSpriteNode
     
-    var focus:Int = 3
     var distance_score:Float = 0
     var isActive:Bool = true
     
@@ -101,9 +100,15 @@ struct Ball:Identifiable{
         self.isActive = false
     }
     
+    mutating func set_distance(distance_u:Float, distance_d:Float){
+        self.distance_u = distance_u
+        self.distance_d = distance_d
+    }
+    
     mutating func jump(){
-        assert(self.isActive == true,"inactive ball jump ERROR")
-        self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+        if self.isActive{
+            self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+        }
     }
     
     func get_ball_node() -> SKNode{
