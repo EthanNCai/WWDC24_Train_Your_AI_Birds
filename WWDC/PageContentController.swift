@@ -14,6 +14,7 @@ class PageContentController: ObservableObject {
     @Published var isBegin:Bool = false
     @Published var isTapBegin:Bool = false
     @Published var isReset:Bool = false
+    @Published var isGameOver:Bool = false
     
     @Published var size:CGSize = .zero
     
@@ -51,8 +52,10 @@ class PageContentController: ObservableObject {
         isReset = false
         isBegin = false
         isTapBegin = false
+        isGameOver = false
         score = 0
         bannerContent = "~ Tap to begin ~"
+        
     }
     
     func decrease_ball_count(){
@@ -71,7 +74,7 @@ class PageContentController: ObservableObject {
     }
     
     
-    func startCountingDown() {
+    func setCountingDown() {
         
         let timeToGo = TimeInterval(self.count_down)
         
@@ -88,5 +91,11 @@ class PageContentController: ObservableObject {
                 }
             }
         }
+    }
+    func setGameOver(){
+        
+        self.bannerContent = " Game Over \n touch to reset"
+        self.isBegin = false
+        self.isTapBegin = false
     }
 }

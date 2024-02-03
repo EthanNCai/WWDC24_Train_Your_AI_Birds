@@ -12,7 +12,7 @@ class GameScene: SKScene{
     
     
     // controller
-    @ObservedObject var pc_ctrler: PageContentController
+    @ObservedObject var content_ctrl: PageContentController
     
     //  hyper-params
     var difficulty_index: CGFloat = 0.3
@@ -39,7 +39,7 @@ class GameScene: SKScene{
    
     
     init(viewController: PageContentController) {
-        self.pc_ctrler = viewController
+        self.content_ctrl = viewController
         super.init(size: viewController.size)
     }
         
@@ -72,7 +72,7 @@ class GameScene: SKScene{
     
     
     func updateCollisionStatus() {
-        let ball = self.pc_ctrler.balls[0]
+        let ball = self.content_ctrl.balls[0]
         
         // check for cell and floor
         
@@ -81,7 +81,7 @@ class GameScene: SKScene{
         let y_higher_boundary = self.size.height - ball.ballRadius - outed_tolerance
         
         if y < y_lower_boundary || y > y_higher_boundary{
-            self.pc_ctrler.balls[0].isActive = false
+            self.content_ctrl.balls[0].isActive = false
         }
         
         // check for column
@@ -92,16 +92,16 @@ class GameScene: SKScene{
             let col_lower_bounds = col_upper_bounds - self.size.height * self.difficulty_index
             
             if y < col_lower_bounds || y > col_upper_bounds{
-                self.pc_ctrler.balls[0].isActive = false
+                self.content_ctrl.balls[0].isActive = false
             }
         }
     }
     
     func makeBall(){
         
-        self.pc_ctrler.balls.removeAll()
-        self.pc_ctrler.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
-        let ball_node = self.pc_ctrler.balls[0].ball_node
+        self.content_ctrl.balls.removeAll()
+        self.content_ctrl.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
+        let ball_node = self.content_ctrl.balls[0].ball_node
         addChild(ball_node)
     }
     
@@ -113,8 +113,8 @@ class GameScene: SKScene{
     }
     
     func updateBallDistScore(){
-        if self.pc_ctrler.balls[0].isActive {
-            self.pc_ctrler.balls[0].distance_score += Float(self.speed_index * self.size.width)
+        if self.content_ctrl.balls[0].isActive {
+            self.content_ctrl.balls[0].distance_score += Float(self.speed_index * self.size.width)
         }
     }
     
@@ -173,8 +173,8 @@ class GameScene: SKScene{
     }
     
     func update_velocity(){
-        if self.pc_ctrler.balls[0].isActive && pc_ctrler.isBegin {
-            self.pc_ctrler.velocity = Float(self.pc_ctrler.balls[0].ball_node.physicsBody!.velocity.dy)
+        if self.content_ctrl.balls[0].isActive && content_ctrl.isBegin {
+            self.content_ctrl.velocity = Float(self.content_ctrl.balls[0].ball_node.physicsBody!.velocity.dy)
         }
     }
     
@@ -186,12 +186,12 @@ class GameScene: SKScene{
             let col_node = self.childNode(withName: col_name)!
             if col_node.position.x > self.ballXPosition{
                 self.currently_focus =  col_index
-                self.pc_ctrler.current_focus = col_index
+                self.content_ctrl.current_focus = col_index
                 return
             }
         }
         self.currently_focus =  0
-        self.pc_ctrler.current_focus = 0
+        self.content_ctrl.current_focus = 0
     }
     
     func updateColDistance() {
@@ -200,15 +200,15 @@ class GameScene: SKScene{
         let colu_index = self.currently_focus
         
         if colu_index == 0{
-            self.pc_ctrler.balls[0].set_distance(distance_u: -1, distance_d: -1)
+            self.content_ctrl.balls[0].set_distance(distance_u: -1, distance_d: -1)
             return
         }
         let colu_name = "colu" + String(colu_index)
         let colu = self.childNode(withName: colu_name)!
         
         // ball x,y
-        let ball_x = self.pc_ctrler.balls[0].ball_node.position.x
-        let ball_y = self.pc_ctrler.balls[0].ball_node.position.y
+        let ball_x = self.content_ctrl.balls[0].ball_node.position.x
+        let ball_y = self.content_ctrl.balls[0].ball_node.position.y
         // upper x,y
         let colu_x = colu.position.x
         let colu_y = colu.position.y
@@ -219,18 +219,29 @@ class GameScene: SKScene{
         let ball_cold_distance = Float(sqrt(pow(ball_x - cold_x, 2) + pow(ball_y - cold_y, 2)))
         let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
     
-        self.pc_ctrler.balls[0].set_distance(distance_u: ball_colu_distance, distance_d: ball_cold_distance)
+        self.content_ctrl.balls[0].set_distance(distance_u: ball_colu_distance, distance_d: ball_cold_distance)
         
     }
     
     func cleanOutedBirds() {
-        if !self.pc_ctrler.balls.isEmpty && !self.pc_ctrler.balls[0].isActive {
-            let ball_node = self.pc_ctrler.balls[0].ball_node
+        if !self.content_ctrl.balls.isEmpty && !self.content_ctrl.balls[0].isActive {
+            let ball_node = self.content_ctrl.balls[0].ball_node
             let scaleAction = SKAction.scale(to: 0.0, duration: 0.2)
             let removeAction = SKAction.removeFromParent()
             let sequence = SKAction.sequence([scaleAction, removeAction])
             ball_node.run(sequence)
         }
+    }
+    func checkGameOver(){
+        
+        for ball in self.content_ctrl.balls{
+            if ball.isActive == true{
+                return
+            }
+        }
+        self.content_ctrl.isGameOver = true
+        self.content_ctrl.setGameOver()
+        
     }
 }
 
@@ -241,7 +252,7 @@ class GameScene: SKScene{
 extension GameScene{
     func resetGame() {
         
-        self.pc_ctrler.reset()
+        self.content_ctrl.reset()
         self.onscreen_cols.removeAll()
         self.removeAllChildren()
         newest_col_index = 0
@@ -281,7 +292,7 @@ extension GameScene{
         let dt_sm = currentTime - self.colGeneratorTimer
         
         
-        if self.pc_ctrler.isTapBegin{
+        if self.content_ctrl.isTapBegin && !self.content_ctrl.isGameOver{
             
             /* tick update*/
             if dt_sm >= self.gameTickInterval {
@@ -309,8 +320,11 @@ extension GameScene{
                 // clean birds
                 self.cleanOutedBirds()
                 
+                // check game over
+                self.checkGameOver()
+                
                 // get jump prob
-                _ = self.pc_ctrler.balls[0].get_dicision_is_jump()
+                _ = self.content_ctrl.balls[0].get_dicision_is_jump()
                 
                 // apply jump
                 
@@ -329,7 +343,7 @@ extension GameScene{
                     self.gameTickTimer = currentTime
             }
         }
-        if self.pc_ctrler.isReset{
+        if self.content_ctrl.isReset{
             resetGame()
         }
 
@@ -342,26 +356,30 @@ extension GameScene{
 
 extension GameScene{
     
-    override func mouseDown(with event: NSEvent) {
+    override func mouseDown(with event: NSEvent){
         countingDown()
         jump()
-        
     }
     func jump(){
         // tap to fly
-        if self.pc_ctrler.isBegin {
-            self.pc_ctrler.balls[0].jump()
+        if self.content_ctrl.isBegin {
+            self.content_ctrl.balls[0].jump()
         }
     }
     func countingDown(){
         // tap to start
-        if self.pc_ctrler.isTapBegin == false{
-            self.pc_ctrler.startCountingDown()
-            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.pc_ctrler.count_down)) {
-                self.pc_ctrler.balls[0].set_active()
+        if self.content_ctrl.isTapBegin == false{
+            if self.content_ctrl.isGameOver{
+                self.resetGame()
+                self.content_ctrl.reset()
+            }
+            self.content_ctrl.setCountingDown()
+            DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.content_ctrl.count_down)) {
+                self.content_ctrl.balls[0].set_active()
             }
         }
     }
+    
     override func touchesBegan(with event: NSEvent) {
         //
     }

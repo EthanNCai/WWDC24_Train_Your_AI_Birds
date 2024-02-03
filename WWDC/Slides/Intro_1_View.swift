@@ -9,12 +9,12 @@ import SwiftUI
 
 struct Intro_1_View: View {
     
-    @ObservedObject var pageContentController = PageContentController()
+    @ObservedObject var content_ctrl = PageContentController()
     @State var isSpeeded = false
     var scene: GameScene{
-        let scene = GameScene(viewController:pageContentController)
+        let scene = GameScene(viewController:content_ctrl)
 
-        scene.size = CGSize(width: pageContentController.size.width*1/2, height: pageContentController.size.height)
+        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height)
         return scene
     }
     
@@ -66,7 +66,7 @@ struct Intro_1_View: View {
                         Text("this section displayed some round informations, indicating the on-screen bird situation")
                             .font(.caption2)
                             .fontWeight(.light)
-                        BallBoard(balls: self.$pageContentController.balls)
+                        BallBoard(balls: self.$content_ctrl.balls)
                             Divider()
                         HStack{
                             Text("BestGenes")
@@ -82,8 +82,8 @@ struct Intro_1_View: View {
                         
                     }
                     .padding()
-                        .frame(width: pageContentController.size.width*1/2,
-                               height: pageContentController.size.height)
+                        .frame(width: content_ctrl.size.width*1/2,
+                               height: content_ctrl.size.height)
                     
                     ZStack{
                         
@@ -93,16 +93,16 @@ struct Intro_1_View: View {
                             .padding(.vertical,10)
                             .padding(.trailing,10)
                             .onDisappear(){
-                                self.pageContentController.reset()
+                                self.content_ctrl.reset()
                             }
                             .onChange(of: scene.size) { newSize in
-                                self.pageContentController.reset()
+                                self.content_ctrl.reset()
                             }
                         
                         // banner
                         
-                        if !pageContentController.isBegin {
-                            Text(pageContentController.bannerContent)
+                        if !content_ctrl.isBegin ||  content_ctrl.isGameOver{
+                            Text(content_ctrl.bannerContent)
                                 .padding()
                                 .background(.ultraThinMaterial)
                                 .mask(RoundedRectangle(cornerRadius: 10))
@@ -124,7 +124,7 @@ struct Intro_1_View: View {
                             // gauges Buttom
                             HStack{
                                 Button(action: {
-                                    self.pageContentController.isReset = true
+                                    self.content_ctrl.isReset = true
                                     //self.scene.resetGame()
                                     }) {
                                         Image(systemName: "arrow.clockwise.circle")
@@ -150,14 +150,14 @@ struct Intro_1_View: View {
                                 
                                     Text("__Debug infos__")
                                         .foregroundColor(.green)
-                                    Text("Current Focus -> " + String(self.pageContentController.current_focus))
-                                    Text("Distanse Upper -> " + String(format: "%.1f", self.pageContentController.distance_u))
-                                    Text("Distanse Downer -> " + String(format: "%.1f", self.pageContentController.distance_d))
-                                    Text("Velocity -> " + String(format: "%.1f", self.pageContentController.velocity))
+                                    Text("Current Focus -> " + String(self.content_ctrl.current_focus))
+                                    Text("Distanse Upper -> " + String(format: "%.1f", self.content_ctrl.distance_u))
+                                    Text("Distanse Downer -> " + String(format: "%.1f", self.content_ctrl.distance_d))
+                                    Text("Velocity -> " + String(format: "%.1f", self.content_ctrl.velocity))
                                     Text("Decision -> ")
-                                    Text("Distance -> " + String(format: "%.1f", self.pageContentController.distance_score))
-                                    Text("jump_probabiliry -> " + String(format: "%.2f",self.pageContentController.jump_prob))
-                                    Text("idle_probabiliry -> " + String(format: "%.2f",self.pageContentController.not_jump_prob))
+                                    Text("Distance -> " + String(format: "%.1f", self.content_ctrl.distance_score))
+                                    Text("jump_probabiliry -> " + String(format: "%.2f",self.content_ctrl.jump_prob))
+                                    Text("idle_probabiliry -> " + String(format: "%.2f",self.content_ctrl.not_jump_prob))
                                 }
                                 .padding()
                                 .background(.gray.opacity(0.2))
@@ -173,11 +173,11 @@ struct Intro_1_View: View {
                 }
             }
             .onAppear {
-                pageContentController.size = geometry.size
+                content_ctrl.size = geometry.size
             }
             .onChange(of: geometry.size) { newSize in
 
-                pageContentController.size = geometry.size
+                content_ctrl.size = geometry.size
             }
             
             
