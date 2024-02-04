@@ -16,6 +16,9 @@
 		8BCCDCE52B0B40F600040744 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */; };
 		8BE91C6D2B6CE8B400C3FA0F /* BallBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */; };
 		8BE91C6F2B6D370D00C3FA0F /* RoundInfoBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C6E2B6D370D00C3FA0F /* RoundInfoBoard.swift */; };
+		8BE91C712B6F4B9600C3FA0F /* ObservationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C702B6F4B9600C3FA0F /* ObservationView.swift */; };
+		8BE91C732B6F4BB300C3FA0F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C722B6F4BB300C3FA0F /* SettingView.swift */; };
+		8BE91C752B6F550700C3FA0F /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C742B6F550700C3FA0F /* GameView.swift */; };
 		8BF04A052B67A00E006DD210 /* Intro_1_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A042B67A00E006DD210 /* Intro_1_View.swift */; };
 		8BF04A072B67A20A006DD210 /* Intro_2_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A062B67A20A006DD210 /* Intro_2_View.swift */; };
 		8BF04A092B67A215006DD210 /* Intro_3_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A082B67A215006DD210 /* Intro_3_View.swift */; };
@@ -35,6 +38,9 @@
 		8BCCDCE62B0B40F600040744 /* WWDC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WWDC.entitlements; sourceTree = "<group>"; };
 		8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallBoard.swift; sourceTree = "<group>"; };
 		8BE91C6E2B6D370D00C3FA0F /* RoundInfoBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundInfoBoard.swift; sourceTree = "<group>"; };
+		8BE91C702B6F4B9600C3FA0F /* ObservationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationView.swift; sourceTree = "<group>"; };
+		8BE91C722B6F4BB300C3FA0F /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		8BE91C742B6F550700C3FA0F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		8BF04A042B67A00E006DD210 /* Intro_1_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro_1_View.swift; sourceTree = "<group>"; };
 		8BF04A062B67A20A006DD210 /* Intro_2_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro_2_View.swift; sourceTree = "<group>"; };
 		8BF04A082B67A215006DD210 /* Intro_3_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro_3_View.swift; sourceTree = "<group>"; };
@@ -74,6 +80,9 @@
 			children = (
 				8BF04A012B679FC2006DD210 /* Slides */,
 				8B155B582B0C803700D3ACF7 /* PageController.swift */,
+				8BE91C702B6F4B9600C3FA0F /* ObservationView.swift */,
+				8BE91C722B6F4BB300C3FA0F /* SettingView.swift */,
+				8BE91C742B6F550700C3FA0F /* GameView.swift */,
 				8B2D17522B6C198300FEB986 /* GeneBoard.swift */,
 				8BE91C6E2B6D370D00C3FA0F /* RoundInfoBoard.swift */,
 				8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */,
@@ -180,6 +189,9 @@
 				8BCCDCE02B0B40F500040744 /* StageView.swift in Sources */,
 				8B2D17532B6C198300FEB986 /* GeneBoard.swift in Sources */,
 				8BE91C6D2B6CE8B400C3FA0F /* BallBoard.swift in Sources */,
+				8BE91C732B6F4BB300C3FA0F /* SettingView.swift in Sources */,
+				8BE91C752B6F550700C3FA0F /* GameView.swift in Sources */,
+				8BE91C712B6F4B9600C3FA0F /* ObservationView.swift in Sources */,
 				8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */,
 				8BF04A0F2B67D604006DD210 /* PageContentController.swift in Sources */,
 				8BF04A072B67A20A006DD210 /* Intro_2_View.swift in Sources */,

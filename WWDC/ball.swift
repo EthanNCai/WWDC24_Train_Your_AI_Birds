@@ -13,36 +13,39 @@ struct Ball:Identifiable{
     var id = UUID()
     
     // neural network
-    var jump_probability: Float = -1
-    var not_jump_probability: Float = -1
+    var jump_probability: Float = 0
+    var not_jump_probability: Float = 0
     
     
     // ball
     let ballRadius:CGFloat
     var ball_node:SKSpriteNode
-    
+    var ball_index:Int
     var distance_score:Float = 0
     var isActive:Bool = true
     
     
     // parameter
-    var distance_u:Float = 0.1
-    var distance_d:Float = 0.1
-    var distance_top:Float = 0.1
-    var distance_bottom:Float = 0.1
-    var velocity:Float = 0.1
+    var distance_u:Float = 0.0
+    var distance_d:Float = 0.0
+    var distance_top:Float = 0.0
+    var distance_bottom:Float = 0.0
+    var velocity:Float = 0.0
     
-    var weights:[Float] = (0..<10).map { _ in Float.random(in: 0...1) }
-    var bias:[Float] = (0..<10).map { _ in Float.random(in: 0...1) }
+    var weights:[Float]
+    var bias:[Float]
     
     init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color) {
         
         self.ballRadius = CGFloat(ball_radius)
         self.ball_node = SKSpriteNode(imageNamed: "bird")
         self.ball_node.scale(to: CGSize(width: 38, height: 38))
+        self.ball_index = ball_index
         self.ball_node.position = CGPoint(x: x, y: y)
         self.ball_node.name = "ball" + String(ball_index)
         self.ball_node.color = NSColor(ball_color)
+        self.weights = (0..<10).map { _ in Float.random(in: 0...1) }
+        self.bias = (0..<10).map { _ in Float.random(in: 0...1) }
         
     }
      

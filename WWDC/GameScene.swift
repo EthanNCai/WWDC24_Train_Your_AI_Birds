@@ -51,7 +51,7 @@ class GameScene: SKScene{
         
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         makeBackgrounds()
-        makeBall()
+
         
     }
     
@@ -87,6 +87,9 @@ class GameScene: SKScene{
         // check for column
         
         if self.is_on_restricted_area{
+            if self.currently_focus == 0{
+                return
+            }
             let colu = childNode(withName: "colu" + String(self.currently_focus))!
             let col_upper_bounds = colu.position.y
             let col_lower_bounds = col_upper_bounds - self.size.height * self.difficulty_index
@@ -97,16 +100,9 @@ class GameScene: SKScene{
         }
     }
     
-    func makeBall(){
-        
-        self.content_ctrl.balls.removeAll()
-        self.content_ctrl.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: 1, ball_radius: 15.0, ball_color: .red))
-        let ball_node = self.content_ctrl.balls[0].ball_node
-        addChild(ball_node)
-    }
     
     func makeBackgrounds(){
-        let background = SKSpriteNode(color: .gray, size: self.size)
+        let background = SKSpriteNode(color: NSColor(Color.blue.opacity(0.6)), size: self.size)
         background.anchorPoint = CGPoint.zero
         background.position = CGPoint.zero
         addChild(background)
@@ -246,21 +242,36 @@ class GameScene: SKScene{
 }
 
 
+// MARK: - Initialize
+
+extension GameScene{
+    func generate_balls_accordingly(){
+        print("hi")
+        print("child_num",self.children.count)
+        for i in 0..<self.content_ctrl.bird_number{
+            self.content_ctrl.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: i, ball_radius: 15.0, ball_color: .red))
+            let ball_node = self.content_ctrl.balls[i].ball_node
+            addChild(ball_node)
+        }
+        print("child_num",self.children.count)
+    }
+}
+
 
 // MARK: - Utilities
 
 extension GameScene{
     func resetGame() {
         
+        //print("self.content_ctrl.bird_number",self.content_ctrl.bird_number)
         self.content_ctrl.reset()
-        self.onscreen_cols.removeAll()
         self.removeAllChildren()
+        self.onscreen_cols.removeAll()
         newest_col_index = 0
         colGeneratorTimer = 0.0
         gameTickTimer = 0.0
-        
         makeBackgrounds()
-        makeBall()
+        generate_balls_accordingly()
     }
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
@@ -282,6 +293,7 @@ extension GameScene{
         }
         
     }
+
 }
 
 
@@ -357,8 +369,11 @@ extension GameScene{
 extension GameScene{
     
     override func mouseDown(with event: NSEvent){
-        countingDown()
-        jump()
+        if !self.content_ctrl.isOnSetting{
+            countingDown()
+            jump()
+        }
+        
     }
     func jump(){
         // tap to fly
@@ -368,11 +383,14 @@ extension GameScene{
     }
     func countingDown(){
         // tap to start
+        
         if self.content_ctrl.isTapBegin == false{
             if self.content_ctrl.isGameOver{
                 self.resetGame()
-                self.content_ctrl.reset()
+                return
             }
+            
+            self.resetGame()
             self.content_ctrl.setCountingDown()
             DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.content_ctrl.count_down)) {
                 self.content_ctrl.balls[0].set_active()

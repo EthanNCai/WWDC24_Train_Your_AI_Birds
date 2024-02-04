@@ -19,164 +19,27 @@ struct Intro_1_View: View {
     }
     
     var body: some View {
+        
         GeometryReader { geometry in
             ZStack {
                 HStack { // info panal & game scene
-                    ScrollView{
-                        
-                        VStack(alignment: .leading){
-                            HStack{
-                                Button(action: {}){
-                                    HStack{
-                                        Image(systemName: "chevron.left")
-                                        Text("Adjust training settings")
-                                    }
-                                }
-                                Spacer()
-                            }
-                            HStack{
-                                Text("Round Info.")
-                                    .font(.title2)
-                                    .fontWeight(.heavy)
-                                    .padding(2)
-                                Spacer()
-                            }
-                            Text("this section displayed some round informations")
-                                .font(.caption2)
-                                .fontWeight(.ultraLight)
-                            HStack{
-                                
-                                Text("Round Counts : 13")
-                            }.padding(.horizontal,5)
-                            HStack{
-                                Image(systemName: "bird.fill")
-                                Text("Remaining : 8")
-                            }.padding(.horizontal,5)
-                        }
-                        
-                        
-                        Divider()
-                        HStack{
-                            Text("Bird Status")
-                                .font(.title2)
-                                .fontWeight(.heavy)
-                                .padding(2)
-                            Spacer()
-                        }
-                        Text("this section displayed some round informations, indicating the on-screen bird situation")
-                            .font(.caption2)
-                            .fontWeight(.light)
-                        BallBoard(balls: self.$content_ctrl.balls)
-                            Divider()
-                        HStack{
-                            Text("BestGenes")
-                                .font(.title2)
-                                .fontWeight(.heavy)
-                                .padding(2)
-                            Spacer()
-                        }
-                        Text("this place will count the farest bird and display visulize it's gene segment this section displayed some round informations, indicating the on-screen bird situation")
-                            .font(.caption2)
-                            .fontWeight(.light)
-                        GeneBoard()
-                        
-                    }
-                    .padding()
-                        .frame(width: content_ctrl.size.width*1/2,
-                               height: content_ctrl.size.height)
+                    HStack{
                     
-                    ZStack{
-                        
-                        // gamelayer
-                        SpriteView(scene: scene)
-                            .mask(RoundedRectangle(cornerRadius: 15))
-                            .padding(.vertical,10)
-                            .padding(.trailing,10)
-                            .onDisappear(){
-                                self.content_ctrl.reset()
-                            }
-                            .onChange(of: scene.size) { newSize in
-                                self.content_ctrl.reset()
-                            }
-                        
-                        // banner
-                        
-                        if !content_ctrl.isBegin ||  content_ctrl.isGameOver{
-                            Text(content_ctrl.bannerContent)
-                                .padding()
-                                .background(.ultraThinMaterial)
-                                .mask(RoundedRectangle(cornerRadius: 10))
-                                
+                        if content_ctrl.isOnSetting{
+                            SettingView(content_ctrl: self.content_ctrl,scene:scene)
+                        }else
+                        {
+                            ObservationView(content_ctrl: self.content_ctrl)
                         }
-                        
-                        // gauges
-                        VStack{
-                        
-                            // gauges Top
-                            HStack{
-                               
-                                Spacer()
-                            }
-                            .padding(.vertical)
-                            Spacer()
-                            
-                            
-                            // gauges Buttom
-                            HStack{
-                                Button(action: {
-                                    self.content_ctrl.isReset = true
-                                    //self.scene.resetGame()
-                                    }) {
-                                        Image(systemName: "arrow.clockwise.circle")
-                                        Text("Reset")
-                                    }
-                                Toggle(isOn: $isSpeeded) {
-                                    Text("10x Fast forward")
-                                }.toggleStyle(SwitchToggleStyle())
-                                    .padding(.horizontal)
-                                    .background(.ultraThinMaterial)
-                                    .cornerRadius(5) // 设置按钮的圆角半径
-                            }
-                            .padding()
-                            
-                         
-                        
-                        }
-                        //debug info
-                        HStack{
-                            Spacer()
-                            VStack{
-                                VStack(alignment: .leading){
-                                
-                                    Text("__Debug infos__")
-                                        .foregroundColor(.green)
-                                    Text("Current Focus -> " + String(self.content_ctrl.current_focus))
-                                    Text("Distanse Upper -> " + String(format: "%.1f", self.content_ctrl.distance_u))
-                                    Text("Distanse Downer -> " + String(format: "%.1f", self.content_ctrl.distance_d))
-                                    Text("Velocity -> " + String(format: "%.1f", self.content_ctrl.velocity))
-                                    Text("Decision -> ")
-                                    Text("Distance -> " + String(format: "%.1f", self.content_ctrl.distance_score))
-                                    Text("jump_probabiliry -> " + String(format: "%.2f",self.content_ctrl.jump_prob))
-                                    Text("idle_probabiliry -> " + String(format: "%.2f",self.content_ctrl.not_jump_prob))
-                                }
-                                .padding()
-                                .background(.gray.opacity(0.2))
-                                .mask(RoundedRectangle(cornerRadius: 15))
-                                
-                                Spacer()
-                            }
-                            .padding()
-                        
-                        }
-                        
                     }
+                    GameView(content_ctrl: content_ctrl, scene: scene)
+                    
                 }
             }
             .onAppear {
                 content_ctrl.size = geometry.size
             }
             .onChange(of: geometry.size) { newSize in
-
                 content_ctrl.size = geometry.size
             }
             

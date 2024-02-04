@@ -15,11 +15,10 @@ class PageContentController: ObservableObject {
     @Published var isTapBegin:Bool = false
     @Published var isReset:Bool = false
     @Published var isGameOver:Bool = false
-    
+    @Published var isOnSetting:Bool = true
     @Published var size:CGSize = .zero
     
     // debug infos
-    @Published var score: Int = 0
     @Published var bannerContent: String = "~ Tap to begin ~"
     @Published var distance_score:Float = 0.123
     @Published var velocity:Float = 1.23
@@ -27,7 +26,22 @@ class PageContentController: ObservableObject {
     @Published var distance_u:Float = 0.123
     @Published var distance_d:Float = 0.123
     
+    //Retrive for GAME SCENE
+    @Published var ui_bird_number: Int = 10
+    @Published var ui_bird_radius: Float = 10
+    @Published var ui_bird_speed: Float = 10
+    @Published var ui_selected_best_ratio: best_ratio = .x1
+    @Published var ui_mutate_proab: Float = 0.1
     
+    // for GAME SCENE
+    var difficulty_index: CGFloat = 0.0
+    var bird_speed_index: CGFloat = 0.0
+    var bird_size_index: CGFloat = 0.0
+    var best_bird_needed: Int = 0
+    var bird_number: Int = 0
+    var mutate_proab: Float = 0.0
+    
+    // bird
     @Published var jump_prob: Float = -1
     @Published var not_jump_prob: Float = -1
     
@@ -48,14 +62,35 @@ class PageContentController: ObservableObject {
   
     }
     
-    func reset() {
-        isReset = false
-        isBegin = false
-        isTapBegin = false
-        isGameOver = false
-        score = 0
-        bannerContent = "~ Tap to begin ~"
+    func done_setting(){
         
+        // retieve from UI
+        self.bird_number = ui_bird_number
+        self.mutate_proab = ui_mutate_proab
+        self.bird_size_index = sizeIndexMapping(value: self.ui_bird_radius)
+        self.bird_speed_index = speedIndexMapping(value: self.ui_bird_speed)
+        self.setBestBirdNumbers()
+        
+        
+        print("birdNumber:", bird_number)
+        print("mutateProb:", mutate_proab)
+        print("birdSizeIndex:", bird_size_index)
+        print("birdSpeedIndex:", bird_speed_index)
+        print("bestBirdNeeded:", best_bird_needed)
+        
+    }
+    
+    
+    func reset() {
+        
+        // reset don't incluede the setting reset
+        isReset = false
+        isTapBegin = false
+        isBegin = false
+        isGameOver = false
+        balls.removeAll()
+        bannerContent = "~ Tap to begin ~"
+    
     }
     
     func decrease_ball_count(){
@@ -72,6 +107,38 @@ class PageContentController: ObservableObject {
             
         }
     }
+    
+    func sizeIndexMapping(value: Float) -> CGFloat {
+        // gap height*0.3
+        let inputMin: Float = 0
+        let inputMax: Float = 20
+        let outputMin: Float = Float(self.size.height * (0.3 - 0.28))
+        let outputMax: Float = Float(self.size.height * (0.3 - 0.25))
+        
+        let normalizedValue = (value - inputMin) / (inputMax - inputMin)
+        let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin
+        
+        return CGFloat(mappedValue)
+    }
+    
+    func speedIndexMapping(value: Float) -> CGFloat {
+        let inputMin: Float = 0
+        let inputMax: Float = 20
+        let outputMin: Float = 0.004
+        let outputMax: Float = 0.006
+        
+        let normalizedValue = (value - inputMin) / (inputMax - inputMin)
+        let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin
+        
+        return CGFloat(mappedValue)
+    }
+    
+    func setBestBirdNumbers(){
+        
+        self.best_bird_needed =  Int(Float(self.ui_bird_number) * self.ui_selected_best_ratio.rawValue)
+        
+    }
+    
     
     
     func setCountingDown() {
