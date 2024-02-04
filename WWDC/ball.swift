@@ -11,11 +11,7 @@ import SwiftUI
 struct Ball:Identifiable{
     
     var id = UUID()
-    
-    // neural network
-    var jump_probability: Float = 0
-    var not_jump_probability: Float = 0
-    
+
     
     // ball
     let ballRadius:CGFloat
@@ -50,17 +46,16 @@ struct Ball:Identifiable{
     }
      
     
-    mutating func get_dicision_is_jump() -> Bool{
+    func get_dicision_is_jump(scene_size: CGSize) -> Bool{
         
         var jump: Float = 0
         var not_jump: Float = 0
         
-        let sum = self.distance_d + self.distance_u + self.distance_top + self.distance_bottom + self.velocity
-        let norm_distance_d = self.distance_d/sum
-        let norm_distance_u = self.distance_u/sum
-        let norm_distance_top = self.distance_top/sum
-        let norm_distance_bottom = self.distance_bottom/sum
-        let norm_velocity = self.velocity/sum
+        let norm_distance_d =  self.normalization(self.distance_d, lowerLimit: 0, upperLimit: Float(scene_size.height))
+        let norm_distance_u = self.normalization(self.distance_u, lowerLimit: 0, upperLimit: Float(scene_size.height))
+        let norm_distance_top = self.normalization(self.distance_top, lowerLimit: 0, upperLimit: Float(scene_size.height))
+        let norm_distance_bottom = self.normalization(self.distance_bottom, lowerLimit: 0, upperLimit: Float(scene_size.height))
+        let norm_velocity = self.normalization(self.distance_top, lowerLimit: -500, upperLimit: 500)
         
         //relu + linear
         jump += max(0.0, (norm_distance_d * self.weights[0] + self.bias[0]))
@@ -79,19 +74,25 @@ struct Ball:Identifiable{
         //softmax
         let (jump_softmax, not_jump_softmax) = (exp(jump) / (exp(jump) + exp(not_jump)), exp(not_jump) / (exp(jump) + exp(not_jump)))
         
-        self.jump_probability = jump_softmax
-        self.not_jump_probability = not_jump_softmax
-        
-        if jump_softmax > not_jump_softmax && jump_softmax > 0.7 {
+        print("softmax",jump_softmax,not_jump_softmax)
+        if jump_softmax > not_jump_softmax && jump_softmax > 0.7{
             return true
         }else{
             return false
         }
     }
-    func get_prob_test()-> (Float, Float){
-        
-        return (self.jump_probability,self.not_jump_probability)
+    
+    func normalization(_ input: Float, lowerLimit: Float = -500, upperLimit: Float = 500) -> Float {
+        if input > upperLimit{
+            return 1
+        }
+        if input < upperLimit{
+            return 0
+        }
+        let normalizedData = (input - lowerLimit) / (upperLimit - lowerLimit)
+        return max(0, min(1, normalizedData))
     }
+    
     
     mutating func set_active(){
         self.ball_node.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
@@ -103,12 +104,8 @@ struct Ball:Identifiable{
         self.isActive = false
     }
     
-    mutating func set_distance(distance_u:Float, distance_d:Float){
-        self.distance_u = distance_u
-        self.distance_d = distance_d
-    }
     
-    mutating func jump(){
+    func jump(){
         if self.isActive{
             self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
         }

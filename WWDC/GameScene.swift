@@ -170,6 +170,7 @@ class GameScene: SKScene{
     
     func update_velocity(){
         if self.content_ctrl.balls[0].isActive && content_ctrl.isBegin {
+            self.content_ctrl.balls[0].velocity = Float(self.content_ctrl.balls[0].ball_node.physicsBody!.velocity.dy)
             self.content_ctrl.velocity = Float(self.content_ctrl.balls[0].ball_node.physicsBody!.velocity.dy)
         }
     }
@@ -196,7 +197,8 @@ class GameScene: SKScene{
         let colu_index = self.currently_focus
         
         if colu_index == 0{
-            self.content_ctrl.balls[0].set_distance(distance_u: -1, distance_d: -1)
+            self.content_ctrl.balls[0].distance_d = -1
+            self.content_ctrl.balls[0].distance_u = -1
             return
         }
         let colu_name = "colu" + String(colu_index)
@@ -215,7 +217,8 @@ class GameScene: SKScene{
         let ball_cold_distance = Float(sqrt(pow(ball_x - cold_x, 2) + pow(ball_y - cold_y, 2)))
         let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
     
-        self.content_ctrl.balls[0].set_distance(distance_u: ball_colu_distance, distance_d: ball_cold_distance)
+        self.content_ctrl.balls[0].distance_d = ball_cold_distance
+        self.content_ctrl.balls[0].distance_u = ball_colu_distance
         
     }
     
@@ -239,6 +242,16 @@ class GameScene: SKScene{
         self.content_ctrl.setGameOver()
         
     }
+    
+    func jump_accordingly()
+    {
+        
+            //ball.velocity = self.normalization(ball.velocity, lowerLimit: -500, upperLimit: 500)
+        if self.content_ctrl.balls[0].get_dicision_is_jump(scene_size: self.size){
+            self.content_ctrl.balls[0].jump()
+            }
+        
+    }
 }
 
 
@@ -246,14 +259,14 @@ class GameScene: SKScene{
 
 extension GameScene{
     func generate_balls_accordingly(){
-        print("hi")
-        print("child_num",self.children.count)
+        //print("hi")
+        //print("child_num",self.children.count)
         for i in 0..<self.content_ctrl.bird_number{
             self.content_ctrl.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: i, ball_radius: 15.0, ball_color: .red))
             let ball_node = self.content_ctrl.balls[i].ball_node
             addChild(ball_node)
         }
-        print("child_num",self.children.count)
+        //print("child_num",self.children.count)
     }
 }
 
@@ -315,13 +328,14 @@ extension GameScene{
                 // update ball distance
                 self.updateBallDistScore()
                 
-                self.update_velocity()
-                
                 // update focus to *game scene*
                 self.updateFocusIndex()
                 
                 // update distance to *ball matrics*
                 self.updateColDistance()
+                
+                // update distance to *ball matrics*
+                self.update_velocity()
                 
                 // check restricted zone
                 self.checkRestrictedZone()
@@ -335,10 +349,10 @@ extension GameScene{
                 // check game over
                 self.checkGameOver()
                 
-                // get jump prob
-                _ = self.content_ctrl.balls[0].get_dicision_is_jump()
+                // jump if needed
+                self.jump_accordingly()
                 
-                // apply jump
+                
                 
                 
                 
