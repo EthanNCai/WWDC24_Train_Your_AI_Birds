@@ -40,8 +40,8 @@ struct Ball:Identifiable{
         self.ball_node.position = CGPoint(x: x, y: y)
         self.ball_node.name = "ball" + String(ball_index)
         self.ball_node.color = NSColor(ball_color)
-        self.weights = (0..<10).map { _ in Float.random(in: 0...1) }
-        self.bias = (0..<10).map { _ in Float.random(in: 0...1) }
+        self.weights = (0..<10).map { _ in Float.random(in: -1...1) }
+        self.bias = (0..<10).map { _ in Float.random(in: -1...1) }
         
     }
      
@@ -74,7 +74,6 @@ struct Ball:Identifiable{
         //softmax
         let (jump_softmax, not_jump_softmax) = (exp(jump) / (exp(jump) + exp(not_jump)), exp(not_jump) / (exp(jump) + exp(not_jump)))
         
-        print("softmax",jump_softmax,not_jump_softmax)
         if jump_softmax > not_jump_softmax && jump_softmax > 0.7{
             return true
         }else{
@@ -86,7 +85,7 @@ struct Ball:Identifiable{
         if input > upperLimit{
             return 1
         }
-        if input < upperLimit{
+        if input < lowerLimit{
             return 0
         }
         let normalizedData = (input - lowerLimit) / (upperLimit - lowerLimit)
@@ -96,6 +95,7 @@ struct Ball:Identifiable{
     
     mutating func set_active(){
         self.ball_node.physicsBody = SKPhysicsBody(circleOfRadius: self.ballRadius)
+        self.ball_node.physicsBody?.collisionBitMask = 0
         self.isActive = true
     }
     
@@ -107,7 +107,8 @@ struct Ball:Identifiable{
     
     func jump(){
         if self.isActive{
-            self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
+            let upage = CGFloat(Float.random(in:9...11))
+            self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: upage))
         }
     }
     

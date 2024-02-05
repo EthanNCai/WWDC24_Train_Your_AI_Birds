@@ -21,10 +21,10 @@ struct GameView: View {
                 .padding(.vertical,10)
                 .padding(.trailing,10)
                 .onDisappear(){
-                    self.content_ctrl.reset()
+                    //self.content_ctrl.controller_reset()
                 }
                 .onChange(of: scene.size) { newSize in
-                    self.content_ctrl.reset()
+                    //self.content_ctrl.controller_reset()
                 }
             
             // banner
@@ -36,7 +36,7 @@ struct GameView: View {
                     .mask(RoundedRectangle(cornerRadius: 10))
             }else
             {
-                if !content_ctrl.isBegin ||  content_ctrl.isGameOver{
+                if !content_ctrl.isUserBegin ||  content_ctrl.isGameOver{
                     Text(content_ctrl.bannerContent)
                         .padding()
                         .background(.ultraThinMaterial)
@@ -63,10 +63,10 @@ struct GameView: View {
                             self.content_ctrl.isReset = true
                         }) {
                             Image(systemName: "arrow.clockwise.circle")
-                            Text("Reset")
+                            Text("Reset Experiment")
                         }
-                        Toggle(isOn: $isSpeeded) {
-                            Text("10x Fast forward")
+                        Toggle(isOn: self.$content_ctrl.isLooped) {
+                            Text("Auto loop")
                         }.toggleStyle(SwitchToggleStyle())
                             .padding(.horizontal)
                             .background(.ultraThinMaterial)
@@ -80,20 +80,30 @@ struct GameView: View {
             if !self.content_ctrl.isOnSetting{
                 //debug info
                 HStack{
+                    VStack{
+                        VStack(alignment: .leading){
+                            
+                            Text("Round" + String(self.content_ctrl.rounds_count))
+                                
+                        }
+                        .padding()
+                        .background(.gray.opacity(0.2))
+                        .mask(RoundedRectangle(cornerRadius: 15))
+                        
+                        Spacer()
+                    }
+                    .padding()
                     Spacer()
                     VStack{
                         VStack(alignment: .leading){
                             
                             Text("__Debug infos__")
                                 .foregroundColor(.green)
-                            Text("Current Focus -> " + String(self.content_ctrl.current_focus))
-                            Text("Distanse Upper -> " + String(format: "%.1f", self.content_ctrl.distance_u))
-                            Text("Distanse Downer -> " + String(format: "%.1f", self.content_ctrl.distance_d))
-                            Text("Velocity -> " + String(format: "%.1f", self.content_ctrl.velocity))
-                            Text("Decision -> ")
-                            Text("Distance -> " + String(format: "%.1f", self.content_ctrl.distance_score))
-                            Text("jump_probabiliry -> " + String(format: "%.2f",self.content_ctrl.jump_prob))
-                            Text("idle_probabiliry -> " + String(format: "%.2f",self.content_ctrl.not_jump_prob))
+                            Text("isGameBegin -> " + (self.content_ctrl.isGameBegin ? "true" : "false"))
+                            Text("isUserBegin -> " + (self.content_ctrl.isUserBegin ? "true" : "false"))
+                            Text("isGameOver -> " + (self.content_ctrl.isGameOver ? "true" : "false"))
+                            Text("isLooped -> " + (self.content_ctrl.isLooped ? "true" : "false"))
+                            Text("isReset -> " + (self.content_ctrl.isReset ? "true" : "false"))
                         }
                         .padding()
                         .background(.gray.opacity(0.2))

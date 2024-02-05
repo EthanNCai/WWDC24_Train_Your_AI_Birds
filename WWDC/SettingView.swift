@@ -31,11 +31,7 @@ struct SettingView: View {
                         withAnimation(){
                             self.content_ctrl.isOnSetting = false
                         }
-                        self.content_ctrl.done_setting()
-                        DispatchQueue.main.async {
-                            self.scene.resetGame()
-                        }
-                        
+                        self.content_ctrl.done_setting()                        
                         
                     }){
                         HStack{

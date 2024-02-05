@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ObservationView: View {
     @ObservedObject var content_ctrl: PageContentController
+    let scene:GameScene
     var body: some View {
         ScrollView{
             
@@ -19,6 +20,10 @@ struct ObservationView: View {
                         withAnimation(){
                             self.content_ctrl.isOnSetting = true
                         }
+                        self.content_ctrl.deep_controller_reset()
+                        self.scene.game_scene_reset()
+                        
+                        
                         
                     }){
                         HStack{
@@ -39,13 +44,15 @@ struct ObservationView: View {
                     .font(.caption2)
                     .fontWeight(.ultraLight)
                 HStack{
-                    
-                    Text("Round Counts : 13")
-                }.padding(.horizontal,5)
+                    Text("Round Counts : \(self.content_ctrl.rounds_count)")
+                }.padding(1)
                 HStack{
                     Image(systemName: "bird.fill")
-                    Text("Remaining : 8")
-                }.padding(.horizontal,5)
+                    Text("Remaining : \(self.content_ctrl.ball_remaining)")
+                }.padding(1)
+                HStack{
+                    Text("Best distance : \(Int(self.content_ctrl.best_distance))")
+                }.padding(1)
             }
             
             

@@ -29,7 +29,7 @@ struct Intro_1_View: View {
                             SettingView(content_ctrl: self.content_ctrl,scene:scene)
                         }else
                         {
-                            ObservationView(content_ctrl: self.content_ctrl)
+                            ObservationView(content_ctrl: self.content_ctrl, scene: scene)
                         }
                     }
                     GameView(content_ctrl: content_ctrl, scene: scene)

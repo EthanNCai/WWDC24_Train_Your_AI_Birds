@@ -11,8 +11,8 @@ import Foundation
 class PageContentController: ObservableObject {
     
     
-    @Published var isBegin:Bool = false
-    @Published var isTapBegin:Bool = false
+    @Published var isUserBegin:Bool = false
+    @Published var isGameBegin:Bool = false
     @Published var isReset:Bool = false
     @Published var isGameOver:Bool = false
     @Published var isOnSetting:Bool = true
@@ -40,6 +40,12 @@ class PageContentController: ObservableObject {
     var best_bird_needed: Int = 0
     var bird_number: Int = 0
     var mutate_proab: Float = 0.0
+    let gene_length: Int = 10
+    
+    var isFirstRound: Bool = true
+    
+    //
+    var isLooped: Bool = false
     
     // bird
     @Published var jump_prob: Float = -1
@@ -49,17 +55,23 @@ class PageContentController: ObservableObject {
     @Published var balls: [Ball] = []
     @Published var parallel_balls: Int = 1
     @Published var ball_remaining:Int = 1
+    @Published var best_distance:Float = 0
     
     // training
-    @Published var best_3_balls:[Ball] = []
-    @Published var best_2_balls:[Ball] = []
-    @Published var rounds: Int = 1
+    @Published var best_balls:[Ball] = []
+    @Published var rounds_count: Int = 0
     
     let count_down: Float = 2.0
     
-    func acc_distance_score(new_score:Float){
-        self.balls[0].distance_score += new_score
-  
+    
+    func update_birds_remaining(){
+        var temp_bird_remaining = 0
+        for bird in self.balls{
+            if bird.isActive{
+                temp_bird_remaining += 1
+            }
+        }
+        self.ball_remaining = temp_bird_remaining
     }
     
     func done_setting(){
@@ -81,31 +93,124 @@ class PageContentController: ObservableObject {
     }
     
     
-    func reset() {
+    func controller_reset() {
         
         // reset don't incluede the setting reset
+        self.rounds_count += 1
         isReset = false
-        isTapBegin = false
-        isBegin = false
+        isGameBegin = false
+        isUserBegin = false
+        isGameOver = false
+        if isFirstRound{
+            balls.removeAll()
+        }
+        bannerContent = "~ Tap to begin ~"
+    
+    }
+    func deep_controller_reset() {
+        
+        // reset don't incluede the setting reset
+        self.rounds_count = 0
+        isLooped = false
+        isReset = false
+        isGameBegin = false
+        isUserBegin = false
         isGameOver = false
         balls.removeAll()
+        isOnSetting = true
         bannerContent = "~ Tap to begin ~"
     
     }
     
-    func decrease_ball_count(){
+    func fetch_the_best_birds(){
+        self.best_balls.removeAll()
+        let sortedBalls = self.balls.sorted { $0.distance_score > $1.distance_score }
+        let count = min(self.best_bird_needed, sortedBalls.count)
+        for i in 0..<count {
+           self.best_balls.append(sortedBalls[i])
+        }
+        self.best_distance = sortedBalls[0].distance_score
+    }
+    
+    func reproduce(){
         
-        self.ball_remaining -= 1
         
-        if self.ball_remaining == 1 || self.ball_remaining == 0 || self.ball_remaining == 2{
-            if self.ball_remaining == 2{
-                // collect for best_3_balls
+        var bird_a_w: Ball
+        var bird_b_w: Ball
+        var bird_a_b: Ball
+        var bird_b_b: Ball
+        
+        self.balls.removeAll()
+        while self.balls.count < self.bird_number{
+            
+            // select 2 parent for weights
+            
+            assert(self.best_balls.count == self.best_bird_needed,"best bird number check")
+            
+            repeat {
+                bird_a_w = self.best_balls.randomElement()!
+                bird_b_w = self.best_balls.randomElement()!
+            } while bird_a_w.ball_index == bird_b_w.ball_index
+            
+            // select 2 parent for bias
+            
+            repeat {
+                bird_a_b = self.best_balls.randomElement()!
+                bird_b_b = self.best_balls.randomElement()!
+            } while bird_a_b.ball_index == bird_b_b.ball_index
+            
+            // generate new gene segment
+            
+            let w_break_point = Int.random(in: 1..<(self.gene_length-1))
+            let b_break_point = Int.random(in: 1..<(self.gene_length-1))
+            
+            assert(bird_a_b.weights.count == self.gene_length,"gene length check")
+            
+            /*
+                Index range     ->  0 1 2 ... 9
+                bp range        ->  1 2 3 ... 8
+             */
+            
+            let new_weights = Array(bird_a_w.weights.prefix(w_break_point) + bird_b_w.weights.suffix(from: w_break_point))
+            let new_bias = Array(bird_a_b.weights.prefix(b_break_point) + bird_b_b.weights.suffix(from: b_break_point))
+            
+            assert(new_weights.count == self.gene_length,"new weights length check")
+            assert(new_bias.count == self.gene_length,"new bias length check")
+            
+            // make new ball (inherit everything except gene)
+            var new_ball = bird_a_w
+            new_ball.weights = new_weights
+            new_ball.bias = new_weights
+            self.balls.append(new_ball)
+        }
+        
+    }
+    
+    func dropout(){
+        
+        // randomly flip every ball's gene accordingly
+        
+        // calculate flip bits per gene
+        
+        let bits_to_flip = Int(Float(self.gene_length) * self.mutate_proab)
+        
+        // flip
+        
+        for (index, _) in self.balls.enumerated(){
+            
+            for _ in 0..<bits_to_flip{
+                
+                let w_flip_point = Int.random(in: 0..<(self.gene_length))
+                let b_flip_point = Int.random(in: 0..<(self.gene_length))
+                let w_flip_value = Float.random(in: -1...1)
+                let b_flip_value = Float.random(in: -1...1)
+                
+                self.balls[index].weights[w_flip_point] = w_flip_value
+                self.balls[index].bias[b_flip_point] = b_flip_value
                 
             }
-            // collect for both
-            
-            
         }
+        
     }
     
     func sizeIndexMapping(value: Float) -> CGFloat {
@@ -139,13 +244,15 @@ class PageContentController: ObservableObject {
         
     }
     
+    func set_game_begin(){
+        self.isGameBegin = true
+    }
     
     
-    func setCountingDown() {
+    func counting_down_set_user_begin() {
         
         let timeToGo = TimeInterval(self.count_down)
         
-        self.isTapBegin = true
         DispatchQueue.main.async {
             self.bannerContent = "Counting down 3..."
             DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
@@ -153,16 +260,18 @@ class PageContentController: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
                     self.bannerContent = "Counting down 1..."
                     DispatchQueue.main.asyncAfter(deadline: .now() + timeToGo / 3) {
-                        self.isBegin = true
+                        self.isUserBegin = true
                     }
                 }
             }
         }
     }
-    func setGameOver(){
-        
+    func set_game_over_banner(){
         self.bannerContent = " Game Over \n touch to reset"
-        self.isBegin = false
-        self.isTapBegin = false
+    }
+    func set_game_over_flags(){
+        self.isGameOver = true
+        self.isUserBegin = false
+        self.isGameBegin = false
     }
 }
