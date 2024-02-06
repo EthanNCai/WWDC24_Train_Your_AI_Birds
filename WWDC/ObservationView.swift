@@ -21,7 +21,7 @@ struct ObservationView: View {
                             self.content_ctrl.isOnSetting = true
                         }
                         self.content_ctrl.deep_controller_reset()
-                        self.scene.game_scene_reset()
+                        self.scene.reset_everything()
                         
                         
                         

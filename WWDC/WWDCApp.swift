@@ -15,7 +15,7 @@ struct MyApp: App {
                 
         }
         .commands {
-            SidebarCommands() // 添加一些默认的侧边栏命令，例如“显示/隐藏侧边栏”
+            SidebarCommands() 
         }
     }
 }

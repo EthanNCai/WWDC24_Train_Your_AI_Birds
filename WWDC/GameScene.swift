@@ -43,6 +43,7 @@ class GameScene: SKScene{
     init(viewController: PageContentController) {
         self.content_ctrl = viewController
         super.init(size: viewController.size)
+        self.content_ctrl.ball_x_position = self.ballXPosition
     }
         
     required init?(coder aDecoder: NSCoder) {
@@ -65,9 +66,11 @@ class GameScene: SKScene{
         let colu = childNode(withName: "colu" + String(self.currently_focus))!
         if abs(colu.position.x - self.ballXPosition) < outed_tolerance {
             self.is_on_restricted_area = true
+            self.content_ctrl.is_on_restricted_area = true
         }else
         {
             self.is_on_restricted_area = false
+          
         }
         
     }
@@ -88,7 +91,7 @@ class GameScene: SKScene{
             
             // check for column
             
-            if self.is_on_restricted_area{
+            if self.is_on_restricted_area {
                 if self.currently_focus == 0{
                     return
                 }
@@ -254,8 +257,22 @@ class GameScene: SKScene{
         self.content_ctrl.isGameOver = true
         self.content_ctrl.set_game_over_flags()
         self.content_ctrl.set_game_over_banner()
-        self.content_ctrl.fetch_the_best_birds()
         
+    }
+    
+    func check_node_unique(){
+        
+        let ballset = Set(self.content_ctrl.balls)
+        assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "ball number error")
+        assert(ballset.count == self.content_ctrl.bird_number, "ball element repeated")
+        
+    }
+    
+    func print_node_obj_info(){
+        
+        for ball in self.content_ctrl.balls{
+            print(Unmanaged.passUnretained(ball.ball_node).toOpaque())
+        }
     }
     
     func jump_accordingly()
@@ -278,21 +295,29 @@ extension GameScene{
     func generate_balls_accordingly(){
         //print("hi")
         //print("child_num",self.children.count)
+        assert(self.content_ctrl.balls.count == 0 , "balls.count error: \(self.content_ctrl.balls.count)")
+        print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
             self.content_ctrl.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: i, ball_radius: 15.0, ball_color: .red))
             let ball_node = self.content_ctrl.balls[i].ball_node
-            
+            assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
         }
+        print("> children.count \(self.children.count)")
+        print("> balls.count \(self.content_ctrl.balls.count)")
         //print("child_num",self.children.count)
     }
     func join_balls_accordingly(){
         //print("hi")
         //print("child_num",self.children.count)
+        print("+ parent generated - bird child adding")
         for bird in self.content_ctrl.balls{
             let bird_node = bird.ball_node
+            assert(bird_node.parent == nil, "bird parent error")
             addChild(bird_node)
         }
+        print("> children.count \(self.children.count)")
+        print("> balls.count \(self.content_ctrl.balls.count)")
         //print("child_num",self.children.count)
     }
 }
@@ -301,25 +326,47 @@ extension GameScene{
 // MARK: - Utilities
 
 extension GameScene{
-    func game_scene_reset() {
+    func reset_everything() {
         
-        // indexs
+        // game scene clean
+        print("=====================================")
+        print("round \(self.content_ctrl.rounds_count)")
+        print("=====================================")
+        self.removeAllChildren()
         self.onscreen_cols.removeAll()
+        
+        
+        // index clean
         newest_col_index = 0
         colGeneratorTimer = 0.0
         gameTickTimer = 0.0
         
+        self.content_ctrl.controller_reset()
         
-        // node reset
-        self.removeAllChildren()
+        for birds in self.content_ctrl.balls{
+            assert(birds.ball_node.parent == nil, "bird parenting error")
+        }
+        assert(self.children.count == 0, "children state error")
+        
+        if self.content_ctrl.rounds_count > 1{
+            assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
+        }
+        
         makeBackgrounds()
         
-        if self.content_ctrl.isFirstRound{
-            self.generate_balls_accordingly()
-        }else
-        {
+        // regenerate children
+        if self.content_ctrl.rounds_count > 1{
             self.join_balls_accordingly()
+            
+        }else{
+            self.generate_balls_accordingly()
         }
+        //self.print_node_obj_info()
+        
+        // make sure there's n + 1 children
+        assert(self.content_ctrl.bird_number + 1 == self.children.count ,"children number error : \(self.children.count) children(s)")
+        // make sure there's n balls
+        assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
     }
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
@@ -341,6 +388,8 @@ extension GameScene{
         }
         
     }
+    
+    
 
 }
 
@@ -354,41 +403,53 @@ extension GameScene{
             UPDATES *Directed* by tick
          */
         let dt_sm = currentTime - self.colGeneratorTimer
-        if self.content_ctrl.isGameBegin && !self.content_ctrl.isGameOver{
+        if  !self.content_ctrl.isGameOver{
             
             /* sm-tick update*/
             if dt_sm >= self.gameTickInterval {
                 
-                // update col position
-                self.shiftColLeft()
+                if self.content_ctrl.isGameBegin{
+                    
+                    // update col position
+                    self.shiftColLeft()
+                    
+                }
                 
-                // update ball distance
-                self.updateBallDistScore()
+                if self.content_ctrl.isUserBegin{
+                    
+                    //
+                    //self.check_node_unique()
+                    
+                    
+                    // update ball distance
+                    self.updateBallDistScore()
+                    
+                    // update focus to *game scene*
+                    self.updateFocusIndex()
+                    
+                    // update distance to *ball matrics*
+                    self.updateColDistance()
+                    
+                    // update distance to *ball matrics*
+                    self.update_velocity()
+                    
+                    // check restricted zone
+                    self.checkRestrictedZone()
+                    
+                    // update is_active statu
+                    self.updateCollisionStatus()
+                    
+                    // update birds remaining
+                    self.content_ctrl.update_birds_remaining()
+                    
+                    // clean birds
+                    self.cleanOutedBirds()
+                    
+                    // check game over, find the best bird
+                    self.checkGameOver()
+                }
                 
-                // update focus to *game scene*
-                self.updateFocusIndex()
                 
-                // update distance to *ball matrics*
-                self.updateColDistance()
-                
-                // update distance to *ball matrics*
-                self.update_velocity()
-                
-                // check restricted zone
-                self.checkRestrictedZone()
-                
-                // update is_active statu
-                self.updateCollisionStatus()
-                
-                // clean birds
-                self.cleanOutedBirds()
-                
-                // check game over, find the best bird
-                self.checkGameOver()
-                
-                
-                
-                self.content_ctrl.dropout()
                 
                 // reset time
                 self.colGeneratorTimer = currentTime
@@ -423,24 +484,17 @@ extension GameScene{
         
         // any time you pressed Reset
         if self.content_ctrl.isReset{
-            self.content_ctrl.controller_reset()
-            game_scene_reset()
+            print("reset buttom start")
+            self.reset_everything()
         }
         
         // game is over & you opened Auto Loop
         if self.content_ctrl.isGameOver && !self.content_ctrl.isReset && self.content_ctrl.isLooped{
             
-            self.content_ctrl.isFirstRound = false
             
-            //reproduce logic
-            
-            self.content_ctrl.fetch_the_best_birds()
-            self.content_ctrl.reproduce()
-            self.content_ctrl.dropout()
-            
+            print("+ gameover start automatically")
             // reset logic
-            self.content_ctrl.controller_reset()                // controllet reset
-            self.game_scene_reset()                             // game scene reset (incl. generate stuffs)
+            self.reset_everything()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
             self.content_ctrl.set_game_begin()                  // game begin first
@@ -483,9 +537,10 @@ extension GameScene{
         // gameover start
         if self.content_ctrl.isGameOver && !self.content_ctrl.isLooped{
             
+            print("+ gameover start")
+            
             // reset logic
-            self.content_ctrl.controller_reset()                // controllet reset
-            self.game_scene_reset()                             // game scene reset (incl. generate stuffs)
+            self.reset_everything()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
             self.content_ctrl.set_game_begin()
@@ -500,9 +555,9 @@ extension GameScene{
         // general start, due to the lazy reset bug, reset needed here
             
             
+            print("+ general_starting")
             // reset logic
-            self.content_ctrl.controller_reset()                // controllet reset
-            self.game_scene_reset()                             // game scene reset (incl. generate stuffs)
+            self.reset_everything()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
             self.content_ctrl.set_game_begin()                  // game begin first

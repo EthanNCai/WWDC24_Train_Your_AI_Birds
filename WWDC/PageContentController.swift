@@ -25,6 +25,7 @@ class PageContentController: ObservableObject {
     @Published var current_focus:Int = 0
     @Published var distance_u:Float = 0.123
     @Published var distance_d:Float = 0.123
+    @Published var is_on_restricted_area = false
     
     //Retrive for GAME SCENE
     @Published var ui_bird_number: Int = 10
@@ -42,10 +43,10 @@ class PageContentController: ObservableObject {
     var mutate_proab: Float = 0.0
     let gene_length: Int = 10
     
-    var isFirstRound: Bool = true
     
     //
     var isLooped: Bool = false
+    var ball_x_position: CGFloat = -1
     
     // bird
     @Published var jump_prob: Float = -1
@@ -60,6 +61,7 @@ class PageContentController: ObservableObject {
     // training
     @Published var best_balls:[Ball] = []
     @Published var rounds_count: Int = 0
+    
     
     let count_down: Float = 2.0
     
@@ -96,15 +98,21 @@ class PageContentController: ObservableObject {
     func controller_reset() {
         
         // reset don't incluede the setting reset
+        if self.rounds_count >= 1 {
+            print("+ fetching best birds")
+            self.fetch_the_best_birds()
+            self.balls.removeAll()
+            print("+ reproducing")
+            self.reproduce()
+            self.dropout()
+        }
         self.rounds_count += 1
         isReset = false
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        if isFirstRound{
-            balls.removeAll()
-        }
         bannerContent = "~ Tap to begin ~"
+        
     
     }
     func deep_controller_reset() {
@@ -116,13 +124,13 @@ class PageContentController: ObservableObject {
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        balls.removeAll()
         isOnSetting = true
         bannerContent = "~ Tap to begin ~"
     
     }
     
     func fetch_the_best_birds(){
+        assert(self.balls.count == self.bird_number, "balls array number error: \(self.balls.count)")
         self.best_balls.removeAll()
         let sortedBalls = self.balls.sorted { $0.distance_score > $1.distance_score }
         let count = min(self.best_bird_needed, sortedBalls.count)
@@ -134,13 +142,12 @@ class PageContentController: ObservableObject {
     
     func reproduce(){
         
-        
         var bird_a_w: Ball
         var bird_b_w: Ball
         var bird_a_b: Ball
         var bird_b_b: Ball
         
-        self.balls.removeAll()
+        
         while self.balls.count < self.bird_number{
             
             // select 2 parent for weights
@@ -150,14 +157,14 @@ class PageContentController: ObservableObject {
             repeat {
                 bird_a_w = self.best_balls.randomElement()!
                 bird_b_w = self.best_balls.randomElement()!
-            } while bird_a_w.ball_index == bird_b_w.ball_index
+            } while bird_a_w.id == bird_b_w.id
             
             // select 2 parent for bias
             
             repeat {
                 bird_a_b = self.best_balls.randomElement()!
                 bird_b_b = self.best_balls.randomElement()!
-            } while bird_a_b.ball_index == bird_b_b.ball_index
+            } while bird_a_b.id == bird_b_b.id
             
             // generate new gene segment
             
@@ -178,10 +185,18 @@ class PageContentController: ObservableObject {
             assert(new_bias.count == self.gene_length,"new bias length check")
             
             // make new ball (inherit everything except gene)
-            var new_ball = bird_a_w
+            
+            var new_ball = Ball(x: self.ball_x_position, y: self.size.height/2, ball_index: -1, ball_radius: 15.0, ball_color: .red)
             new_ball.weights = new_weights
             new_ball.bias = new_weights
             self.balls.append(new_ball)
+            
+        }
+
+        assert(self.balls.count == self.bird_number, "reproduced number incorrect: \(self.balls.count)")
+        
+        for bird in self.balls{
+            assert(bird.ball_node.parent == nil, "bird parenting error")
         }
         
     }
@@ -273,5 +288,12 @@ class PageContentController: ObservableObject {
         self.isGameOver = true
         self.isUserBegin = false
         self.isGameBegin = false
+    }
+    
+    
+    func manuallyChildRemoving(){
+        for ball in self.balls{
+            ball.ball_node.removeFromParent()
+        }
     }
 }

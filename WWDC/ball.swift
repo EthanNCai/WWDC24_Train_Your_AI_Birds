@@ -8,7 +8,7 @@ import SpriteKit
 import SwiftUI
 
 
-struct Ball:Identifiable{
+struct Ball:Identifiable, Hashable{
     
     var id = UUID()
 
