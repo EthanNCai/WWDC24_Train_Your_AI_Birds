@@ -18,6 +18,7 @@ struct Ball:Identifiable, Hashable{
     var ball_node:SKSpriteNode
     var ball_index:Int
     var distance_score:Float = 0
+    var fitness_score:Int = 0
     var isActive:Bool = true
     
     
@@ -83,7 +84,7 @@ struct Ball:Identifiable, Hashable{
         //softmax
         let (jump_softmax, not_jump_softmax) = (exp(jump) / (exp(jump) + exp(not_jump)), exp(not_jump) / (exp(jump) + exp(not_jump)))
         
-        if jump_softmax > not_jump_softmax{
+        if jump_softmax > not_jump_softmax && jump_softmax > 0.7{
             return true
         }else{
             return false
@@ -116,7 +117,7 @@ struct Ball:Identifiable, Hashable{
     
     func jump(){
         if self.isActive{
-            let upage = CGFloat(Float.random(in:8...10))
+            let upage = CGFloat(Float.random(in:9...10))
             self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: upage))
         }
     }

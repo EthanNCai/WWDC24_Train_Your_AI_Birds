@@ -137,6 +137,28 @@ class GameScene: SKScene{
         }
         
     }
+    func update_ball_fitness_score(){
+        for (index, ball) in self.content_ctrl.balls.enumerated(){
+            if ball.isActive {
+            
+                let current_height = ball.ball_node.position.y
+                if self.currently_focus == 0{
+                    return
+                }
+                let colu = childNode(withName: "colu" + String(self.currently_focus))!
+                let col_upper_bounds = colu.position.y
+                let col_lower_bounds = col_upper_bounds - self.size.height * self.difficulty_index
+                
+                if current_height < col_lower_bounds || current_height > col_upper_bounds{
+                    continue
+                }else{
+                    
+                    self.content_ctrl.balls[index].fitness_score += 1
+                }
+            }
+        }
+        
+    }
     
     func shiftColLeft() {
 
@@ -314,7 +336,8 @@ extension GameScene{
         assert(self.content_ctrl.balls.count == 0 , "balls.count error: \(self.content_ctrl.balls.count)")
         print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
-            self.content_ctrl.balls.append(Ball(x: 100, y: self.size.height/2, ball_index: -1, ball_radius: 15.0, ball_color: .red))
+            let rand_y_pos = Float.random(in: 0.1...0.9)
+            self.content_ctrl.balls.append(Ball(x: 100, y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red))
             let ball_node = self.content_ctrl.balls[i].ball_node
             assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
@@ -356,6 +379,7 @@ extension GameScene{
         newest_col_index = 0
         colGeneratorTimer = 0.0
         gameTickTimer = 0.0
+        self.currently_focus = 0
         
         self.content_ctrl.controller_reset()
         
@@ -439,6 +463,8 @@ extension GameScene{
                     
                     // update ball distance
                     self.updateBallDistScore()
+                    
+                    self.update_ball_fitness_score()
                     
                     // update focus to *game scene*
                     self.updateFocusIndex()

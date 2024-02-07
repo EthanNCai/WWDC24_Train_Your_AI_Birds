@@ -57,6 +57,7 @@ class PageContentController: ObservableObject {
     @Published var parallel_balls: Int = 1
     @Published var ball_remaining:Int = 1
     @Published var best_distance:Float = 0
+    @Published var best_fitneass:Int = 0
     @Published var focus: Int = 0
     
     // training
@@ -133,12 +134,12 @@ class PageContentController: ObservableObject {
     func fetch_the_best_birds(){
         assert(self.balls.count == self.bird_number, "balls array number error: \(self.balls.count)")
         self.best_balls.removeAll()
-        let sortedBalls = self.balls.sorted { $0.distance_score > $1.distance_score }
+        let sortedBalls = self.balls.sorted { $0.fitness_score > $1.fitness_score }
         let count = min(self.best_bird_needed, sortedBalls.count)
         for i in 0..<count {
            self.best_balls.append(sortedBalls[i])
         }
-        self.best_distance = sortedBalls[0].distance_score
+        self.best_fitneass = sortedBalls[0].fitness_score
     }
     
     func reproduce(){
@@ -172,7 +173,6 @@ class PageContentController: ObservableObject {
             let w_break_point = Int.random(in: 1..<(self.gene_length-1))
             let b_break_point = Int.random(in: 1..<(self.gene_length-1))
             
-            assert(bird_a_b.weights.count == self.gene_length,"gene length check")
             
             /*
                 Index range     ->  0 1 2 ... 9
@@ -182,12 +182,10 @@ class PageContentController: ObservableObject {
             let new_weights = Array(bird_a_w.weights.prefix(w_break_point) + bird_b_w.weights.suffix(from: w_break_point))
             let new_bias = Array(bird_a_b.weights.prefix(b_break_point) + bird_b_b.weights.suffix(from: b_break_point))
             
-            assert(new_weights.count == self.gene_length,"new weights length check")
-            assert(new_bias.count == self.gene_length,"new bias length check")
             
             // make new ball (inherit everything except gene)
-            
-            var new_ball = Ball(x: 100, y: self.size.height/2, ball_index: -1, ball_radius: 15.0, ball_color: .red)
+            let rand_y_pos = Float.random(in: 0.1...0.9)
+            var new_ball = Ball(x: 100, y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red)
             new_ball.weights = new_weights
             new_ball.bias = new_weights
             self.balls.append(new_ball)
