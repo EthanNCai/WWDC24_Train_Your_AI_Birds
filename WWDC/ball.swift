@@ -44,6 +44,15 @@ struct Ball:Identifiable, Hashable{
         self.bias = (0..<10).map { _ in Float.random(in: -1...1) }
         
     }
+    
+    mutating func clone_node(){
+        
+        let cloned_ball = SKSpriteNode(imageNamed: "bird")
+        cloned_ball.scale(to: CGSize(width: 38, height: 38))
+        cloned_ball.position = self.ball_node.position
+        self.ball_node = cloned_ball
+        
+    }
      
     
     func get_dicision_is_jump(scene_size: CGSize) -> Bool{
@@ -58,23 +67,23 @@ struct Ball:Identifiable, Hashable{
         let norm_velocity = self.normalization(self.distance_top, lowerLimit: -500, upperLimit: 500)
         
         //relu + linear
-        jump += max(0.0, (norm_distance_d * self.weights[0] + self.bias[0]))
-        jump += max(0.0, (norm_distance_u * self.weights[1] + self.bias[1]))
-        jump += max(0.0, (norm_distance_top * self.weights[2] + self.bias[2]))
-        jump += max(0.0, (norm_distance_bottom * self.weights[3] + self.bias[3]))
-        jump += max(0.0, (norm_velocity * self.weights[4] + self.bias[4]))
+        jump += (norm_distance_d * self.weights[0] + self.bias[0])
+        jump += (norm_distance_u * self.weights[1] + self.bias[1])
+        jump += (norm_distance_top * self.weights[2] + self.bias[2])
+        jump += (norm_distance_bottom * self.weights[3] + self.bias[3])
+        jump += (norm_velocity * self.weights[4] + self.bias[4])
         
         //relu + linear
-        not_jump += max(0.0, (norm_distance_d * self.weights[5] + self.bias[5]))
-        not_jump += max(0.0, (norm_distance_u * self.weights[6] + self.bias[6]))
-        not_jump += max(0.0, (norm_distance_top * self.weights[7] + self.bias[7]))
-        not_jump += max(0.0, (norm_distance_bottom * self.weights[8] + self.bias[8]))
-        not_jump += max(0.0, (norm_velocity * self.weights[9] + self.bias[9]))
+        not_jump += (norm_distance_d * self.weights[5] + self.bias[5])
+        not_jump += (norm_distance_u * self.weights[6] + self.bias[6])
+        not_jump += (norm_distance_top * self.weights[7] + self.bias[7])
+        not_jump += (norm_distance_bottom * self.weights[8] + self.bias[8])
+        not_jump += (norm_velocity * self.weights[9] + self.bias[9])
         
         //softmax
         let (jump_softmax, not_jump_softmax) = (exp(jump) / (exp(jump) + exp(not_jump)), exp(not_jump) / (exp(jump) + exp(not_jump)))
         
-        if jump_softmax > not_jump_softmax && jump_softmax > 0.7{
+        if jump_softmax > not_jump_softmax{
             return true
         }else{
             return false
@@ -107,7 +116,7 @@ struct Ball:Identifiable, Hashable{
     
     func jump(){
         if self.isActive{
-            let upage = CGFloat(Float.random(in:9...11))
+            let upage = CGFloat(Float.random(in:8...10))
             self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: upage))
         }
     }

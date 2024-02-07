@@ -57,6 +57,7 @@ class PageContentController: ObservableObject {
     @Published var parallel_balls: Int = 1
     @Published var ball_remaining:Int = 1
     @Published var best_distance:Float = 0
+    @Published var focus: Int = 0
     
     // training
     @Published var best_balls:[Ball] = []
@@ -186,7 +187,7 @@ class PageContentController: ObservableObject {
             
             // make new ball (inherit everything except gene)
             
-            var new_ball = Ball(x: self.ball_x_position, y: self.size.height/2, ball_index: -1, ball_radius: 15.0, ball_color: .red)
+            var new_ball = Ball(x: 100, y: self.size.height/2, ball_index: -1, ball_radius: 15.0, ball_color: .red)
             new_ball.weights = new_weights
             new_ball.bias = new_weights
             self.balls.append(new_ball)

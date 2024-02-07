@@ -21,7 +21,7 @@ class GameScene: SKScene{
     var jmpTimeInterval: Double = 0.2
     var gameTickInterval: Double = 0.02
     var ballRadius:CGFloat = 15.0
-    var outed_tolerance: CGFloat = 5
+    var outed_tolerance: CGFloat = 8
     var colDistanceInterval: CGFloat {
         
         return CGFloat((colTimeInterval / gameTickInterval) * speed_index) * self.size.width
@@ -54,7 +54,6 @@ class GameScene: SKScene{
         
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
         makeBackgrounds()
-
         
     }
     
@@ -70,23 +69,32 @@ class GameScene: SKScene{
         }else
         {
             self.is_on_restricted_area = false
-          
         }
         
     }
     
     
-    func updateCollisionStatus() {
+    func remove_collide_balls() {
         for (index, ball) in self.content_ctrl.balls.enumerated(){
+            
+            if !ball.isActive{
+                continue
+            }
             
             // check for cell and floor
             
+            
             let y = ball.ball_node.position.y
+            
             let y_lower_boundary = 0 + ball.ballRadius + outed_tolerance
             let y_higher_boundary = self.size.height - ball.ballRadius - outed_tolerance
             
             if y < y_lower_boundary || y > y_higher_boundary{
                 self.content_ctrl.balls[index].isActive = false
+                let scaleAction = SKAction.scale(to: 0.0, duration: 0.2)
+                let removeAction = SKAction.removeFromParent()
+                let sequence = SKAction.sequence([scaleAction, removeAction])
+                ball.ball_node.run(sequence)
             }
             
             // check for column
@@ -101,8 +109,15 @@ class GameScene: SKScene{
                 
                 if y < col_lower_bounds || y > col_upper_bounds{
                     self.content_ctrl.balls[index].isActive = false
+                    let scaleAction = SKAction.scale(to: 0.0, duration: 0.2)
+                    let removeAction = SKAction.removeFromParent()
+                    assert(self.is_on_restricted_area == true, "removing objects our of restricted area")
+                    let sequence = SKAction.sequence([scaleAction, removeAction])
+                    ball.ball_node.run(sequence)
                 }
             }
+            
+            
         }
     }
     
@@ -237,10 +252,11 @@ class GameScene: SKScene{
     func cleanOutedBirds() {
         
         for (_, ball) in self.content_ctrl.balls.enumerated(){
-            if !self.content_ctrl.balls.isEmpty && !ball.isActive && ball.ball_node.parent != nil{
+            if !ball.isActive && ball.ball_node.parent != nil{
                 let ball_node = ball.ball_node
                 let scaleAction = SKAction.scale(to: 0.0, duration: 0.2)
                 let removeAction = SKAction.removeFromParent()
+                assert(self.is_on_restricted_area == true, "removing objects our of restricted area")
                 let sequence = SKAction.sequence([scaleAction, removeAction])
                 ball_node.run(sequence)
             }
@@ -298,7 +314,7 @@ extension GameScene{
         assert(self.content_ctrl.balls.count == 0 , "balls.count error: \(self.content_ctrl.balls.count)")
         print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
-            self.content_ctrl.balls.append(Ball(x: self.ballXPosition, y: self.size.height/2, ball_index: i, ball_radius: 15.0, ball_color: .red))
+            self.content_ctrl.balls.append(Ball(x: 100, y: self.size.height/2, ball_index: -1, ball_radius: 15.0, ball_color: .red))
             let ball_node = self.content_ctrl.balls[i].ball_node
             assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
@@ -437,13 +453,13 @@ extension GameScene{
                     self.checkRestrictedZone()
                     
                     // update is_active statu
-                    self.updateCollisionStatus()
+                    self.remove_collide_balls()
                     
                     // update birds remaining
-                    self.content_ctrl.update_birds_remaining()
+                    //self.content_ctrl.update_birds_remaining()
                     
                     // clean birds
-                    self.cleanOutedBirds()
+                    //self.cleanOutedBirds()
                     
                     // check game over, find the best bird
                     self.checkGameOver()

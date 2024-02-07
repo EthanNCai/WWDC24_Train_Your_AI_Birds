@@ -104,7 +104,8 @@ struct GameView: View {
                             Text("isGameOver -> " + (self.content_ctrl.isGameOver ? "true" : "false"))
                             Text("isLooped -> " + (self.content_ctrl.isLooped ? "true" : "false"))
                             Text("isReset -> " + (self.content_ctrl.isReset ? "true" : "false"))
-                            Text("Restricted_area ->" + (self.scene.is_on_restricted_area ? "true" : "false"))
+                            Text("Restricted_area ->" + (self.content_ctrl.is_on_restricted_area ? "true" : "false"))
+                            Text("Focus ->" + (self.content_ctrl.is_on_restricted_area ? "true" : "false"))
                         }
                         .padding()
                         .background(.gray.opacity(0.2))
