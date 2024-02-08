@@ -70,16 +70,18 @@ struct Ball:Identifiable, Hashable{
         
         let norm_distance_d =  self.normalization(self.distance_d, lowerLimit: 0, upperLimit: Float(scene_size.height))
         let norm_distance_u = self.normalization(self.distance_u, lowerLimit: 0, upperLimit: Float(scene_size.height))
-        let norm_velocity = self.normalization(self.velocity, lowerLimit: -350, upperLimit: 350)
+        let norm_velocity = self.normalization(self.velocity, lowerLimit: -330, upperLimit: 330)
         
-        let input_tensor:[Float] = [norm_distance_d,norm_distance_u,norm_velocity]
+        let input_tensor:[Float] = Array([norm_distance_d,norm_distance_u,norm_velocity])
+        
         print("==Begin==")
+        print(self.id)
         print(input_tensor)
         let result = self.mlp.forward(input: input_tensor)
-        
+        print(result)
         let jump_softmax = result[0]
         let not_jump_softmax = result[1]
-        print(result)
+        
         print("==END==")
         if jump_softmax > not_jump_softmax {
             return true
@@ -114,8 +116,7 @@ struct Ball:Identifiable, Hashable{
     
     func jump(){
         if self.isActive{
-            let upage = CGFloat(Float.random(in:20...22))
-            self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: upage))
+            self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 35))
         }
     }
     

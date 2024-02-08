@@ -1,6 +1,6 @@
 import Foundation
 
-struct SimpleNeuralNetwork: Hashable{
+struct SimpleNeuralNetwork:Hashable{
     
     let input_len = 3
     let output_len = 2
@@ -29,11 +29,10 @@ struct SimpleNeuralNetwork: Hashable{
         self.b2_len = self.output_len
         
         // ramdom initialize weights and bias
-        self.weights_layer1 = (0..<w1_len).map { _ in Float.random(in: -1...1) }
-        self.weights_layer2 = (0..<w2_len).map { _ in Float.random(in: -1...1) }
-        self.bias_layer1 = (0..<b1_len).map { _ in Float.random(in: -1...1) }
-        self.bias_layer2 = (0..<b2_len).map { _ in Float.random(in: -1...1) }
-        
+        self.weights_layer1 = (0..<w1_len).map { _ in Float.random(in: -5...5) }
+        self.weights_layer2 = (0..<w2_len).map { _ in Float.random(in: -5...5) }
+        self.bias_layer1 = (0..<b1_len).map { _ in Float.random(in: 0...0.1) }
+        self.bias_layer2 = (0..<b2_len).map { _ in Float.random(in: 0...0.1) }
         
     }
     
@@ -50,27 +49,29 @@ struct SimpleNeuralNetwork: Hashable{
         self.b2_len = self.output_len
     }
     
-    func feed_forward1(input_tensor: [Float]) -> [Float] {
-        var hidden_tensor: [Float] = Array(repeating: 0, count: self.hidden_len)
-        let input_copy = Array(input_tensor) // 深拷贝输入参数
-        assert(input_copy.count == self.input_len, "input len incorrect expected \(self.input_len), but got \(input_copy.count)")
-        for hidden_index in 0..<self.hidden_len {
-            for input_index in 0..<self.input_len {
-                let weight_index = hidden_index * input_len + input_index
-                hidden_tensor[hidden_index] = self.weights_layer1[weight_index] * input_copy[input_index] + self.bias_layer1[hidden_index]
+    func feed_forward1(input_tensor:[Float])->[Float]{
+        
+        assert(input_tensor.count == self.input_len, "input len incorrect expected\(self.input_len), but got \(input_tensor.count)")
+        let input_tensor = Array(input_tensor)
+        var hidden_tensor:[Float] = Array(repeating: 0, count: self.hidden_len)
+        for input_index in 0..<self.input_len{
+            for hidden_index in 0..<self.hidden_len{
+                let weight_index = input_index * self.hidden_len + hidden_index
+                hidden_tensor[hidden_index] += (self.weights_layer1[weight_index] * input_tensor[input_index] + self.bias_layer1[hidden_index])
             }
         }
+
         return hidden_tensor
     }
-
-    func feed_forward2(hidden_tensor: [Float]) -> [Float] {
-        assert(hidden_tensor.count == self.hidden_len, "input len incorrect expected \(self.hidden_len), but got \(hidden_tensor.count)")
-        var output_tensor: [Float] = Array(repeating: 0, count: self.output_len)
-        let hidden_copy = Array(hidden_tensor) // 深拷贝隐藏层参数
-        for output_index in 0..<self.output_len {
-            for hidden_index in 0..<self.hidden_len {
-                let weight_index = output_index * input_len + hidden_index
-                output_tensor[output_index] = self.weights_layer2[weight_index] * hidden_copy[hidden_index] + self.bias_layer1[output_index]
+    
+    func feed_forward2(hidden_tensor:[Float])->[Float]{
+        assert(hidden_tensor.count == self.hidden_len, "input len incorrect expected\(self.hidden_len), but got \(hidden_tensor.count)")
+        let hidden_tensor = Array(hidden_tensor)
+        var output_tensor:[Float] = Array(repeating: 0, count: self.output_len)
+        for hidden_index in 0..<self.hidden_len{
+            for output_index in 0..<self.output_len{
+                let weight_index = hidden_index * self.output_len + output_index
+                output_tensor[output_index] += (self.weights_layer2[weight_index] * hidden_tensor[hidden_index] + self.bias_layer2[output_index])
             }
         }
         return output_tensor
@@ -99,47 +100,6 @@ struct SimpleNeuralNetwork: Hashable{
         let x3 = self.feed_forward2(hidden_tensor: x2)
         let x4 = self.softmax(input_tensor: x3)
         return x4
-    }
-    
-    func peek_weight() {
-        let maxCount = 10
-        print("+ NeuralNetwork Begin")
-        print("weights_layer1:")
-        for weight in self.weights_layer1.prefix(maxCount) {
-            print(weight, terminator: " ")
-            print("")
-        }
-        if self.weights_layer1.count > maxCount {
-            print("...and \(self.weights_layer1.count - maxCount) more")
-        }
-        
-        print("weights_layer2:")
-        for weight in self.weights_layer2.prefix(maxCount) {
-            print(weight, terminator: " ")
-            print("")
-        }
-        if self.weights_layer2.count > maxCount {
-            print("...and \(self.weights_layer2.count - maxCount) more")
-        }
-        
-        print("bias_layer1:")
-        for bias in self.bias_layer1.prefix(maxCount) {
-            print(bias, terminator: " ")
-            print("")
-        }
-        if self.bias_layer1.count > maxCount {
-            print("...and \(self.bias_layer1.count - maxCount) more")
-        }
-        
-        print("bias_layer2:")
-        for bias in self.bias_layer2.prefix(maxCount) {
-            print(bias, terminator: " ")
-            print("")
-        }
-        if self.bias_layer2.count > maxCount {
-            print("...and \(self.bias_layer2.count - maxCount) more")
-        }
-        print("+ NeuralNetwork End")
     }
     
 }

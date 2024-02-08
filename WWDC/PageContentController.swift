@@ -146,10 +146,14 @@ class PageContentController: ObservableObject {
         
         //save
         for best_ball in self.best_balls{
-            let rand_y_pos = Float.random(in: 0.1...0.9)
-            let new_ball = Ball(x: CGFloat(50), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: best_ball.mlp)
+            let rand_y_pos = Float.random(in: 0.3...0.7)
+            let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: best_ball.mlp)
             self.balls.append(new_ball)
         }
+        
+        let rand_y_pos = Float.random(in: 0.3...0.7)
+        let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red)
+        self.balls.append(new_ball)
         
         
         
@@ -168,8 +172,8 @@ class PageContentController: ObservableObject {
             
             
             repeat {
-                bird_parent_a = self.balls.randomElement()!
-                bird_parent_b = self.balls.randomElement()!
+                bird_parent_a = self.best_balls.randomElement()!
+                bird_parent_b = self.best_balls.randomElement()!
             } while bird_parent_a == bird_parent_b
             
             // select 2 parent for bias
@@ -177,8 +181,8 @@ class PageContentController: ObservableObject {
             
             let nn_new = NNBreader.weight_fusion(nn1: bird_parent_a.mlp, nn2: bird_parent_b.mlp, mutate_probability: self.mutate_proab)
             
-            let rand_y_pos = Float.random(in: 0.1...0.9)
-            var new_ball = Ball(x: CGFloat(50), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: nn_new)
+            let rand_y_pos = Float.random(in: 0.3...0.7)
+            let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: nn_new)
             self.balls.append(new_ball)
             
             /*

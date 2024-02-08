@@ -15,10 +15,10 @@ class GameScene: SKScene{
     @ObservedObject var content_ctrl: PageContentController
     
     //  hyper-params
-    var difficulty_index: CGFloat = 0.25
+    var difficulty_index: CGFloat = 0.35
     var speed_index: CGFloat = 0.005
     var colTimeInterval: Double = 3.0
-    var jmpTimeInterval: Double = 0.02
+    var jmpTimeInterval: Double = 0.2
     var gameTickInterval: Double = 0.02
     var ballRadius:CGFloat = 15.0
     var outed_tolerance: CGFloat = 8
@@ -27,7 +27,7 @@ class GameScene: SKScene{
         return CGFloat((colTimeInterval / gameTickInterval) * speed_index) * self.size.width
     }
     var ballXPosition: CGFloat {
-        return self.size.width*(1/5)
+        100
     }
     
     // on-going variables
@@ -230,7 +230,7 @@ class GameScene: SKScene{
         for col_index in self.onscreen_cols{
             let col_name = "cold" + String(col_index)
             let col_node = self.childNode(withName: col_name)!
-            if col_node.position.x > CGFloat(50){
+            if col_node.position.x > CGFloat(100){
                 self.currently_focus =  col_index
                 self.content_ctrl.current_focus = col_index
                 return
@@ -316,7 +316,27 @@ class GameScene: SKScene{
     func jump_accordingly()
     {
         
+        
+        
         for (index, ball) in self.content_ctrl.balls.enumerated(){
+            
+//            let rand = Int.random(in: 0...1)
+//            if rand == 1{
+//                ball.jump()
+//            }
+            
+            if ball.isActive && ball.get_dicision_is_jump(scene_size: self.size)
+            {
+                ball.jump()
+            }
+            
+            if ball.ball_node.physicsBody!.velocity.dy > CGFloat(330){
+                self.content_ctrl.balls[index].ball_node.physicsBody?.velocity.dy = CGFloat(330)
+            }else if ball.ball_node.physicsBody!.velocity.dy < CGFloat(-330){
+                self.content_ctrl.balls[index].ball_node.physicsBody?.velocity.dy = CGFloat(-330)
+            }
+            
+            /*
             if ball.isActive && ball.get_dicision_is_jump(scene_size: self.size)
             {
                 ball.jump()
@@ -326,6 +346,7 @@ class GameScene: SKScene{
             }else if ball.ball_node.physicsBody!.velocity.dy < CGFloat(-250){
                 self.content_ctrl.balls[index].ball_node.physicsBody?.velocity.dy = CGFloat(-350)
             }
+             */
         }
         
     }
@@ -341,8 +362,8 @@ extension GameScene{
         assert(self.content_ctrl.balls.count == 0 , "balls.count error: \(self.content_ctrl.balls.count)")
         print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
-            let rand_y_pos = Float.random(in: 0.1...0.9)
-            self.content_ctrl.balls.append(Ball(x: CGFloat(50), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red))
+            let rand_y_pos = Float.random(in: 0.3...0.7)
+            self.content_ctrl.balls.append(Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red))
             let ball_node = self.content_ctrl.balls[i].ball_node
             assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
