@@ -1,6 +1,6 @@
 import Foundation
 
-struct SimpleNeuralNetwork{
+struct SimpleNeuralNetwork: Hashable{
     
     let input_len = 3
     let output_len = 2
@@ -50,25 +50,27 @@ struct SimpleNeuralNetwork{
         self.b2_len = self.output_len
     }
     
-    func feed_forward1(input_tensor:[Float])->[Float]{
-        var hidden_tensor:[Float] = Array(repeating: 0, count: self.hidden_len)
-        assert(input_tensor.count == self.input_len, "input len incorrect expected\(self.input_len), but got \(input_tensor.count)")
-        for hidden_index in 0..<self.hidden_len{
-            for input_index in 0..<self.input_len{
+    func feed_forward1(input_tensor: [Float]) -> [Float] {
+        var hidden_tensor: [Float] = Array(repeating: 0, count: self.hidden_len)
+        let input_copy = Array(input_tensor) // 深拷贝输入参数
+        assert(input_copy.count == self.input_len, "input len incorrect expected \(self.input_len), but got \(input_copy.count)")
+        for hidden_index in 0..<self.hidden_len {
+            for input_index in 0..<self.input_len {
                 let weight_index = hidden_index * input_len + input_index
-                hidden_tensor[hidden_index] = self.weights_layer1[weight_index] * input_tensor[input_index] + self.bias_layer1[hidden_index]
+                hidden_tensor[hidden_index] = self.weights_layer1[weight_index] * input_copy[input_index] + self.bias_layer1[hidden_index]
             }
         }
         return hidden_tensor
     }
-    
-    func feed_forward2(hidden_tensor:[Float])->[Float]{
-        assert(hidden_tensor.count == self.hidden_len, "input len incorrect expected\(self.hidden_len), but got \(hidden_tensor.count)")
-        var output_tensor:[Float] = Array(repeating: 0, count: self.output_len)
-        for output_index in 0..<self.output_len{
-            for hidden_index in 0..<self.hidden_len{
+
+    func feed_forward2(hidden_tensor: [Float]) -> [Float] {
+        assert(hidden_tensor.count == self.hidden_len, "input len incorrect expected \(self.hidden_len), but got \(hidden_tensor.count)")
+        var output_tensor: [Float] = Array(repeating: 0, count: self.output_len)
+        let hidden_copy = Array(hidden_tensor) // 深拷贝隐藏层参数
+        for output_index in 0..<self.output_len {
+            for hidden_index in 0..<self.hidden_len {
                 let weight_index = output_index * input_len + hidden_index
-                output_tensor[output_index] = self.weights_layer2[weight_index] * hidden_tensor[hidden_index] + self.bias_layer1[output_index]
+                output_tensor[output_index] = self.weights_layer2[weight_index] * hidden_copy[hidden_index] + self.bias_layer1[output_index]
             }
         }
         return output_tensor
@@ -90,14 +92,13 @@ struct SimpleNeuralNetwork{
         return output_tensor
     }
     
-    func forward(){
-        
-        let input:[Float] = [1,2,3]
+    func forward(input: [Float]) -> [Float]{
+    
         let x1 = self.feed_forward1(input_tensor: input)
         let x2 = self.ReLU(input_tensor: x1)
         let x3 = self.feed_forward2(hidden_tensor: x2)
         let x4 = self.softmax(input_tensor: x3)
-        print(x4)
+        return x4
     }
     
     func peek_weight() {

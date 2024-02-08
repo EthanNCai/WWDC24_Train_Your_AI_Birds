@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct Ball:Identifiable, Hashable{
-    
+ 
     var id = UUID()
 
     
@@ -29,8 +29,7 @@ struct Ball:Identifiable, Hashable{
     var distance_bottom:Float = 0.0
     var velocity:Float = 0.0
     
-    var weights:[Float]
-    var bias:[Float]
+    var mlp:SimpleNeuralNetwork
     
     init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color) {
         
@@ -41,8 +40,19 @@ struct Ball:Identifiable, Hashable{
         self.ball_node.position = CGPoint(x: x, y: y)
         self.ball_node.name = "ball" + String(ball_index)
         self.ball_node.color = NSColor(ball_color)
-        self.weights = (0..<10).map { _ in Float.random(in: -1...1) }
-        self.bias = (0..<10).map { _ in Float.random(in: -1...1) }
+        self.mlp = SimpleNeuralNetwork(hidden_layer_len: 18)
+        
+    }
+    init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color, mlp: SimpleNeuralNetwork) {
+        
+        self.ballRadius = CGFloat(ball_radius)
+        self.ball_node = SKSpriteNode(imageNamed: "bird")
+        self.ball_node.scale(to: CGSize(width: 38, height: 38))
+        self.ball_index = ball_index
+        self.ball_node.position = CGPoint(x: x, y: y)
+        self.ball_node.name = "ball" + String(ball_index)
+        self.ball_node.color = NSColor(ball_color)
+        self.mlp = mlp
         
     }
     
@@ -58,40 +68,27 @@ struct Ball:Identifiable, Hashable{
     
     func get_dicision_is_jump(scene_size: CGSize) -> Bool{
         
-        var jump: Float = 0
-        var not_jump: Float = 0
-        
         let norm_distance_d =  self.normalization(self.distance_d, lowerLimit: 0, upperLimit: Float(scene_size.height))
         let norm_distance_u = self.normalization(self.distance_u, lowerLimit: 0, upperLimit: Float(scene_size.height))
-        let norm_distance_top = self.normalization(self.distance_top, lowerLimit: 0, upperLimit: Float(scene_size.height))
-        let norm_distance_bottom = self.normalization(self.distance_bottom, lowerLimit: 0, upperLimit: Float(scene_size.height))
-        let norm_velocity = self.normalization(self.distance_top, lowerLimit: -500, upperLimit: 500)
+        let norm_velocity = self.normalization(self.velocity, lowerLimit: -350, upperLimit: 350)
         
-        //relu + linear
-        jump += (norm_distance_d * self.weights[0] + self.bias[0])
-        jump += (norm_distance_u * self.weights[1] + self.bias[1])
-        jump += (norm_distance_top * self.weights[2] + self.bias[2])
-        jump += (norm_distance_bottom * self.weights[3] + self.bias[3])
-        jump += (norm_velocity * self.weights[4] + self.bias[4])
+        let input_tensor:[Float] = [norm_distance_d,norm_distance_u,norm_velocity]
+        print("==Begin==")
+        print(input_tensor)
+        let result = self.mlp.forward(input: input_tensor)
         
-        //relu + linear
-        not_jump += (norm_distance_d * self.weights[5] + self.bias[5])
-        not_jump += (norm_distance_u * self.weights[6] + self.bias[6])
-        not_jump += (norm_distance_top * self.weights[7] + self.bias[7])
-        not_jump += (norm_distance_bottom * self.weights[8] + self.bias[8])
-        not_jump += (norm_velocity * self.weights[9] + self.bias[9])
-        
-        //softmax
-        let (jump_softmax, not_jump_softmax) = (exp(jump) / (exp(jump) + exp(not_jump)), exp(not_jump) / (exp(jump) + exp(not_jump)))
-        
-        if jump_softmax > not_jump_softmax && jump_softmax > 0.7{
+        let jump_softmax = result[0]
+        let not_jump_softmax = result[1]
+        print(result)
+        print("==END==")
+        if jump_softmax > not_jump_softmax {
             return true
         }else{
             return false
         }
     }
     
-    func normalization(_ input: Float, lowerLimit: Float = -500, upperLimit: Float = 500) -> Float {
+    func normalization(_ input: Float, lowerLimit: Float, upperLimit: Float) -> Float {
         if input > upperLimit{
             return 1
         }
@@ -117,7 +114,7 @@ struct Ball:Identifiable, Hashable{
     
     func jump(){
         if self.isActive{
-            let upage = CGFloat(Float.random(in:9...10))
+            let upage = CGFloat(Float.random(in:20...22))
             self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: upage))
         }
     }

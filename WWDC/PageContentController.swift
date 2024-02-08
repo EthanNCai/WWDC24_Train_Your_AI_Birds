@@ -144,30 +144,47 @@ class PageContentController: ObservableObject {
     
     func reproduce(){
         
-        var bird_a_w: Ball
-        var bird_b_w: Ball
-        var bird_a_b: Ball
-        var bird_b_b: Ball
+        //save
+        for best_ball in self.best_balls{
+            let rand_y_pos = Float.random(in: 0.1...0.9)
+            let new_ball = Ball(x: CGFloat(50), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: best_ball.mlp)
+            self.balls.append(new_ball)
+        }
         
+        
+        
+        // random
+        var bird_parent_a: Ball
+        var bird_parent_b: Ball
         
         while self.balls.count < self.bird_number{
+            
+            // save the best ball
             
             // select 2 parent for weights
             
             assert(self.best_balls.count == self.best_bird_needed,"best bird number check")
             
+            
+            
             repeat {
-                bird_a_w = self.best_balls.randomElement()!
-                bird_b_w = self.best_balls.randomElement()!
-            } while bird_a_w.id == bird_b_w.id
+                bird_parent_a = self.balls.randomElement()!
+                bird_parent_b = self.balls.randomElement()!
+            } while bird_parent_a == bird_parent_b
             
             // select 2 parent for bias
             
-            repeat {
-                bird_a_b = self.best_balls.randomElement()!
-                bird_b_b = self.best_balls.randomElement()!
-            } while bird_a_b.id == bird_b_b.id
             
+            let nn_new = NNBreader.weight_fusion(nn1: bird_parent_a.mlp, nn2: bird_parent_b.mlp, mutate_probability: self.mutate_proab)
+            
+            let rand_y_pos = Float.random(in: 0.1...0.9)
+            var new_ball = Ball(x: CGFloat(50), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: nn_new)
+            self.balls.append(new_ball)
+            
+            /*
+                old codes
+             */
+            /*
             // generate new gene segment
             
             let w_break_point = Int.random(in: 1..<(self.gene_length-1))
@@ -189,6 +206,7 @@ class PageContentController: ObservableObject {
             new_ball.weights = new_weights
             new_ball.bias = new_weights
             self.balls.append(new_ball)
+             */
             
         }
 
@@ -202,6 +220,9 @@ class PageContentController: ObservableObject {
     
     func dropout(){
         
+        
+        /* old codes*/
+        /*
         // randomly flip every ball's gene accordingly
         
         // calculate flip bits per gene
@@ -224,7 +245,7 @@ class PageContentController: ObservableObject {
                 
             }
         }
-        
+        */
     }
     
     func sizeIndexMapping(value: Float) -> CGFloat {
