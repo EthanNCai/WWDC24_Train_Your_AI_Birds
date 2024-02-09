@@ -35,6 +35,13 @@ struct BallBoard: View {
                     .padding(2)
                     .background(ball.isActive ? Color.green.opacity(0.8) : Color.red.opacity(0.6))
                     .mask(RoundedRectangle(cornerRadius: 3))
+                    .overlay(
+                        ball.is_jumped ?
+                            RoundedRectangle(cornerRadius: 3)
+                                .stroke(Color.yellow, lineWidth: 3) :
+                            RoundedRectangle(cornerRadius: 3)
+                            .stroke(Color.clear, lineWidth: 3)
+                    )
                 }
             }
             

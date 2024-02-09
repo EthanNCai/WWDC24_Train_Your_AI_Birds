@@ -19,7 +19,7 @@ class PageContentController: ObservableObject {
     @Published var size:CGSize = .zero
     
     // debug infos
-    @Published var bannerContent: String = "~ Tap to begin ~"
+    @Published var bannerContent: String = " Tap to begin "
     @Published var distance_score:Float = 0.123
     @Published var velocity:Float = 1.23
     @Published var current_focus:Int = 0
@@ -28,16 +28,16 @@ class PageContentController: ObservableObject {
     @Published var is_on_restricted_area = false
     
     //Retrive for GAME SCENE
-    @Published var ui_bird_number: Int = 10
-    @Published var ui_bird_radius: Float = 10
-    @Published var ui_bird_speed: Float = 10
+    @Published var ui_bird_number: Int = 12
+    @Published var ui_bird_brain_size: Int = 16
+    @Published var ui_col_gap: Float = 10
     @Published var ui_selected_best_ratio: best_ratio = .x1
-    @Published var ui_mutate_proab: Float = 0.1
+    @Published var ui_mutate_proab: Float = 0.15
     
     // for GAME SCENE
     var difficulty_index: CGFloat = 0.0
-    var bird_speed_index: CGFloat = 0.0
-    var bird_size_index: CGFloat = 0.0
+    var bird_brain_volumn_index: Int = 0
+    var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 0
     var bird_number: Int = 0
     var mutate_proab: Float = 0.0
@@ -64,6 +64,15 @@ class PageContentController: ObservableObject {
     @Published var best_balls:[Ball] = []
     @Published var rounds_count: Int = 0
     
+    @Published var best_distance_score: Float = 0
+    @Published var avg_distance_score: Float = 0
+    @Published var best_fitness_score: Float = 0
+    @Published var avg_fitness_score: Float = 0
+    @Published var best_distance_score_trend: Float = 0
+    @Published var avg_distance_score_trend: Float = 0
+    @Published var best_fitness_score_trend: Float = 0
+    @Published var avg_fitness_score_trend: Float = 0
+    
     
     let count_down: Float = 2.0
     
@@ -83,15 +92,15 @@ class PageContentController: ObservableObject {
         // retieve from UI
         self.bird_number = ui_bird_number
         self.mutate_proab = ui_mutate_proab
-        self.bird_size_index = sizeIndexMapping(value: self.ui_bird_radius)
-        self.bird_speed_index = speedIndexMapping(value: self.ui_bird_speed)
+        self.col_gap_value_mapping = col_gap_value_mapping(value: self.ui_col_gap)
+        self.bird_brain_volumn_index = self.ui_bird_brain_size
         self.setBestBirdNumbers()
         
         
         print("birdNumber:", bird_number)
         print("mutateProb:", mutate_proab)
-        print("birdSizeIndex:", bird_size_index)
-        print("birdSpeedIndex:", bird_speed_index)
+        print("birdSizeIndex:", col_gap_value_mapping)
+        print("birdSpeedIndex:", bird_brain_volumn_index)
         print("bestBirdNeeded:", best_bird_needed)
         
     }
@@ -108,12 +117,14 @@ class PageContentController: ObservableObject {
             self.reproduce()
             self.dropout()
         }
-        self.rounds_count += 1
+        
+            self.rounds_count += 1
+        
         isReset = false
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        bannerContent = "~ Tap to begin ~"
+        bannerContent = " Tap to begin "
         
     
     }
@@ -130,7 +141,7 @@ class PageContentController: ObservableObject {
         is_on_restricted_area = false
         balls.removeAll()
         best_balls.removeAll()
-        bannerContent = "~ Tap to begin ~"
+        bannerContent = " Tap to begin "
     
     }
     
@@ -255,7 +266,7 @@ class PageContentController: ObservableObject {
         */
     }
     
-    func sizeIndexMapping(value: Float) -> CGFloat {
+    func col_gap_value_mapping(value: Float) -> CGFloat {
         // gap height*0.3
         let inputMin: Float = 0
         let inputMax: Float = 20
@@ -268,17 +279,6 @@ class PageContentController: ObservableObject {
         return CGFloat(mappedValue)
     }
     
-    func speedIndexMapping(value: Float) -> CGFloat {
-        let inputMin: Float = 0
-        let inputMax: Float = 20
-        let outputMin: Float = 0.004
-        let outputMax: Float = 0.006
-        
-        let normalizedValue = (value - inputMin) / (inputMax - inputMin)
-        let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin
-        
-        return CGFloat(mappedValue)
-    }
     
     func setBestBirdNumbers(){
         
@@ -310,7 +310,7 @@ class PageContentController: ObservableObject {
     }
     func set_game_over_banner() {
         DispatchQueue.main.async {
-            self.bannerContent = " Game Over \n touch to reset"
+            self.bannerContent = " Round ended! Touch to test the next generation"
         }
     }
 
@@ -327,5 +327,43 @@ class PageContentController: ObservableObject {
         for ball in self.balls{
             ball.ball_node.removeFromParent()
         }
+    }
+    
+    func gathering_round_brief() {
+        var avg_distance_score: Float = 0
+        var best_distance_score: Float = 0
+        var avg_fitness: Float = 0
+        var best_fitness: Float = 0
+        
+        for ball in self.balls {
+            avg_distance_score += ball.distance_score
+            avg_fitness += Float(ball.fitness_score)
+            
+            if Float(ball.distance_score) > best_distance_score {
+                best_distance_score = ball.distance_score
+            }
+            
+            if Float(ball.fitness_score) > best_fitness {
+                best_fitness = Float(ball.fitness_score)
+            }
+        }
+        
+        let count = Float(self.balls.count)
+        avg_distance_score /= count
+        avg_fitness /= count
+        
+        
+        // trend calculation
+        self.best_distance_score_trend = (best_distance_score - self.best_distance_score )
+        self.avg_distance_score_trend = (avg_distance_score - self.avg_distance_score)
+        self.best_fitness_score_trend = (best_fitness - self.best_fitness_score )
+        self.avg_fitness_score_trend = (avg_fitness - self.avg_fitness_score)
+            
+        
+        self.best_fitness_score = best_fitness
+        self.avg_fitness_score = avg_fitness
+        self.best_distance_score = best_distance_score
+        self.avg_distance_score = avg_distance_score
+        
     }
 }

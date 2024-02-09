@@ -28,7 +28,7 @@ struct Ball:Identifiable, Hashable{
     var distance_top:Float = 0.0
     var distance_bottom:Float = 0.0
     var velocity:Float = 0.0
-    
+    var is_jumped: Bool = false
     var mlp:SimpleNeuralNetwork
     
     init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color) {
@@ -119,6 +119,7 @@ struct Ball:Identifiable, Hashable{
             self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 35))
         }
     }
+    
     
     func get_ball_node() -> SKNode{
         return self.ball_node

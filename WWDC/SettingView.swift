@@ -65,15 +65,15 @@ struct SettingView: View {
                             Slider(value: Binding<Double>(
                                 get: { Double(self.content_ctrl.ui_bird_number) },
                                 set: { self.content_ctrl.ui_bird_number = Int($0) }
-                            ), in: 1...30, step: 1) {
+                            ), in: 12...45, step: 1) {
                             
                                 Text("Bird numbers: \(self.content_ctrl.ui_bird_number)")
                                     .fontWeight(.heavy)
                                     
                             }minimumValueLabel: {
-                                Text("1")
+                                Text("12")
                             } maximumValueLabel: {
-                                Text("30")
+                                Text("45")
                                 
                             }
                             Text("In each round, the genes of the bird that flies the furthest will be selected from these birds.")
@@ -81,11 +81,11 @@ struct SettingView: View {
                             Divider()
                         
                             Slider(value: Binding<Double>(
-                                get: { Double(self.content_ctrl.ui_bird_radius) },
-                                set: { self.content_ctrl.ui_bird_radius = Float($0) }
-                            ), in: 0...20, step: 1) {
+                                get: { Double(self.content_ctrl.ui_bird_brain_size) },
+                                set: { self.content_ctrl.ui_bird_brain_size = Int($0) }
+                            ), in: 8...48, step: 2) {
                             
-                                Text("Bird size")
+                                Text("Bird Brain Volumn:\n \(self.content_ctrl.ui_bird_brain_size) (Neurons)")
                                     .fontWeight(.heavy)
                                     
                             }minimumValueLabel: {
@@ -100,17 +100,17 @@ struct SettingView: View {
                             Divider()
                         
                             Slider(value: Binding<Double>(
-                                get: { Double(self.content_ctrl.ui_bird_speed) },
-                                set: { self.content_ctrl.ui_bird_speed = Float($0) }
+                                get: { Double(self.content_ctrl.ui_col_gap) },
+                                set: { self.content_ctrl.ui_col_gap = Float($0) }
                             ), in: 0...20, step: 1) {
                             
-                                Text("Bird Speed")
+                                Text("Column Gap Size")
                                     .fontWeight(.heavy)
                                     
                             }minimumValueLabel: {
-                                Text("Slow")
+                                Text("Small")
                             } maximumValueLabel: {
-                                Text("Fast")
+                                Text("Large")
                                 
                             }
                             Text("This value controls the size of the spacing between the upper and lower columns; the larger the spacing, the easier it is for the bird to fly past. This value must be larger than the size of the bird")

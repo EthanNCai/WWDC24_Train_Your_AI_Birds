@@ -14,6 +14,7 @@
 		8BCCDCE02B0B40F500040744 /* StageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCDCDF2B0B40F500040744 /* StageView.swift */; };
 		8BCCDCE22B0B40F600040744 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE12B0B40F600040744 /* Assets.xcassets */; };
 		8BCCDCE52B0B40F600040744 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */; };
+		8BDED9DD2B7621E200A47501 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDED9DC2B7621E200A47501 /* NoticeView.swift */; };
 		8BE199BA2B73ABC100CFD3BA /* NeuralNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */; };
 		8BE199CF2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE199CE2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift */; };
 		8BE91C6D2B6CE8B400C3FA0F /* BallBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */; };
@@ -38,6 +39,7 @@
 		8BCCDCE12B0B40F600040744 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8BCCDCE62B0B40F600040744 /* WWDC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WWDC.entitlements; sourceTree = "<group>"; };
+		8BDED9DC2B7621E200A47501 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
 		8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetwork.swift; sourceTree = "<group>"; };
 		8BE199CE2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetworkBreeder.swift; sourceTree = "<group>"; };
 		8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallBoard.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 				8B155B582B0C803700D3ACF7 /* PageController.swift */,
 				8BE91C702B6F4B9600C3FA0F /* ObservationView.swift */,
 				8BE91C722B6F4BB300C3FA0F /* SettingView.swift */,
+				8BDED9DC2B7621E200A47501 /* NoticeView.swift */,
 				8BE91C742B6F550700C3FA0F /* GameView.swift */,
 				8B2D17522B6C198300FEB986 /* GeneBoard.swift */,
 				8BE91C6E2B6D370D00C3FA0F /* RoundInfoBoard.swift */,
@@ -204,6 +207,7 @@
 				8BE199CF2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift in Sources */,
 				8BF04A092B67A215006DD210 /* Intro_3_View.swift in Sources */,
 				8BE91C6F2B6D370D00C3FA0F /* RoundInfoBoard.swift in Sources */,
+				8BDED9DD2B7621E200A47501 /* NoticeView.swift in Sources */,
 				8B155B592B0C803700D3ACF7 /* PageController.swift in Sources */,
 				8B2D17512B6C01DB00FEB986 /* Ball.swift in Sources */,
 				8BF04A0D2B67D2FF006DD210 /* GameScene.swift in Sources */,

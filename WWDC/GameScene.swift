@@ -293,6 +293,7 @@ class GameScene: SKScene{
         }
         
         self.content_ctrl.isGameOver = true
+        self.content_ctrl.gathering_round_brief()
         self.content_ctrl.set_game_over_flags()
         self.content_ctrl.set_game_over_banner()
         
@@ -328,6 +329,9 @@ class GameScene: SKScene{
             if ball.isActive && ball.get_dicision_is_jump(scene_size: self.size)
             {
                 ball.jump()
+                self.content_ctrl.balls[index].is_jumped = true
+            }else{
+                self.content_ctrl.balls[index].is_jumped = false
             }
             
             if ball.ball_node.physicsBody!.velocity.dy > CGFloat(330){

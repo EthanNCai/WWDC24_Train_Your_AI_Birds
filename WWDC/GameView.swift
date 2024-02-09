@@ -37,10 +37,25 @@ struct GameView: View {
             }else
             {
                 if !content_ctrl.isUserBegin ||  content_ctrl.isGameOver{
-                    Text(content_ctrl.bannerContent)
-                        .padding()
-                        .background(.ultraThinMaterial)
-                        .mask(RoundedRectangle(cornerRadius: 10))
+                    VStack{
+                        if !self.content_ctrl.isGameOver{
+                            if self.content_ctrl.rounds_count == 1{
+                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))st. generation")
+                            }else if self.content_ctrl.rounds_count == 2{
+                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))nd. generation")
+                            }else if self.content_ctrl.rounds_count == 3{
+                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))rd. generation")
+                            }else{
+                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))th. generation")
+                            }
+                        }
+                        Text(content_ctrl.bannerContent)
+                            .fontWeight(.black)
+                            
+                    }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .mask(RoundedRectangle(cornerRadius: 10))
                         
                 }
             }
@@ -83,42 +98,27 @@ struct GameView: View {
                     VStack{
                         VStack(alignment: .leading){
                             
-                            Text("Round" + String(self.content_ctrl.rounds_count))
+                            if self.content_ctrl.rounds_count == 1{
+                                Text(" \(String(self.content_ctrl.rounds_count))st. generation bird")
                                 
+                            }else if self.content_ctrl.rounds_count == 2{
+                                Text(" \(String(self.content_ctrl.rounds_count))nd. generation bird")
+                            }else if self.content_ctrl.rounds_count == 3{
+                                Text(" \(String(self.content_ctrl.rounds_count))rd. generation bird")
+                            }else{
+                                Text(" \(String(self.content_ctrl.rounds_count))th. generation bird")
+                            }
                         }
+                        .fontWeight(.black)
                         .padding()
-                        .background(.gray.opacity(0.2))
+                        .background(.ultraThinMaterial)
                         .mask(RoundedRectangle(cornerRadius: 15))
-                        
                         Spacer()
                     }
                     .padding()
                     Spacer()
-                    VStack{
-                        VStack(alignment: .leading){
-                            
-                            Text("__Debug infos__")
-                                .foregroundColor(.green)
-                            Text("isGameBegin -> " + (self.content_ctrl.isGameBegin ? "true" : "false"))
-                            Text("isUserBegin -> " + (self.content_ctrl.isUserBegin ? "true" : "false"))
-                            Text("isGameOver -> " + (self.content_ctrl.isGameOver ? "true" : "false"))
-                            Text("isLooped -> " + (self.content_ctrl.isLooped ? "true" : "false"))
-                            Text("isReset -> " + (self.content_ctrl.isReset ? "true" : "false"))
-                            Text("Restricted_area ->" + (self.content_ctrl.is_on_restricted_area ? "true" : "false"))
-                            Text("Focus ->" + (self.content_ctrl.is_on_restricted_area ? "true" : "false"))
-                        }
-                        .padding()
-                        .background(.gray.opacity(0.2))
-                        .mask(RoundedRectangle(cornerRadius: 15))
-                        
-                        Spacer()
-                    }
-                    .padding()
-                    
                 }
-                
             }
-            
         }
         .frame(width: content_ctrl.size.width*1/2,
                height: content_ctrl.size.height)
