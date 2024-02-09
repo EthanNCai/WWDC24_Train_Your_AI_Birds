@@ -10,7 +10,8 @@ import Foundation
 
 class PageContentController: ObservableObject {
     
-    
+    @Published var is_showed_notice = false
+    @Published var is_show_notice = false
     @Published var isUserBegin:Bool = false
     @Published var isGameBegin:Bool = false
     @Published var isReset:Bool = false
@@ -27,7 +28,7 @@ class PageContentController: ObservableObject {
     @Published var distance_d:Float = 0.123
     @Published var is_on_restricted_area = false
     
-    //Retrive for GAME SCENE
+    //Retrive from GAME SCENE
     @Published var ui_bird_number: Int = 12
     @Published var ui_bird_brain_size: Int = 16
     @Published var ui_col_gap: Float = 10

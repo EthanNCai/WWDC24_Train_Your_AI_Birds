@@ -15,7 +15,7 @@ class GameScene: SKScene{
     @ObservedObject var content_ctrl: PageContentController
     
     //  hyper-params
-    var difficulty_index: CGFloat = 0.35
+    var difficulty_index: CGFloat = 0.30
     var speed_index: CGFloat = 0.005
     var colTimeInterval: Double = 3.0
     var jmpTimeInterval: Double = 0.2
@@ -547,6 +547,8 @@ extension GameScene{
                     // update birds remaining
                     self.content_ctrl.update_birds_remaining()
                     
+                    self.see_if_we_can_show_the_notice()
+                    
                     
                     // check game over, find the best bird
                     self.checkGameOver()
@@ -602,7 +604,7 @@ extension GameScene{
             // begin logic
             self.content_ctrl.set_game_begin()                  // game begin first
             self.content_ctrl.counting_down_set_user_begin()    // user begin 3 secs later
-            self.counting_down_set_active()                     // user begin 3 secs later
+            self.counting_down_then_set_active()                     // user begin 3 secs later
         }
         
     }
@@ -648,7 +650,7 @@ extension GameScene{
             // begin logic
             self.content_ctrl.set_game_begin()
             self.content_ctrl.counting_down_set_user_begin()    // user begin 3 secs later
-            self.counting_down_set_active()                     // user begin 3 secs later
+            self.counting_down_then_set_active()                     // user begin 3 secs later
             
             return
         }
@@ -665,7 +667,7 @@ extension GameScene{
             // begin logic
             self.content_ctrl.set_game_begin()                  // game begin first
             self.content_ctrl.counting_down_set_user_begin()    // user begin 3 secs later
-            self.counting_down_set_active()                     // user begin 3 secs later
+            self.counting_down_then_set_active()                     // user begin 3 secs later
         }
         
         
@@ -674,7 +676,7 @@ extension GameScene{
         
     }
 
-    func counting_down_set_active(){
+    func counting_down_then_set_active(){
         // tap to start
 
         DispatchQueue.main.asyncAfter(deadline: .now() + TimeInterval(self.content_ctrl.count_down)) {
@@ -685,6 +687,23 @@ extension GameScene{
             }
         }
         
+    }
+    
+    func see_if_we_can_show_the_notice(){
+        
+        var is_distance_long_enough = false
+        for ball in self.content_ctrl.balls{
+            if ball.distance_score >= 800{
+                is_distance_long_enough = true
+            }
+        }
+        if is_distance_long_enough && !self.content_ctrl.is_showed_notice {
+            withAnimation(){
+                self.content_ctrl.is_show_notice = true
+            }
+                self.content_ctrl.is_showed_notice = true
+            
+        }
     }
     
     override func touchesBegan(with event: NSEvent) {

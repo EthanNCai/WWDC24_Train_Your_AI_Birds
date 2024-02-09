@@ -85,7 +85,7 @@ struct GameView: View {
                         }.toggleStyle(SwitchToggleStyle())
                             .padding(.horizontal)
                             .background(.ultraThinMaterial)
-                            .cornerRadius(5) // 设置按钮的圆角半径
+                            .cornerRadius(5)
                     }
                     .padding()
                     

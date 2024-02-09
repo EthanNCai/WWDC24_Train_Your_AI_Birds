@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NoticeView: View {
+    @ObservedObject var content_ctrl :PageContentController
     var body: some View {
         HStack{
             VStack{
@@ -23,26 +24,25 @@ struct NoticeView: View {
                 .padding()
                 .padding()
                 
-                Button(action: {}, label: {Text("OK")})
-            }
+                Button(action: {
+                    withAnimation(){
+                        self.content_ctrl.is_show_notice = false
+                    }}, label: {Text("OK")})
+                }
             
                 
                 .padding()
-                .background(.ultraThinMaterial)
+                .background(.ultraThickMaterial)
                 .mask(RoundedRectangle(cornerRadius: 10))
                 .padding()
                 .padding()
                 
                 
-        }.frame(width: 800,height: 600)
-        .background(.blue)
+        }
+        
         
     }
         
 }
 
-struct NoticeView_Previews: PreviewProvider {
-    static var previews: some View {
-        NoticeView()
-    }
-}
+

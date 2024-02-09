@@ -24,7 +24,6 @@ struct Intro_1_View: View {
             ZStack {
                 HStack { // info panal & game scene
                     HStack{
-                    
                         if content_ctrl.isOnSetting{
                             SettingView(content_ctrl: self.content_ctrl,scene:scene)
                         }else
@@ -33,8 +32,11 @@ struct Intro_1_View: View {
                         }
                     }
                     GameView(content_ctrl: content_ctrl, scene: scene)
-                    
                 }
+                if self.content_ctrl.is_show_notice{
+                    NoticeView(content_ctrl: self.content_ctrl)
+                }
+                
             }
             .onAppear {
                 content_ctrl.size = geometry.size
