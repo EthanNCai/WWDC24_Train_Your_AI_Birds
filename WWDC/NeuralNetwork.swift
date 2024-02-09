@@ -30,7 +30,7 @@ struct SimpleNeuralNetwork:Hashable{
         
         // ramdom initialize weights and bias
         self.weights_layer1 = (0..<w1_len).map { _ in Float.random(in: -5...5) }
-        self.weights_layer2 = (0..<w2_len).map { _ in Float.random(in: -5...5) }
+        self.weights_layer2 = (0..<w2_len).map { _ in Float.random(in: -5...6) }
         self.bias_layer1 = (0..<b1_len).map { _ in Float.random(in: 0...0.1) }
         self.bias_layer2 = (0..<b2_len).map { _ in Float.random(in: 0...0.1) }
         

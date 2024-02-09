@@ -405,6 +405,7 @@ extension GameScene{
         newest_col_index = 0
         colGeneratorTimer = 0.0
         gameTickTimer = 0.0
+        jmpTimer = 0.0
         self.currently_focus = 0
         
         self.content_ctrl.controller_reset()
@@ -433,6 +434,38 @@ extension GameScene{
         assert(self.content_ctrl.bird_number + 1 == self.children.count ,"children number error : \(self.children.count) children(s)")
         // make sure there's n balls
         assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
+    }
+    
+    func game_wise_reset_everything() {
+        
+        // game scene clean
+        print("DEEP RESET")
+        
+        self.removeAllChildren()
+        self.onscreen_cols.removeAll()
+        
+        
+        // index clean
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        jmpTimer = 0.0
+        self.currently_focus = 0
+        
+        self.content_ctrl.game_wise_controller_reset()
+        
+        for birds in self.content_ctrl.balls{
+            assert(birds.ball_node.parent == nil, "bird parenting error")
+        }
+        assert(self.children.count == 0, "children state error")
+        
+        if self.content_ctrl.rounds_count > 1{
+            assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
+        }
+        
+        makeBackgrounds()
+        
+        
     }
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
@@ -469,7 +502,7 @@ extension GameScene{
             UPDATES *Directed* by tick
          */
         let dt_sm = currentTime - self.colGeneratorTimer
-        if  !self.content_ctrl.isGameOver{
+        if  !self.content_ctrl.isGameOver && !self.content_ctrl.isOnSetting{
             
             /* sm-tick update*/
             if dt_sm >= self.gameTickInterval {

@@ -117,7 +117,7 @@ class PageContentController: ObservableObject {
         
     
     }
-    func deep_controller_reset() {
+    func game_wise_controller_reset() {
         
         // reset don't incluede the setting reset
         self.rounds_count = 0
@@ -127,6 +127,9 @@ class PageContentController: ObservableObject {
         isUserBegin = false
         isGameOver = false
         isOnSetting = true
+        is_on_restricted_area = false
+        balls.removeAll()
+        best_balls.removeAll()
         bannerContent = "~ Tap to begin ~"
     
     }
@@ -305,13 +308,18 @@ class PageContentController: ObservableObject {
             }
         }
     }
-    func set_game_over_banner(){
-        self.bannerContent = " Game Over \n touch to reset"
+    func set_game_over_banner() {
+        DispatchQueue.main.async {
+            self.bannerContent = " Game Over \n touch to reset"
+        }
     }
-    func set_game_over_flags(){
-        self.isGameOver = true
-        self.isUserBegin = false
-        self.isGameBegin = false
+
+    func set_game_over_flags() {
+        DispatchQueue.main.async {
+            self.isGameOver = true
+            self.isUserBegin = false
+            self.isGameBegin = false
+        }
     }
     
     

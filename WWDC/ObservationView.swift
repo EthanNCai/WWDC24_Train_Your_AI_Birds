@@ -20,11 +20,9 @@ struct ObservationView: View {
                         withAnimation(){
                             self.content_ctrl.isOnSetting = true
                         }
-                        self.content_ctrl.deep_controller_reset()
-                        self.scene.reset_everything()
+                        self.scene.game_wise_reset_everything()
                         
-                        
-                        
+                    
                     }){
                         HStack{
                             Image(systemName: "chevron.left")
