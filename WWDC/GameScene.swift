@@ -15,7 +15,6 @@ class GameScene: SKScene{
     @ObservedObject var content_ctrl: PageContentController
     
     //  hyper-params
-    var difficulty_index: CGFloat = 0.30
     var speed_index: CGFloat = 0.005
     var colTimeInterval: Double = 3.0
     var jmpTimeInterval: Double = 0.2
@@ -105,7 +104,7 @@ class GameScene: SKScene{
                 }
                 let colu = childNode(withName: "colu" + String(self.currently_focus))!
                 let col_upper_bounds = colu.position.y
-                let col_lower_bounds = col_upper_bounds - self.size.height * self.difficulty_index
+                let col_lower_bounds = col_upper_bounds - self.size.height * self.content_ctrl.difficulty_index
                 
                 if y < col_lower_bounds || y > col_upper_bounds{
                     self.content_ctrl.balls[index].isActive = false
@@ -120,6 +119,7 @@ class GameScene: SKScene{
             
         }
     }
+    
     
     
     func makeBackgrounds(){
@@ -147,7 +147,8 @@ class GameScene: SKScene{
                 }
                 let colu = childNode(withName: "colu" + String(self.currently_focus))!
                 let col_upper_bounds = colu.position.y
-                let col_lower_bounds = col_upper_bounds - self.size.height * self.difficulty_index
+                
+                let col_lower_bounds = col_upper_bounds - self.size.height * self.content_ctrl.difficulty_index
                 
                 if current_height < col_lower_bounds || current_height > col_upper_bounds{
                     continue
@@ -261,7 +262,7 @@ class GameScene: SKScene{
             let colu_y = colu.position.y
             // downer x,y
             let cold_x = colu_x
-            let cold_y = colu_y - self.size.height * self.difficulty_index
+            let cold_y = colu_y - self.size.height * self.content_ctrl.difficulty_index
             
             let ball_cold_distance = Float(sqrt(pow(ball_x - cold_x, 2) + pow(ball_y - cold_y, 2)))
             let ball_colu_distance = Float(sqrt(pow(ball_x - colu_x, 2) + pow(ball_y - colu_y, 2)))
@@ -297,6 +298,10 @@ class GameScene: SKScene{
         self.content_ctrl.set_game_over_flags()
         self.content_ctrl.set_game_over_banner()
         
+        // print best mlp
+        
+        //print(content_ctrl.)
+        
     }
     
     func check_node_unique(){
@@ -316,17 +321,16 @@ class GameScene: SKScene{
     
     func jump_accordingly()
     {
-        
-        
-        
         for (index, ball) in self.content_ctrl.balls.enumerated(){
             
 //            let rand = Int.random(in: 0...1)
 //            if rand == 1{
 //                ball.jump()
 //            }
+            let(jump_proab,is_jump) = ball.get_dicision_is_jump(scene_size: self.size)
             
-            if ball.isActive && ball.get_dicision_is_jump(scene_size: self.size)
+            self.content_ctrl.balls[index].set_fly_probability(fly_probability: jump_proab)
+            if ball.isActive && is_jump
             {
                 ball.jump()
                 self.content_ctrl.balls[index].is_jumped = true
@@ -364,7 +368,7 @@ extension GameScene{
         //print("hi")
         //print("child_num",self.children.count)
         assert(self.content_ctrl.balls.count == 0 , "balls.count error: \(self.content_ctrl.balls.count)")
-        print("+ newly generated - bird child adding")
+       // print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
             let rand_y_pos = Float.random(in: 0.3...0.7)
             self.content_ctrl.balls.append(Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red))
@@ -372,21 +376,21 @@ extension GameScene{
             assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
         }
-        print("> children.count \(self.children.count)")
-        print("> balls.count \(self.content_ctrl.balls.count)")
+        //print("> children.count \(self.children.count)")
+        //print("> balls.count \(self.content_ctrl.balls.count)")
         //print("child_num",self.children.count)
     }
     func join_balls_accordingly(){
         //print("hi")
         //print("child_num",self.children.count)
-        print("+ parent generated - bird child adding")
+        //print("+ parent generated - bird child adding")
         for bird in self.content_ctrl.balls{
             let bird_node = bird.ball_node
             assert(bird_node.parent == nil, "bird parent error")
             addChild(bird_node)
         }
-        print("> children.count \(self.children.count)")
-        print("> balls.count \(self.content_ctrl.balls.count)")
+        //print("> children.count \(self.children.count)")
+        //print("> balls.count \(self.content_ctrl.balls.count)")
         //print("child_num",self.children.count)
     }
 }
@@ -395,86 +399,11 @@ extension GameScene{
 // MARK: - Utilities
 
 extension GameScene{
-    func reset_everything() {
-        
-        // game scene clean
-        print("=====================================")
-        print("round \(self.content_ctrl.rounds_count)")
-        print("=====================================")
-        self.removeAllChildren()
-        self.onscreen_cols.removeAll()
-        
-        
-        // index clean
-        newest_col_index = 0
-        colGeneratorTimer = 0.0
-        gameTickTimer = 0.0
-        jmpTimer = 0.0
-        self.currently_focus = 0
-        
-        self.content_ctrl.controller_reset()
-        
-        for birds in self.content_ctrl.balls{
-            assert(birds.ball_node.parent == nil, "bird parenting error")
-        }
-        assert(self.children.count == 0, "children state error")
-        
-        if self.content_ctrl.rounds_count > 1{
-            assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
-        }
-        
-        makeBackgrounds()
-        
-        // regenerate children
-        if self.content_ctrl.rounds_count > 1{
-            self.join_balls_accordingly()
-            
-        }else{
-            self.generate_balls_accordingly()
-        }
-        //self.print_node_obj_info()
-        
-        // make sure there's n + 1 children
-        assert(self.content_ctrl.bird_number + 1 == self.children.count ,"children number error : \(self.children.count) children(s)")
-        // make sure there's n balls
-        assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
-    }
     
-    func game_wise_reset_everything() {
-        
-        // game scene clean
-        print("DEEP RESET")
-        
-        self.removeAllChildren()
-        self.onscreen_cols.removeAll()
-        
-        
-        // index clean
-        newest_col_index = 0
-        colGeneratorTimer = 0.0
-        gameTickTimer = 0.0
-        jmpTimer = 0.0
-        self.currently_focus = 0
-        
-        self.content_ctrl.game_wise_controller_reset()
-        
-        for birds in self.content_ctrl.balls{
-            assert(birds.ball_node.parent == nil, "bird parenting error")
-        }
-        assert(self.children.count == 0, "children state error")
-        
-        if self.content_ctrl.rounds_count > 1{
-            assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
-        }
-        
-        makeBackgrounds()
-        
-        
-    }
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: (self.difficulty_index*1.1)...1)
-        let id = iu - (1+self.difficulty_index)
+        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.1)...1)
+        let id = iu - (1+self.content_ctrl.difficulty_index)
         return (iu, id)
     }
     
@@ -492,8 +421,27 @@ extension GameScene{
         
     }
     
+    func adjust_bird_rotation(){
+        
+        for bird in self.content_ctrl.balls{
+            
+            if bird.isActive{
+                let bird_ndoe = bird.ball_node
+                let velocityY = bird_ndoe.physicsBody?.velocity.dy ?? 0
+                let angle = atan2(velocityY, 1) * 0.10
+                let rotateAction = SKAction.rotate(toAngle: angle, duration: 0.05)
+                bird_ndoe.run(rotateAction)
+            }
+            
+        }
+    }
     
-
+    func touch_jumping(){
+        assert(self.content_ctrl.balls.indices.contains(0), "checkin'")
+        if self.content_ctrl.balls.indices.contains(0){
+           self.content_ctrl.balls[0].human_jump()
+        }
+    }
 }
 
 
@@ -524,10 +472,15 @@ extension GameScene{
                     //self.check_node_unique()
                     
                     
-                    // update ball distance
                     self.updateBallDistScore()
                     
-                    self.update_ball_fitness_score()
+                    if self.content_ctrl.experiment_mode{
+                        
+                        
+                        self.update_ball_fitness_score()
+                        
+                        self.see_if_we_can_show_the_notice()
+                    }
                     
                     // update focus to *game scene*
                     self.updateFocusIndex()
@@ -538,17 +491,13 @@ extension GameScene{
                     // update distance to *ball matrics*
                     self.update_velocity()
                     
+                    self.adjust_bird_rotation()
+                    
                     // check restricted zone
                     self.checkRestrictedZone()
                     
                     // update is_active statu
                     self.remove_collide_balls()
-                    
-                    // update birds remaining
-                    self.content_ctrl.update_birds_remaining()
-                    
-                    self.see_if_we_can_show_the_notice()
-                    
                     
                     // check game over, find the best bird
                     self.checkGameOver()
@@ -563,12 +512,15 @@ extension GameScene{
             /* md-tick update*/
             let dt_md = currentTime - self.jmpTimer
             
-            if dt_md >= self.jmpTimeInterval {
-                if self.content_ctrl.isUserBegin && !self.content_ctrl.isGameOver{
-                    self.jump_accordingly()
-                    self.jmpTimer = currentTime
+            if !self.content_ctrl.play_mode{
+                if dt_md >= self.jmpTimeInterval {
+                    if self.content_ctrl.isUserBegin && !self.content_ctrl.isGameOver{
+                        self.jump_accordingly()
+                        self.jmpTimer = currentTime
+                    }
                 }
             }
+            
 
             /* lg-tick update*/
             let dt_lg = currentTime - self.gameTickTimer
@@ -589,17 +541,22 @@ extension GameScene{
         
         // any time you pressed Reset
         if self.content_ctrl.isReset{
-            print("reset buttom start")
-            self.reset_everything()
+           
+            self.reset_sccordingly()
         }
         
         // game is over & you opened Auto Loop
         if self.content_ctrl.isGameOver && !self.content_ctrl.isReset && self.content_ctrl.isLooped{
             
             
-            print("+ gameover start automatically")
             // reset logic
-            self.reset_everything()                             // game scene reset (incl. generate stuffs)
+            
+            if self.content_ctrl.experiment_mode{
+                self.experiment_reset()                             // game scene reset (incl. generate stuffs)
+            }else if self.content_ctrl.display_mode{
+                self.display_reset()
+            }
+            
             
             // begin logic
             self.content_ctrl.set_game_begin()                  // game begin first
@@ -616,6 +573,53 @@ extension GameScene{
 extension GameScene{
     
     override func mouseDown(with event: NSEvent){
+        
+        if self.content_ctrl.experiment_mode{
+            self.experiment_touch_logic()
+        }else if self.content_ctrl.display_mode{
+            self.display_touch_logic()
+        }else if self.content_ctrl.play_mode{
+            self.play_touch_logic()
+        }
+    }
+    
+    
+    //Touch Logics ..
+    func play_touch_logic(){
+        if self.content_ctrl.isUserBegin && !self.content_ctrl.isGameOver{
+            // on gaming
+            self.touch_jumping()
+            
+            return
+        }
+        if self.content_ctrl.isGameBegin && !self.content_ctrl.isGameOver{
+            return
+        }
+        // already tapped
+        
+        self.play_reset()                             // game scene reset (incl. generate stuffs)
+        
+        // begin logic
+        self.content_ctrl.set_game_begin()
+        self.content_ctrl.counting_down_set_user_begin()    // user begin 3 secs later
+        self.counting_down_then_set_active()
+    }
+    func display_touch_logic(){
+        if self.content_ctrl.isGameBegin && !self.content_ctrl.isGameOver{
+            return
+        }
+        // already tapped
+        if self.content_ctrl.isUserBegin && !self.content_ctrl.isGameOver{
+            return
+        }
+        self.display_reset()                             // game scene reset (incl. generate stuffs)
+        
+        // begin logic
+        self.content_ctrl.set_game_begin()
+        self.content_ctrl.counting_down_set_user_begin()    // user begin 3 secs later
+        self.counting_down_then_set_active()
+    }
+    func experiment_touch_logic(){
         
         /*
             **Manually** Updating game statu
@@ -642,10 +646,9 @@ extension GameScene{
         // gameover start
         if self.content_ctrl.isGameOver && !self.content_ctrl.isLooped{
             
-            print("+ gameover start")
             
             // reset logic
-            self.reset_everything()                             // game scene reset (incl. generate stuffs)
+            self.experiment_reset()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
             self.content_ctrl.set_game_begin()
@@ -660,9 +663,8 @@ extension GameScene{
         // general start, due to the lazy reset bug, reset needed here
             
             
-            print("+ general_starting")
             // reset logic
-            self.reset_everything()                             // game scene reset (incl. generate stuffs)
+            self.experiment_reset()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
             self.content_ctrl.set_game_begin()                  // game begin first
@@ -672,8 +674,6 @@ extension GameScene{
         
         
         // Tap to begin  ---> begin
-        
-        
     }
 
     func counting_down_then_set_active(){
@@ -706,6 +706,7 @@ extension GameScene{
         }
     }
     
+    
     override func touchesBegan(with event: NSEvent) {
         //
     }
@@ -718,4 +719,142 @@ extension GameScene{
     
     
 }
+
+
+// MARK: - Resets logics
+extension GameScene{
+    func experiment_reset() {
+        
+        // game scene clean
+        print("=====================================")
+        print("round \(self.content_ctrl.rounds_count)")
+        print("=====================================")
+        self.removeAllChildren()
+        self.onscreen_cols.removeAll()
+        
+        
+        // index clean
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        jmpTimer = 0.0
+        self.currently_focus = 0
+        
+        self.content_ctrl.experiment_controller_reset()
+        
+        for birds in self.content_ctrl.balls{
+            assert(birds.ball_node.parent == nil, "bird parenting error")
+        }
+        assert(self.children.count == 0, "children state error")
+        
+        if self.content_ctrl.rounds_count > 1{
+            assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
+        }
+        
+        makeBackgrounds()
+        
+        // regenerate children
+        if self.content_ctrl.rounds_count > 1{
+            self.join_balls_accordingly()
+            
+        }else{
+            self.generate_balls_accordingly()
+        }
+        //self.print_node_obj_info()
+        
+        // make sure there's n + 1 children
+        assert(self.content_ctrl.bird_number + 1 == self.children.count ,"children number error : \(self.children.count) children(s)")
+        // make sure there's n balls
+        assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
+    }
+    
+    func game_wise_experiment_reset() {
+        
+        // game scene clean
+        //print("DEEP RESET")
+        
+        self.removeAllChildren()
+        self.onscreen_cols.removeAll()
+        
+        
+        // index clean
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        jmpTimer = 0.0
+        self.currently_focus = 0
+        
+        self.content_ctrl.experiment_game_wise_controller_reset()
+        
+        for birds in self.content_ctrl.balls{
+            assert(birds.ball_node.parent == nil, "bird parenting error")
+        }
+        assert(self.children.count == 0, "children state error")
+        
+        if self.content_ctrl.rounds_count > 1{
+            assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
+        }
+        
+        makeBackgrounds()
+        
+    }
+    func display_reset(){
+        // game scene clean
+        self.removeAllChildren()
+        self.onscreen_cols.removeAll()
+        
+        
+        // index clean
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        jmpTimer = 0.0
+        self.currently_focus = 0
+        self.content_ctrl.display_controller_reset()
+        
+        for birds in self.content_ctrl.balls{
+            assert(birds.ball_node.parent == nil, "bird parenting error")
+        }
+        assert(self.children.count == 0, "children state error")
+        
+        makeBackgrounds()
+        addChild(self.content_ctrl.balls[0].ball_node)
+        
+    }
+    
+    func play_reset(){
+        // game scene clean
+        self.removeAllChildren()
+        self.onscreen_cols.removeAll()
+        
+        
+        // index clean
+        newest_col_index = 0
+        colGeneratorTimer = 0.0
+        gameTickTimer = 0.0
+        jmpTimer = 0.0
+        self.currently_focus = 0
+        self.content_ctrl.play_controller_reset()
+        
+        for birds in self.content_ctrl.balls{
+            assert(birds.ball_node.parent == nil, "bird parenting error")
+        }
+        assert(self.children.count == 0, "children state error")
+        
+        makeBackgrounds()
+        addChild(self.content_ctrl.balls[0].ball_node)
+        
+    }
+    
+    func reset_sccordingly(){
+        if self.content_ctrl.play_mode{
+            self.play_reset()
+        }else if self.content_ctrl.display_mode{
+            self.display_reset()
+        }else if self.content_ctrl.experiment_mode{
+            self.experiment_reset()
+        }
+    }
+}
+
 

@@ -19,7 +19,7 @@ struct ObservationView: View {
                         withAnimation(){
                             self.content_ctrl.isOnSetting = true
                         }
-                        self.scene.game_wise_reset_everything()
+                        self.scene.game_wise_experiment_reset()
                         
                     
                     }){

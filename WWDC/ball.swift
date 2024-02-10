@@ -27,8 +27,9 @@ struct Ball:Identifiable, Hashable{
     var distance_d:Float = 0.0
     var distance_top:Float = 0.0
     var distance_bottom:Float = 0.0
-    var velocity:Float = 0.0
+    var velocity:Float = -700
     var is_jumped: Bool = false
+    var fly_probability: Float = 0.0
     var mlp:SimpleNeuralNetwork
     
     init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color) {
@@ -66,7 +67,7 @@ struct Ball:Identifiable, Hashable{
     }
      
     
-    func get_dicision_is_jump(scene_size: CGSize) -> Bool{
+    func get_dicision_is_jump(scene_size: CGSize) -> (Float,Bool){
         
         let norm_distance_d =  self.normalization(self.distance_d, lowerLimit: 0, upperLimit: Float(scene_size.height))
         let norm_distance_u = self.normalization(self.distance_u, lowerLimit: 0, upperLimit: Float(scene_size.height))
@@ -74,19 +75,15 @@ struct Ball:Identifiable, Hashable{
         
         let input_tensor:[Float] = Array([norm_distance_d,norm_distance_u,norm_velocity])
         
-        print("==Begin==")
-        print(self.id)
-        print(input_tensor)
         let result = self.mlp.forward(input: input_tensor)
-        print(result)
+  
         let jump_softmax = result[0]
         let not_jump_softmax = result[1]
-        
-        print("==END==")
+
         if jump_softmax > not_jump_softmax {
-            return true
+            return (jump_softmax,true)
         }else{
-            return false
+            return (jump_softmax,false)
         }
     }
     
@@ -113,10 +110,20 @@ struct Ball:Identifiable, Hashable{
         self.isActive = false
     }
     
+    mutating func set_fly_probability(fly_probability: Float){
+        self.fly_probability = fly_probability
+    }
+    
     
     func jump(){
         if self.isActive{
             self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 35))
+        }
+    }
+    
+    func human_jump(){
+        if self.isActive{
+            self.ball_node.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 18))
         }
     }
     

@@ -5,13 +5,13 @@ struct StageView: View {
     @ObservedObject var viewModel = PageController()
     
     var intro_name = [Page.intro_1_view, Page.profile, Page.new]
-    var intro_viewpages = [AnyView(Intro_1_View()),
-                        AnyView(Intro_2_View()),
-                        AnyView(Intro_2_View())] as [AnyView]
+    var intro_viewpages = [AnyView(ExperimentPage()),
+                        AnyView(DisplayPage()),
+                        AnyView(PlayPage())] as [AnyView]
     
     var experiment_name = [Page.settings, Page.help]
-    var experiment_viewpages = [AnyView(Intro_3_View()),
-                        AnyView(Intro_1_View())] as [AnyView]
+    var experiment_viewpages = [AnyView(PlayPage()),
+                        AnyView(ExperimentPage())] as [AnyView]
     
     
     var body: some View {
@@ -29,6 +29,7 @@ struct StageView: View {
                                 label: {
                                     Label(page.rawValue, systemImage: page.PageIconFile())
                                 }
+                                
                             )
                         }
                     }
@@ -66,6 +67,7 @@ struct StageContentView<Content: View>: View {
     var body: some View {
         VStack {
                 view.frame(maxWidth: .infinity, maxHeight: .infinity)
+                
             HStack {
                 
                 HStack{

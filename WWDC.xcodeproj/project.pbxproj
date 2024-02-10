@@ -10,11 +10,13 @@
 		8B155B592B0C803700D3ACF7 /* PageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B155B582B0C803700D3ACF7 /* PageController.swift */; };
 		8B2D17512B6C01DB00FEB986 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D17502B6C01DB00FEB986 /* Ball.swift */; };
 		8B2D17532B6C198300FEB986 /* GeneBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D17522B6C198300FEB986 /* GeneBoard.swift */; };
+		8BAD2A342B77899C00CDFC6F /* Pretrained_Bird_Instance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAD2A332B77899C00CDFC6F /* Pretrained_Bird_Instance.swift */; };
 		8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */; };
 		8BCCDCE02B0B40F500040744 /* StageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCCDCDF2B0B40F500040744 /* StageView.swift */; };
 		8BCCDCE22B0B40F600040744 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE12B0B40F600040744 /* Assets.xcassets */; };
 		8BCCDCE52B0B40F600040744 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */; };
 		8BDED9DD2B7621E200A47501 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDED9DC2B7621E200A47501 /* NoticeView.swift */; };
+		8BDED9DF2B767C9600A47501 /* NeuralNetworkExplanation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDED9DE2B767C9600A47501 /* NeuralNetworkExplanation.swift */; };
 		8BE199BA2B73ABC100CFD3BA /* NeuralNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */; };
 		8BE199CF2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE199CE2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift */; };
 		8BE91C6D2B6CE8B400C3FA0F /* BallBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */; };
@@ -22,9 +24,9 @@
 		8BE91C712B6F4B9600C3FA0F /* ObservationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C702B6F4B9600C3FA0F /* ObservationView.swift */; };
 		8BE91C732B6F4BB300C3FA0F /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C722B6F4BB300C3FA0F /* SettingView.swift */; };
 		8BE91C752B6F550700C3FA0F /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE91C742B6F550700C3FA0F /* GameView.swift */; };
-		8BF04A052B67A00E006DD210 /* Intro_1_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A042B67A00E006DD210 /* Intro_1_View.swift */; };
-		8BF04A072B67A20A006DD210 /* Intro_2_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A062B67A20A006DD210 /* Intro_2_View.swift */; };
-		8BF04A092B67A215006DD210 /* Intro_3_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A082B67A215006DD210 /* Intro_3_View.swift */; };
+		8BF04A052B67A00E006DD210 /* ExperimentPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A042B67A00E006DD210 /* ExperimentPage.swift */; };
+		8BF04A072B67A20A006DD210 /* DisplayPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A062B67A20A006DD210 /* DisplayPage.swift */; };
+		8BF04A092B67A215006DD210 /* PlayPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A082B67A215006DD210 /* PlayPage.swift */; };
 		8BF04A0D2B67D2FF006DD210 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A0C2B67D2FF006DD210 /* GameScene.swift */; };
 		8BF04A0F2B67D604006DD210 /* PageContentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF04A0E2B67D604006DD210 /* PageContentController.swift */; };
 /* End PBXBuildFile section */
@@ -33,6 +35,7 @@
 		8B155B582B0C803700D3ACF7 /* PageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageController.swift; sourceTree = "<group>"; };
 		8B2D17502B6C01DB00FEB986 /* Ball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 		8B2D17522B6C198300FEB986 /* GeneBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneBoard.swift; sourceTree = "<group>"; };
+		8BAD2A332B77899C00CDFC6F /* Pretrained_Bird_Instance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pretrained_Bird_Instance.swift; sourceTree = "<group>"; };
 		8BCCDCDA2B0B40F500040744 /* WWDC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WWDC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WWDCApp.swift; sourceTree = "<group>"; };
 		8BCCDCDF2B0B40F500040744 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
@@ -40,6 +43,7 @@
 		8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8BCCDCE62B0B40F600040744 /* WWDC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WWDC.entitlements; sourceTree = "<group>"; };
 		8BDED9DC2B7621E200A47501 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
+		8BDED9DE2B767C9600A47501 /* NeuralNetworkExplanation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetworkExplanation.swift; sourceTree = "<group>"; };
 		8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetwork.swift; sourceTree = "<group>"; };
 		8BE199CE2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetworkBreeder.swift; sourceTree = "<group>"; };
 		8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BallBoard.swift; sourceTree = "<group>"; };
@@ -47,9 +51,9 @@
 		8BE91C702B6F4B9600C3FA0F /* ObservationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservationView.swift; sourceTree = "<group>"; };
 		8BE91C722B6F4BB300C3FA0F /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		8BE91C742B6F550700C3FA0F /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
-		8BF04A042B67A00E006DD210 /* Intro_1_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro_1_View.swift; sourceTree = "<group>"; };
-		8BF04A062B67A20A006DD210 /* Intro_2_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro_2_View.swift; sourceTree = "<group>"; };
-		8BF04A082B67A215006DD210 /* Intro_3_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intro_3_View.swift; sourceTree = "<group>"; };
+		8BF04A042B67A00E006DD210 /* ExperimentPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentPage.swift; sourceTree = "<group>"; };
+		8BF04A062B67A20A006DD210 /* DisplayPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayPage.swift; sourceTree = "<group>"; };
+		8BF04A082B67A215006DD210 /* PlayPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayPage.swift; sourceTree = "<group>"; };
 		8BF04A0C2B67D2FF006DD210 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		8BF04A0E2B67D604006DD210 /* PageContentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageContentController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,8 +102,10 @@
 				8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */,
 				8B2D17502B6C01DB00FEB986 /* Ball.swift */,
 				8BCCDCDF2B0B40F500040744 /* StageView.swift */,
+				8BDED9DE2B767C9600A47501 /* NeuralNetworkExplanation.swift */,
 				8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */,
 				8BE199CE2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift */,
+				8BAD2A332B77899C00CDFC6F /* Pretrained_Bird_Instance.swift */,
 				8BCCDCE12B0B40F600040744 /* Assets.xcassets */,
 				8BCCDCE62B0B40F600040744 /* WWDC.entitlements */,
 				8BCCDCE32B0B40F600040744 /* Preview Content */,
@@ -118,9 +124,9 @@
 		8BF04A012B679FC2006DD210 /* Slides */ = {
 			isa = PBXGroup;
 			children = (
-				8BF04A042B67A00E006DD210 /* Intro_1_View.swift */,
-				8BF04A062B67A20A006DD210 /* Intro_2_View.swift */,
-				8BF04A082B67A215006DD210 /* Intro_3_View.swift */,
+				8BF04A042B67A00E006DD210 /* ExperimentPage.swift */,
+				8BF04A062B67A20A006DD210 /* DisplayPage.swift */,
+				8BF04A082B67A215006DD210 /* PlayPage.swift */,
 			);
 			path = Slides;
 			sourceTree = "<group>";
@@ -195,23 +201,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BDED9DF2B767C9600A47501 /* NeuralNetworkExplanation.swift in Sources */,
 				8BCCDCE02B0B40F500040744 /* StageView.swift in Sources */,
 				8B2D17532B6C198300FEB986 /* GeneBoard.swift in Sources */,
 				8BE91C6D2B6CE8B400C3FA0F /* BallBoard.swift in Sources */,
 				8BE91C732B6F4BB300C3FA0F /* SettingView.swift in Sources */,
 				8BE91C752B6F550700C3FA0F /* GameView.swift in Sources */,
 				8BE91C712B6F4B9600C3FA0F /* ObservationView.swift in Sources */,
+				8BAD2A342B77899C00CDFC6F /* Pretrained_Bird_Instance.swift in Sources */,
 				8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */,
 				8BF04A0F2B67D604006DD210 /* PageContentController.swift in Sources */,
-				8BF04A072B67A20A006DD210 /* Intro_2_View.swift in Sources */,
+				8BF04A072B67A20A006DD210 /* DisplayPage.swift in Sources */,
 				8BE199CF2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift in Sources */,
-				8BF04A092B67A215006DD210 /* Intro_3_View.swift in Sources */,
+				8BF04A092B67A215006DD210 /* PlayPage.swift in Sources */,
 				8BE91C6F2B6D370D00C3FA0F /* RoundInfoBoard.swift in Sources */,
 				8BDED9DD2B7621E200A47501 /* NoticeView.swift in Sources */,
 				8B155B592B0C803700D3ACF7 /* PageController.swift in Sources */,
 				8B2D17512B6C01DB00FEB986 /* Ball.swift in Sources */,
 				8BF04A0D2B67D2FF006DD210 /* GameScene.swift in Sources */,
-				8BF04A052B67A00E006DD210 /* Intro_1_View.swift in Sources */,
+				8BF04A052B67A00E006DD210 /* ExperimentPage.swift in Sources */,
 				8BE199BA2B73ABC100CFD3BA /* NeuralNetwork.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

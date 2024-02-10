@@ -10,6 +10,12 @@ import Foundation
 
 class PageContentController: ObservableObject {
     
+    //mode
+    var display_mode:Bool = false
+    var experiment_mode:Bool = false
+    var play_mode:Bool = false
+    
+    
     @Published var is_showed_notice = false
     @Published var is_show_notice = false
     @Published var isUserBegin:Bool = false
@@ -22,7 +28,7 @@ class PageContentController: ObservableObject {
     // debug infos
     @Published var bannerContent: String = " Tap to begin "
     @Published var distance_score:Float = 0.123
-    @Published var velocity:Float = 1.23
+    @Published var velocity:Float = -600
     @Published var current_focus:Int = 0
     @Published var distance_u:Float = 0.123
     @Published var distance_d:Float = 0.123
@@ -36,7 +42,7 @@ class PageContentController: ObservableObject {
     @Published var ui_mutate_proab: Float = 0.15
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.0
+    var difficulty_index: CGFloat = 0.35
     var bird_brain_volumn_index: Int = 0
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 0
@@ -75,7 +81,27 @@ class PageContentController: ObservableObject {
     @Published var avg_fitness_score_trend: Float = 0
     
     
+    // display
+    var display_mlp: SimpleNeuralNetwork = SimpleNeuralNetwork(hidden_layer_len: 18)
     let count_down: Float = 2.0
+    
+    init (){
+        //
+        self.experiment_mode = true
+    }
+    
+    init (display_mode:Bool,displaying_bird_mlp: SimpleNeuralNetwork){
+        // single bird show
+        // display mode
+        self.display_mode = display_mode
+        self.display_mlp = displaying_bird_mlp
+        self.bannerContent = "Tap to Play"
+    }
+    init (play_mode:Bool){
+        // single bird show
+        // play mode
+        self.play_mode = play_mode
+    }
     
     
     func update_birds_remaining(){
@@ -97,7 +123,7 @@ class PageContentController: ObservableObject {
         self.bird_brain_volumn_index = self.ui_bird_brain_size
         self.setBestBirdNumbers()
         
-        
+        print("Experiment Infos")
         print("birdNumber:", bird_number)
         print("mutateProb:", mutate_proab)
         print("birdSizeIndex:", col_gap_value_mapping)
@@ -106,45 +132,7 @@ class PageContentController: ObservableObject {
         
     }
     
-    
-    func controller_reset() {
-        
-        // reset don't incluede the setting reset
-        if self.rounds_count >= 1 {
-            print("+ fetching best birds")
-            self.fetch_the_best_birds()
-            self.balls.removeAll()
-            print("+ reproducing")
-            self.reproduce()
-            self.dropout()
-        }
-        
-            self.rounds_count += 1
-        
-        isReset = false
-        isGameBegin = false
-        isUserBegin = false
-        isGameOver = false
-        bannerContent = " Tap to begin "
-        
-    
-    }
-    func game_wise_controller_reset() {
-        
-        // reset don't incluede the setting reset
-        self.rounds_count = 0
-        isLooped = false
-        isReset = false
-        isGameBegin = false
-        isUserBegin = false
-        isGameOver = false
-        isOnSetting = true
-        is_on_restricted_area = false
-        balls.removeAll()
-        best_balls.removeAll()
-        bannerContent = " Tap to begin "
-    
-    }
+
     
     func fetch_the_best_birds(){
         assert(self.balls.count == self.bird_number, "balls array number error: \(self.balls.count)")
@@ -311,7 +299,12 @@ class PageContentController: ObservableObject {
     }
     func set_game_over_banner() {
         DispatchQueue.main.async {
-            self.bannerContent = " Round ended! Touch to test the next generation"
+            if self.play_mode{
+                self.bannerContent = "Oops, Tap to restart"
+            }else if self.experiment_mode{
+                self.bannerContent = " Round ended! Touch to test the next generation"
+            }
+            
         }
     }
 
@@ -367,4 +360,95 @@ class PageContentController: ObservableObject {
         self.avg_distance_score = avg_distance_score
         
     }
+    func get_display_mode_info() -> (Float, Float, Float, Float){
+        
+        if self.balls.indices.contains(0){
+            return (balls[0].distance_u,balls[0].distance_d,balls[0].velocity,0)
+        }else{
+            return (0,0,0,0)
+        }
+    }
+}
+
+
+// MARK: - resets
+extension PageContentController{
+    
+    func experiment_controller_reset() {
+        
+        // reset don't incluede the setting reset
+        if self.rounds_count >= 1 {
+            //print("+ fetching best birds")
+            self.fetch_the_best_birds()
+            // print best brid DNA
+            if self.best_balls.indices.contains(0){
+                print("--BEST-MLP--")
+                print("Distence:",self.best_balls[0].distance_score)
+                print("--MLP-BEGINS--")
+                print(self.best_balls[0].mlp.weights_layer1)
+                print(self.best_balls[0].mlp.weights_layer2)
+                print(self.best_balls[0].mlp.bias_layer1)
+                print(self.best_balls[0].mlp.bias_layer2)
+                print("--MLP-ENDS--")
+            }
+            self.balls.removeAll()
+            //print("+ reproducing")
+            self.reproduce()
+            self.dropout()
+        }
+        
+            self.rounds_count += 1
+        
+        isReset = false
+        isGameBegin = false
+        isUserBegin = false
+        isGameOver = false
+        bannerContent = " Tap to begin "
+        
+    
+    }
+    func experiment_game_wise_controller_reset() {
+        
+        // reset don't incluede the setting reset
+        self.rounds_count = 0
+        isLooped = false
+        isReset = false
+        isGameBegin = false
+        isUserBegin = false
+        isGameOver = false
+        isOnSetting = true
+        is_on_restricted_area = false
+        balls.removeAll()
+        best_balls.removeAll()
+        bannerContent = " Tap to begin "
+    
+    }
+    
+    func display_controller_reset(){
+        isLooped = true
+        isReset = false
+        isGameBegin = false
+        isUserBegin = false
+        isGameOver = false
+        isOnSetting = false
+        is_on_restricted_area = false
+        self.balls.removeAll()
+        balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: pretrained_bird_instance))
+        self.bird_brain_volumn_index = 18
+        
+    }
+    
+    func play_controller_reset(){
+        isLooped = false
+        isReset = false
+        isGameBegin = false
+        isUserBegin = false
+        isGameOver = false
+        isOnSetting = false
+        is_on_restricted_area = false
+        balls.removeAll()
+        balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red))
+        bannerContent = " Tap to begin "
+    }
+    
 }

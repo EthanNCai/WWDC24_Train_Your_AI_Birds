@@ -1,15 +1,14 @@
 //
-//  Intro_1_View.swift
+//  Intro_2_View.swift
 //  WWDC
 //
 //  Created by 蔡俊志 on 2024/1/29.
 //
-import SpriteKit
+
 import SwiftUI
 
-struct Intro_1_View: View {
-    
-    @ObservedObject var content_ctrl = PageContentController()
+struct DisplayPage: View {
+    @ObservedObject var content_ctrl = PageContentController(display_mode: true, displaying_bird_mlp: SimpleNeuralNetwork(hidden_layer_len: 16))
     @State var isSpeeded = false
     var scene: GameScene{
         let scene = GameScene(viewController:content_ctrl)
@@ -23,14 +22,7 @@ struct Intro_1_View: View {
         GeometryReader { geometry in
             ZStack {
                 HStack { // info panal & game scene
-                    HStack{
-                        if content_ctrl.isOnSetting{
-                            SettingView(content_ctrl: self.content_ctrl,scene:scene)
-                        }else
-                        {
-                            ObservationView(content_ctrl: self.content_ctrl, scene: scene)
-                        }
-                    }
+                    NeuralNetworkExplanation(content_ctrl: self.content_ctrl)
                     GameView(content_ctrl: content_ctrl, scene: scene)
                 }
                 if self.content_ctrl.is_show_notice{
@@ -44,13 +36,17 @@ struct Intro_1_View: View {
             .onChange(of: geometry.size) { newSize in
                 content_ctrl.size = geometry.size
             }
+            .onAppear(){
+                content_ctrl.isGameOver = true
+            }
             
             
         }
     }
 }
-struct Intro_1_View_Previews: PreviewProvider {
+
+struct Intro_2_View_Previews: PreviewProvider {
     static var previews: some View {
-        Intro_1_View()
+        DisplayPage()
     }
 }

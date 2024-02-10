@@ -29,12 +29,12 @@ struct GameView: View {
             
             // banner
             
-            if self.content_ctrl.isOnSetting{
+            if self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
                 Text("Set everything up and\nClick \"🔨Start Your Experiment\"\n on upper left To Continue")
                     .padding()
                     .background(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 10))
-            }else
+            }else if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode
             {
                 if !content_ctrl.isUserBegin ||  content_ctrl.isGameOver{
                     VStack{
@@ -51,16 +51,32 @@ struct GameView: View {
                         }
                         Text(content_ctrl.bannerContent)
                             .fontWeight(.black)
-                            
+                            .padding()
+                        
                     }
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .mask(RoundedRectangle(cornerRadius: 10))
+                    
+                }
+            }else if !self.content_ctrl.isUserBegin && self.content_ctrl.display_mode{
+                
+                Text(content_ctrl.bannerContent)
+                    .fontWeight(.black)
+                    .padding()
+                    .background(.ultraThinMaterial)
+                    .mask(RoundedRectangle(cornerRadius: 10))
+                
+            }else if !self.content_ctrl.isUserBegin && self.content_ctrl.play_mode{
+                Text(content_ctrl.bannerContent)
+                    .fontWeight(.black)
                     .padding()
                     .background(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 10))
                         
                 }
-            }
             
-            if !self.content_ctrl.isOnSetting{
+            if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
             // gauges
                 VStack{
                     
@@ -92,7 +108,7 @@ struct GameView: View {
                 }
             
             }
-            if !self.content_ctrl.isOnSetting{
+            if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
                 //debug info
                 HStack{
                     VStack{
@@ -119,9 +135,29 @@ struct GameView: View {
                     Spacer()
                 }
             }
+            if !self.content_ctrl.isOnSetting && self.content_ctrl.play_mode{
+                //debug info
+                HStack{
+                    VStack{
+                        VStack(alignment: .leading){
+            
+                            Text("Distance:\(self.content_ctrl.balls.indices.contains(0) ? Int(self.content_ctrl.balls[0].distance_score) : 0)")
+                        }
+                        .fontWeight(.black)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .mask(RoundedRectangle(cornerRadius: 15))
+                        Spacer()
+                    }
+                    .padding()
+                    Spacer()
+                }
+            }
+            
         }
         .frame(width: content_ctrl.size.width*1/2,
                height: content_ctrl.size.height)
+    
     }
 }
 
