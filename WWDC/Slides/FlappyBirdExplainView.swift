@@ -14,16 +14,18 @@ struct FlappyBirdExplainView: View {
             VStack(alignment: .leading){
                 
                     HStack(spacing: 1){
-                        Image(systemName: "bird")
+                        Image(systemName: "bird.fill")
                             .font(.title)
-                            .foregroundColor(.orange)
-                        Text("What's FlappyBird")
+                           
+                        Text("1. What is 'FlappyBird'")
                             .font(.title)
                             .fontWeight(.heavy)
-                            .foregroundColor(.orange)
+                           
                         
-                    }.padding(4)
-                    Text("\t Our goal is to design a machine learning model that automatically plays FlappyBrid, but first we need to understand the FlappyBrid game.\n\tFlappyBird is a very simple and well-known game, __SKIP THIS PAGE__ if you already know how to play it. \n\n\tIf you haven't played it before, the rules are: \n\t_(1)Tap the screen to make the bird go up\n\t(2)Keep the bird away from the column.._ \tYou can try the game on the right to get a understanding of the rules, but __DON'T PLAY FOR TOO LONG__ because that's not the point of this app.")
+                    }
+                    .foregroundColor(.pink)
+                    .padding(4)
+                    Text("\tFlappyBird is a very simple and well-known game, __SKIP THIS PAGE__ if you already know how to play it. \n\n\tIf you haven't played it before, the rules are: \n\t_(1)Tap the screen to make the bird go up\n\t(2)Keep the bird away from the column.._ \tYou can try the game on the right to get a understanding of the rules, but __DON'T PLAY FOR TOO LONG__ because that's not the point of this app.")
                     .font(.body)
                     .padding(1)
                 

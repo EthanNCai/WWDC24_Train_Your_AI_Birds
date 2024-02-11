@@ -23,9 +23,22 @@ struct SettingView: View {
         
 
         VStack {
-            VStack {
-                
+            VStack(alignment: .leading) {
                 HStack{
+                    Image(systemName: "hammer.fill")
+                    VStack(alignment:.leading){
+                        Text("Experiment")
+                            .fontWeight(.bold)
+                        Text("Settings page")
+                            .font(.title3)
+                           
+                    }
+                    
+                }
+                .foregroundColor(.pink)
+                .font(.title)
+                
+                
                     Button(action: {
                         
                         withAnimation(){
@@ -36,29 +49,29 @@ struct SettingView: View {
                     }){
                         HStack{
                             Text("🔨 Start Your Experiment!")
-                                .padding(1)
-                                .fontWeight(.heavy)
                             Image(systemName: "chevron.right")
-                        }
+                        }.padding()
+                            .fontWeight(.bold)
                         
                         
-                    }.background(.red)
-                        .mask(RoundedRectangle(cornerRadius: 5))
-                    Spacer()
-                }
-                .padding(.leading)
-                .padding(.top)
+                    }.padding(3)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.green)
+                    
+                    .mask(RoundedRectangle(cornerRadius: 5))
+                    
+                
+                
                 ScrollView(showsIndicators: true){
                 
                 
                     HStack(spacing: 1){
-                        Image(systemName: "bird.fill")
-                            .foregroundColor(.blue.opacity(1))
+                        
                         Text("Bird & Game settings")
-                            .font(.title2)
-                            .fontWeight(.heavy)
+                            .font(.title3)
+                            
                             .padding(2)
-                            .foregroundColor(.blue.opacity(1))
+                            .foregroundColor(.indigo)
                         Spacer()
                     }
                     VStack{
@@ -120,13 +133,12 @@ struct SettingView: View {
                             
                         }
                     HStack(spacing: 1){
-                        Image(systemName: "gamecontroller.fill")
-                            .foregroundColor(.green)
+                       
                         Text("Genetic Algotithm settings")
-                            .font(.title2)
-                            .fontWeight(.heavy)
+                            .font(.title3)
+                           
                             .padding(2)
-                            .foregroundColor(.green)
+                            .foregroundColor(.indigo)
                         Spacer()
                     }
                     

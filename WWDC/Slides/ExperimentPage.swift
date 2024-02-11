@@ -14,7 +14,7 @@ struct ExperimentPage: View {
     var scene: GameScene{
         let scene = GameScene(viewController:content_ctrl)
 
-        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height)
+        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height*0.9)
         return scene
     }
     
@@ -36,6 +36,11 @@ struct ExperimentPage: View {
                 if self.content_ctrl.is_show_notice{
                     NoticeView(content_ctrl: self.content_ctrl)
                 }
+                if self.content_ctrl.show_welcome_mat{
+                    ExperimentHintView(content_ctrl: self.content_ctrl)
+                        .padding()
+                }
+                
                 
             }
             .onAppear {

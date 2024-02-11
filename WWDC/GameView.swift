@@ -155,8 +155,7 @@ struct GameView: View {
             }
             
         }
-        .frame(width: content_ctrl.size.width*1/2,
-               height: content_ctrl.size.height)
+        .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
     
     }
 }

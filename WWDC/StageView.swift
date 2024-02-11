@@ -98,7 +98,9 @@ struct StageContentView<Content: View>: View {
                 HStack{
                     Button(action: {
                         if let previousPage = viewModel.currentPage?.previous() {
-                            viewModel.currentPage = previousPage
+                            withAnimation(){
+                                viewModel.currentPage = previousPage
+                            }
                         }
                     }) {
                         HStack
@@ -115,7 +117,10 @@ struct StageContentView<Content: View>: View {
 
                     Button(action: {
                         if let nextPage = viewModel.currentPage?.next() {
-                            viewModel.currentPage = nextPage
+                            withAnimation(){
+                                viewModel.currentPage = nextPage
+                            }
+                            
                         }
                     }) {
                         HStack

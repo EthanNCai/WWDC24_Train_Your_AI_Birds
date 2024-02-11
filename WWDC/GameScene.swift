@@ -692,7 +692,7 @@ extension GameScene{
         
         var is_distance_long_enough = false
         for ball in self.content_ctrl.balls{
-            if ball.distance_score >= 800{
+            if ball.distance_score >= 600{
                 is_distance_long_enough = true
             }
         }

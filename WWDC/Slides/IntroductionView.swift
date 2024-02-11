@@ -15,14 +15,15 @@ struct IntroductionView: View {
                 
                     HStack(spacing: 1){
                         Image(systemName: "bird.fill")
-                            .font(.title)
-                            .foregroundColor(.blue)
-                        Text("Welcome to the Bird Machine Learning Lab")
-                            .font(.title)
+                           
+                            
+                        Text("Welcome to the Bird Machine Learning Lab") 
                             .fontWeight(.heavy)
-                            .foregroundColor(.blue)
+                            
                         
                     }.padding(4)
+                    .font(.title)
+                    .foregroundColor(.pink)
                     Text("What does this app do?")
                         .font(.title2)
                         .foregroundColor(.indigo)

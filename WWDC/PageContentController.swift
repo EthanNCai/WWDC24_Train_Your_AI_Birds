@@ -42,13 +42,14 @@ class PageContentController: ObservableObject {
     @Published var ui_mutate_proab: Float = 0.15
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.25
+    var difficulty_index: CGFloat = 0.35
     var bird_brain_volumn_index: Int = 0
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 0
     var bird_number: Int = 0
     var mutate_proab: Float = 0.0
     let gene_length: Int = 10
+    @Published var show_welcome_mat: Bool = true
     
     
     //
@@ -154,9 +155,9 @@ class PageContentController: ObservableObject {
             self.balls.append(new_ball)
         }
         
-        let rand_y_pos = Float.random(in: 0.3...0.7)
-        let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red)
-        self.balls.append(new_ball)
+//        let rand_y_pos = Float.random(in: 0.3...0.7)
+//        let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red)
+//        self.balls.append(new_ball)
         
         
         

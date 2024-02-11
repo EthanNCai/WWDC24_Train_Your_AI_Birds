@@ -16,11 +16,12 @@ struct GAPage: View {
                     HStack(spacing: 1){
                     
                         Image(systemName:"atom")
-                            .font(.title)
-                        Text("Genetic Algorithm")
-                            .font(.title)
-                            .fontWeight(.heavy)
-                    }.foregroundColor(.green)
+                        Text("3. Genetic Algorithm")
+                            
+                    }
+                    .fontWeight(.heavy)
+                    .font(.title)
+                    .foregroundColor(.pink)
                     .padding(4)
                     Text("How does a machine learn a good neural network?")
                         .font(.title2)
@@ -43,7 +44,7 @@ struct GAPage: View {
                         .aspectRatio( contentMode: .fit)
                         .frame(maxWidth: 260)
                         .padding(.leading)
-                    Text("\tIn genetic algorithms, the ability to adapt to the environment is called __Fitness__. When we train FlappyBrids' neural network, we can set the fitness to the __survival time__ of the birds. In each iteration, we take the best birds that have survived the longest and breed them (cross-reorganization of the weights of their neural networks, and genetic mutation) thus obtaining new offspring birds.")
+                    Text("\tIn genetic algorithms, the ability to adapt to the environment is called __Fitness__. When we train FlappyBrids' neural network, we can set the fitness to the __survival time__ of the birds. In each iteration, we take the best birds that have survived the longest and breed them (cross-reorganization of the weights of their neural networks, and genetic mutation) thus obtaining new offspring birds.\n\n\tTo summarize. What we need is an __initial population__ with random genes, a reasonable __Algorithms for calculating Fitness of individuals__ for selecting superior individuals, and a reasonable __probability of genetic variation__ to increase the randomness. This way we can slowly evolve the superior individuals each round of the game")
                     .font(.body)
                     
                     

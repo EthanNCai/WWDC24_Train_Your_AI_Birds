@@ -13,7 +13,7 @@ struct NeuralNetworkPage: View {
     var scene: GameScene{
         let scene = GameScene(viewController:content_ctrl)
 
-        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height)
+        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height*0.8)
         return scene
     }
     
@@ -32,7 +32,7 @@ struct NeuralNetworkPage: View {
                                     .font(.title)
                                     .foregroundColor(.pink)
                                     .fontWeight(.heavy)
-                                Text("Bird's Brain: Neural Networks")
+                                Text("2. Bird's Brain: Neural Networks")
                                     .font(.title)
                                     .fontWeight(.heavy)
                                     .foregroundColor(.pink)
@@ -67,7 +67,7 @@ struct NeuralNetworkPage: View {
                                 .font(.title2)
                                 .foregroundColor(.indigo)
                                 .padding(.horizontal)
-                            Text("\n\tEach neural network is determined by a set of __numbers__ ( aka __weights__). This set of numbers will guide the neural network on __how to compute inputs into outputs__. \n\n\tSo our goal is to find the optimal set of numbers for the neural network that will allow the bird to fly correctly between the columns.")
+                            Text("\n\tEach neural network is determined by a set of __numbers__ ( aka __weights__). This set of numbers will guide the neural network on __how to compute inputs into outputs__. \n\n\tSo our __GOAL__ is to find the __OPTIMAL WEIGHTS__  for the neural network that will allow the bird to fly correctly in the columns.")
                                 .font(.body)
                                 .padding(.horizontal)
                         }
