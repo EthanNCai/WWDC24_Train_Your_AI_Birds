@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct DisplayPage: View {
-    @ObservedObject var content_ctrl = PageContentController(display_mode: true, displaying_bird_mlp: SimpleNeuralNetwork(hidden_layer_len: 16))
+struct IntroductionPage: View {
+    @ObservedObject var content_ctrl = PageContentController(play_mode:  true)
     @State var isSpeeded = false
     var scene: GameScene{
         let scene = GameScene(viewController:content_ctrl)
@@ -22,7 +22,10 @@ struct DisplayPage: View {
         GeometryReader { geometry in
             ZStack {
                 HStack { // info panal & game scene
-                    NeuralNetworkExplanation(content_ctrl: self.content_ctrl)
+                    //NeuralNetworkExplanation(content_ctrl: self.content_ctrl)
+                    IntroductionView()
+                    .frame(width: content_ctrl.size.width*1/2,
+                            height: content_ctrl.size.height)
                     GameView(content_ctrl: content_ctrl, scene: scene)
                 }
                 if self.content_ctrl.is_show_notice{
@@ -45,8 +48,8 @@ struct DisplayPage: View {
     }
 }
 
-struct Intro_2_View_Previews: PreviewProvider {
+struct PlayPage_View_Previews: PreviewProvider {
     static var previews: some View {
-        DisplayPage()
+        IntroductionPage()
     }
 }

@@ -13,12 +13,8 @@ struct NeuralNetworkExplanation: View {
         
         
         VStack {
-            
-            
-            
             HStack {
                 VStack{
-                    
                     VStack(spacing: 0){
                         Text("Distance to the column")
                             .font(.caption2)
@@ -56,18 +52,26 @@ struct NeuralNetworkExplanation: View {
                     
                 }
                 
+                VStack{
+                    
+                    
                     Text("🧠Neural Network")
                         .font(.title2)
                         .fontWeight(.heavy)
-                    
+                    Text("(with well learned __weights__)")
+                        .font(.footnote)
+                }
                     .frame(width: 100,height: 130)
                     .padding()
                     .background(.ultraThickMaterial)
                     .mask(RoundedRectangle(cornerRadius: 15))
                     
+                        
                     
-                
-                
+                    .padding()
+                    .background(.ultraThickMaterial)
+                    .mask(RoundedRectangle(cornerRadius: 15))
+                    
                 VStack{
                     VStack(spacing: 0) {
                         Text("Fly")
@@ -79,8 +83,6 @@ struct NeuralNetworkExplanation: View {
                                 .frame(width: 30,height: 30)
                             Gauge(value: self.content_ctrl.balls.indices.contains(0) ? self.content_ctrl.balls[0].fly_probability : 0, in: 0...1, label: {}).frame(width: 30,height: 30)
                                 .tint(.red)
-                                
-                            
                         }
                     }
                     .padding(1)
@@ -109,8 +111,7 @@ struct NeuralNetworkExplanation: View {
                         
             
         }.padding()
-            .frame(width: content_ctrl.size.width*1/2,
-                   height: content_ctrl.size.height)
+            
             
     }
 }

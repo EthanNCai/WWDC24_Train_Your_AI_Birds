@@ -476,7 +476,6 @@ extension GameScene{
                     
                     if self.content_ctrl.experiment_mode{
                         
-                        
                         self.update_ball_fitness_score()
                         
                         self.see_if_we_can_show_the_notice()

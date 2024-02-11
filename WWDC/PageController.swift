@@ -7,27 +7,27 @@
 import SwiftUI
 
 enum Page: String, CaseIterable {
-    case intro_1_view = "What's this APP do?"
-    case profile = "Our Target"
-    case new = "Genetic Algorithm"
-    case settings = "Random spwan"
-    case help = "Selecting the best gene"
+    case introduction_page = "1.What's this app for?"
+    case flappybird_page = "2.FlappyBrid"
+    case neural_network_page = "3.Neural Networks"
+    case ga_page = "4.Genetic Algorithms"
+    case experiment_page = "5.🔬Experiment!"
     
 }
 
 extension Page {
     func PageIconFile() -> String {
         switch self {
-        case .intro_1_view:
-            return "house"
-        case .profile:
-            return "person"
-        case .settings:
-            return "gear"
-        case .help:
-            return "questionmark.circle"
-        case .new:
-            return "square.and.arrow.up.fill"
+        case .introduction_page:
+            return "questionmark"
+        case .flappybird_page:
+            return "bird.fill"
+        case .neural_network_page:
+            return "brain"
+        case .ga_page:
+            return "atom"
+        case .experiment_page:
+            return "hammer.fill"
         }
     }
 }
@@ -35,16 +35,16 @@ extension Page {
 extension Page {
     func pageTitle() -> String {
         switch self {
-        case .intro_1_view:
-            return "Introduction"
-        case .profile:
-            return "page2"
-        case .settings:
-            return "page3"
-        case .help:
-            return "page4"
-        case .new:
-            return "page5"
+        case .introduction_page:
+            return "APP Introduction"
+        case .flappybird_page:
+            return "How to play FlappyBird"
+        case .neural_network_page:
+            return "Learn about Neural Network"
+        case .ga_page:
+            return "Learn about Genetic Algorithms"
+        case .experiment_page:
+            return "Experiment"
         }
     }
 }
@@ -84,7 +84,7 @@ extension Page {
 }
 
 class PageController: ObservableObject {
-    @Published var currentPage: Page? = .intro_1_view
+    @Published var currentPage: Page? = .introduction_page
     @Published var window_width: CGFloat = 0
     @Published var window_height: CGFloat = 0
 }

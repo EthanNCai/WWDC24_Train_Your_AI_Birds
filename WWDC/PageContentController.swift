@@ -5,7 +5,7 @@
 //  Created by 蔡俊志 on 2024/1/29.
 //
 
-import Foundation
+import SwiftUI
 
 
 class PageContentController: ObservableObject {
@@ -42,7 +42,7 @@ class PageContentController: ObservableObject {
     @Published var ui_mutate_proab: Float = 0.15
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.35
+    var difficulty_index: CGFloat = 0.25
     var bird_brain_volumn_index: Int = 0
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 0
@@ -276,7 +276,10 @@ class PageContentController: ObservableObject {
     }
     
     func set_game_begin(){
-        self.isGameBegin = true
+        withAnimation(){
+            self.isGameBegin = true
+        }
+        
     }
     
     
@@ -291,6 +294,7 @@ class PageContentController: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
                     self.bannerContent = "Counting down 1..."
                     DispatchQueue.main.asyncAfter(deadline: .now() + timeToGo / 3) {
+                        
                         self.isUserBegin = true
                     }
                 }
@@ -448,7 +452,7 @@ extension PageContentController{
         is_on_restricted_area = false
         balls.removeAll()
         balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red))
-        bannerContent = " Tap to begin "
+        bannerContent = " Tap to try FlappyBrid "
     }
     
 }

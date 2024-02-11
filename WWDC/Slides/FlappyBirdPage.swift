@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct PlayPage: View {
+struct FlappyBirdPage: View {
     @ObservedObject var content_ctrl = PageContentController(play_mode:  true)
     @State var isSpeeded = false
     var scene: GameScene{
@@ -23,10 +23,8 @@ struct PlayPage: View {
             ZStack {
                 HStack { // info panal & game scene
                     //NeuralNetworkExplanation(content_ctrl: self.content_ctrl)
-                    
-                    HStack{
-                        
-                    }.frame(width: content_ctrl.size.width*1/2,
+                    FlappyBirdExplainView()
+                    .frame(width: content_ctrl.size.width*1/2,
                             height: content_ctrl.size.height)
                     GameView(content_ctrl: content_ctrl, scene: scene)
                 }
@@ -50,8 +48,3 @@ struct PlayPage: View {
     }
 }
 
-struct PlayPage_View_Previews: PreviewProvider {
-    static var previews: some View {
-        PlayPage()
-    }
-}

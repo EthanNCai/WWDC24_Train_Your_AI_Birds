@@ -4,14 +4,21 @@ import SwiftUI
 struct StageView: View {
     @ObservedObject var viewModel = PageController()
     
-    var intro_name = [Page.intro_1_view, Page.profile, Page.new]
-    var intro_viewpages = [AnyView(ExperimentPage()),
-                        AnyView(DisplayPage()),
-                        AnyView(PlayPage())] as [AnyView]
+    var intro_name = [Page.introduction_page, Page.flappybird_page]
+    var intro_viewpages = [AnyView(IntroductionPage()),
+                           AnyView(FlappyBirdPage())] as [AnyView]
     
-    var experiment_name = [Page.settings, Page.help]
-    var experiment_viewpages = [AnyView(PlayPage()),
+    
+    
+    var knowledges_names = [Page.neural_network_page, Page.ga_page]
+    var knowledges_viewmaps = [AnyView(NeuralNetworkPage()),
+                        AnyView(GAPage())] as [AnyView]
+    
+    var experiment_names = [Page.experiment_page]
+    var experiment_viewmaps = [
                         AnyView(ExperimentPage())] as [AnyView]
+    
+    
     
     
     var body: some View {
@@ -36,11 +43,29 @@ struct StageView: View {
                 }
                 
                 
-                Section(header: Text("Genetic Algorithm")) {
-                    ForEach(experiment_name.indices, id: \.self) { pageIndex in
-                        if pageIndex < experiment_viewpages.count {
-                            let page = experiment_name[pageIndex]
-                            let view = experiment_viewpages[pageIndex]
+                Section(header: Text("Core knowledge")) {
+                    ForEach(knowledges_names.indices, id: \.self) { pageIndex in
+                        if pageIndex < knowledges_viewmaps.count {
+                            let page = knowledges_names[pageIndex]
+                            let view = knowledges_viewmaps[pageIndex]
+                            
+                            NavigationLink(
+                                destination: StageContentView(viewModel: viewModel, view: view,title: page.pageTitle()),
+                                tag: page,
+                                selection: $viewModel.currentPage,
+                                label: {
+                                    Label(page.rawValue, systemImage: page.PageIconFile())
+                                }
+                            )
+                        }
+                    }
+                }
+                
+                Section(header: Text("Experiment")) {
+                    ForEach(experiment_names.indices, id: \.self) { pageIndex in
+                        if pageIndex < experiment_viewmaps.count {
+                            let page = experiment_names[pageIndex]
+                            let view = experiment_viewmaps[pageIndex]
                             
                             NavigationLink(
                                 destination: StageContentView(viewModel: viewModel, view: view,title: page.pageTitle()),
