@@ -29,7 +29,7 @@ struct ExperimentHintView: View {
             
             .padding()
             .frame(maxHeight: .infinity)
-            .background(.ultraThinMaterial)
+            .background(.ultraThickMaterial)
             .mask(RoundedRectangle(cornerRadius: 15))
             .overlay(){
                 RoundedRectangle(cornerRadius: 15).stroke().fill(.gray.opacity(0.4))

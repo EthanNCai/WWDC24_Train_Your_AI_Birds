@@ -14,16 +14,20 @@ struct IntroductionView: View {
             VStack(alignment: .leading){
                 
                     HStack(spacing: 1){
-                        Image(systemName: "bird.fill")
+                        Image(systemName: "swift")
+                            .font(.largeTitle)
+                            .padding(1)
+                            .foregroundColor(.orange)
                            
                             
-                        Text("Welcome to the Bird Machine Learning Lab") 
+                        Text("Welcome to your Bird Machine Learning Lab") 
                             .fontWeight(.heavy)
+                            .font(.title)
                             
                         
                     }.padding(4)
-                    .font(.title)
-                    .foregroundColor(.pink)
+                    
+                    .foregroundColor(.orange)
                     Text("What does this app do?")
                         .font(.title2)
                         .foregroundColor(.indigo)

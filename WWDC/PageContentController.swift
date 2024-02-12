@@ -42,7 +42,7 @@ class PageContentController: ObservableObject {
     @Published var ui_mutate_proab: Float = 0.15
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.35
+    var difficulty_index: CGFloat = 0.26
     var bird_brain_volumn_index: Int = 0
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 0
@@ -98,6 +98,16 @@ class PageContentController: ObservableObject {
         self.display_mlp = displaying_bird_mlp
         self.bannerContent = "Tap to Play"
     }
+    
+    init (display_mode:Bool,displaying_bird_mlp: SimpleNeuralNetwork,display_size: CGSize){
+        // single bird show
+        // display mode
+        self.size = display_size
+        self.display_mode = display_mode
+        self.display_mlp = displaying_bird_mlp
+        self.bannerContent = "Tap to Play"
+    }
+    
     init (play_mode:Bool){
         // single bird show
         // play mode

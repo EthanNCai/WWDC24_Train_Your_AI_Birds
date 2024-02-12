@@ -36,11 +36,12 @@ struct Ball:Identifiable, Hashable{
         
         self.ballRadius = CGFloat(ball_radius)
         self.ball_node = SKSpriteNode(imageNamed: "bird")
-        self.ball_node.scale(to: CGSize(width: 38, height: 38))
+        self.ball_node.scale(to: CGSize(width: 50, height: 50))
         self.ball_index = ball_index
         self.ball_node.position = CGPoint(x: x, y: y)
         self.ball_node.name = "ball" + String(ball_index)
         self.ball_node.color = NSColor(ball_color)
+        self.ball_node.zPosition = -2
         self.mlp = SimpleNeuralNetwork(hidden_layer_len: 18)
         
     }
@@ -48,11 +49,12 @@ struct Ball:Identifiable, Hashable{
         
         self.ballRadius = CGFloat(ball_radius)
         self.ball_node = SKSpriteNode(imageNamed: "bird")
-        self.ball_node.scale(to: CGSize(width: 38, height: 38))
+        self.ball_node.scale(to: CGSize(width: 50, height: 50))
         self.ball_index = ball_index
         self.ball_node.position = CGPoint(x: x, y: y)
         self.ball_node.name = "ball" + String(ball_index)
         self.ball_node.color = NSColor(ball_color)
+        self.ball_node.zPosition = -2
         self.mlp = mlp
         
     }
@@ -60,8 +62,9 @@ struct Ball:Identifiable, Hashable{
     mutating func clone_node(){
         
         let cloned_ball = SKSpriteNode(imageNamed: "bird")
-        cloned_ball.scale(to: CGSize(width: 38, height: 38))
+        cloned_ball.scale(to: CGSize(width: 50, height: 50))
         cloned_ball.position = self.ball_node.position
+        self.ball_node.zPosition = -2
         self.ball_node = cloned_ball
         
     }

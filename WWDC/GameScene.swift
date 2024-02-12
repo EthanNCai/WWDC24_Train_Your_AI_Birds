@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 import SpriteKit
 
 class GameScene: SKScene{
@@ -15,8 +16,10 @@ class GameScene: SKScene{
     @ObservedObject var content_ctrl: PageContentController
     
     //  hyper-params
+    var cloud_speed_index:CGFloat = 0.003
     var speed_index: CGFloat = 0.005
     var colTimeInterval: Double = 3.0
+    var cloudTimeInterval: Double = 3.4
     var jmpTimeInterval: Double = 0.2
     var gameTickInterval: Double = 0.02
     var ballRadius:CGFloat = 15.0
@@ -33,8 +36,11 @@ class GameScene: SKScene{
     var jmpTimer: TimeInterval = 0.0
     var colGeneratorTimer: TimeInterval = 0.0
     var gameTickTimer: TimeInterval =  0.0
+    var cloudTickTimer: TimeInterval =  0.0
     var onscreen_cols: [Int] = []
+    var onscreen_clouds: [Int] = []
     var newest_col_index = 0
+    var newest_cloud_index = 0
     var currently_focus = 0
     var is_on_restricted_area = false
    
@@ -80,12 +86,16 @@ class GameScene: SKScene{
                 continue
             }
             
+            
+            
+            
             // check for cell and floor
             
             
             let y = ball.ball_node.position.y
             
-            let y_lower_boundary = 0 + ball.ballRadius + outed_tolerance
+            let y_lower_boundary = self.size.height * 0.1 + ball.ballRadius + outed_tolerance
+            // 0.1 => solid 
             let y_higher_boundary = self.size.height - ball.ballRadius - outed_tolerance
             
             if y < y_lower_boundary || y > y_higher_boundary{
@@ -123,10 +133,23 @@ class GameScene: SKScene{
     
     
     func makeBackgrounds(){
-        let background = SKSpriteNode(color: NSColor(Color.blue.opacity(0.6)), size: self.size)
+        let background = SKSpriteNode(color: NSColor(hex:0x9BB8CD,alpha:1), size: self.size)
         background.anchorPoint = CGPoint.zero
         background.position = CGPoint.zero
+        background.zPosition = -5
         addChild(background)
+        
+        let solid = SKSpriteNode(color: NSColor(hex: 0xBCA37F,alpha:1.0), size: CGSize(width: self.content_ctrl.size.width, height: self.content_ctrl.size.height * 0.1))
+        solid.anchorPoint = .zero
+        solid.position = .zero
+        solid.zPosition = 1
+        addChild(solid)
+        
+        let ground = SKSpriteNode(color: NSColor(hex: 0xEAD7BB,alpha:1.0),  size: CGSize(width: self.content_ctrl.size.width, height: 10))
+        ground.anchorPoint = .zero
+        ground.position = CGPoint(x: 0, y: self.content_ctrl.size.height * 0.1)
+        solid.zPosition = 0
+        addChild(ground)
     }
     
     func updateBallDistScore(){
@@ -161,7 +184,7 @@ class GameScene: SKScene{
         
     }
     
-    func shiftColLeft() {
+    func shift_col_left() {
 
         for col_index in self.onscreen_cols {
             if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
@@ -181,14 +204,61 @@ class GameScene: SKScene{
             }
         }
     }
-    
+    func shift_cloud_left(){
+        for cloud_index in self.onscreen_clouds {
+            if let cloud = childNode(withName: "cloud" + String(cloud_index)) as? SKSpriteNode {
+                cloud.position.x -= self.cloud_speed_index * self.size.width
+                //print("cloud shifted, position :\(cloud.position.x), screen_width:\(self.content_ctrl.size.width)")
+                if cloud.position.x < -cloud.size.width-100 {
+                    if let index = self.onscreen_clouds.firstIndex(of: cloud_index) {
+                        onscreen_clouds.remove(at: index)
+                    }
+                }
+            }
+            
+        }
+    }
+    func make_cloud(){
+        
+        //print("made cloud")
+        self.newest_cloud_index += 1
+        let cloud_index = newest_cloud_index
+        // y boundary
+        
+        let y_upper_bound = Float(self.content_ctrl.size.height * 0.9)
+        let y_lower_bound = Float(self.content_ctrl.size.height * 0.4)
+        // rand y
+        let y = CGFloat(Float.random(in: y_lower_bound...y_upper_bound))
+        
+        // size boundary
+
+        // rand size
+        let length:CGFloat = 100
+        let coin = Int.random(in: 0...4)
+        let name:String
+        if coin == 1{
+            name = "cloud_sp"
+        }else{
+            name = "cloud"
+        }
+        
+        let cloud = SKSpriteNode(imageNamed: name)
+        cloud.anchorPoint = CGPoint.zero
+        cloud.scale(to: CGSize(width: length, height: length))
+        cloud.position = CGPoint(x: self.size.width, y: y)
+        cloud.name = "cloud" + String(cloud_index)
+        cloud.zPosition = -3
+        // add child
+        addChild(cloud)
+        self.onscreen_clouds.append(cloud_index)
+    }
     
     func makeCol(provided_position: CGFloat = -1){
         
         self.newest_col_index += 1
         let col_index = newest_col_index
         let (pos_index_u,pos_index_d) = colPositionIndexGenerator()
-        let colwidth: CGFloat = 8.0
+        let colwidth: CGFloat = 12.0
         let colheight: CGFloat = self.size.height
         var position: CGFloat {
             if(provided_position != -1){
@@ -198,16 +268,18 @@ class GameScene: SKScene{
             }
         }
         
-        let colu = SKSpriteNode(color: .green, size: CGSize(width: colwidth, height: colheight))
+        let colu = SKSpriteNode(color: NSColor(hex:0xD2DE32,alpha:1), size: CGSize(width: colwidth, height: colheight))
         colu.anchorPoint = CGPoint.zero
         colu.position = CGPoint(x: position , y: self.size.height * pos_index_u)
         colu.name = "colu" + String(col_index)
+        colu.zPosition = -1
         addChild(colu)
         
-        let cold = SKSpriteNode(color: .red, size: CGSize(width: colwidth, height: colheight))
+        let cold = SKSpriteNode(color: NSColor(hex:0xD2DE32,alpha:1), size: CGSize(width: colwidth, height: colheight))
         cold.anchorPoint = CGPoint.zero
         cold.position = CGPoint(x: position , y: self.size.height * pos_index_d)
         cold.name = "cold" + String(col_index)
+        cold.zPosition = -1
         
         
         addChild(cold)
@@ -402,7 +474,7 @@ extension GameScene{
     
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.1)...1)
+        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.2)...1)
         let id = iu - (1+self.content_ctrl.difficulty_index)
         return (iu, id)
     }
@@ -462,7 +534,9 @@ extension GameScene{
                 if self.content_ctrl.isGameBegin{
                     
                     // update col position
-                    self.shiftColLeft()
+                    self.shift_col_left()
+                    
+                    self.shift_cloud_left()
                     
                 }
                 
@@ -525,8 +599,17 @@ extension GameScene{
             let dt_lg = currentTime - self.gameTickTimer
 
             if dt_lg >= self.colTimeInterval {
-                    makeCol()
+                    self.makeCol()
+                    //self.make_cloud()
                     self.gameTickTimer = currentTime
+            }
+            
+            /* xl-tick update*/
+            let dt_xl = currentTime - self.cloudTickTimer
+
+            if dt_xl >= self.cloudTimeInterval {
+                    self.make_cloud()
+                    self.cloudTickTimer = currentTime
             }
         }
         
@@ -760,9 +843,8 @@ extension GameScene{
             self.generate_balls_accordingly()
         }
         //self.print_node_obj_info()
+    
         
-        // make sure there's n + 1 children
-        assert(self.content_ctrl.bird_number + 1 == self.children.count ,"children number error : \(self.children.count) children(s)")
         // make sure there's n balls
         assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
     }
@@ -853,6 +935,15 @@ extension GameScene{
         }else if self.content_ctrl.experiment_mode{
             self.experiment_reset()
         }
+    }
+}
+
+extension NSColor {
+    convenience init(hex: Int, alpha: CGFloat = 1.0) {
+        let red = CGFloat((hex >> 16) & 0xFF) / 255.0
+        let green = CGFloat((hex >> 8) & 0xFF) / 255.0
+        let blue = CGFloat(hex & 0xFF) / 255.0
+        self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
 

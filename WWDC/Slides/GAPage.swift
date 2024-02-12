@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GAPage: View {
+    
     var body: some View {
         ScrollView{
             HStack{
@@ -38,18 +39,17 @@ struct GAPage: View {
                 Text("\tAs shown in the picture. Many years ago giraffes did not have long necks. Due to the high foliage in their environment, giraffes with long necks were more likely to survive, thus passing on the long neck excellence gene to the next generation.")
                     .font(.body)
                     .padding(1)
-                HStack(alignment: .top,spacing: 0){
-                    Image("fitness")
-                        .resizable()
-                        .aspectRatio( contentMode: .fit)
-                        .frame(maxWidth: 260)
-                        .padding(.leading)
+                
+                HStack{
+                    
+                }
+                
                     Text("\tIn genetic algorithms, the ability to adapt to the environment is called __Fitness__. When we train FlappyBrids' neural network, we can set the fitness to the __survival time__ of the birds. In each iteration, we take the best birds that have survived the longest and breed them (cross-reorganization of the weights of their neural networks, and genetic mutation) thus obtaining new offspring birds.\n\n\tTo summarize. What we need is an __initial population__ with random genes, a reasonable __Algorithms for calculating Fitness of individuals__ for selecting superior individuals, and a reasonable __probability of genetic variation__ to increase the randomness. This way we can slowly evolve the superior individuals each round of the game")
                     .font(.body)
                     
                     
                         
-                }
+                
                     
                         
                     

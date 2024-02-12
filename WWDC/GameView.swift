@@ -9,6 +9,7 @@ import SwiftUI
 import SpriteKit
 
 struct GameView: View {
+    
     @ObservedObject var content_ctrl = PageContentController()
     @State var isSpeeded = false
     var scene: GameScene
@@ -94,7 +95,7 @@ struct GameView: View {
                             self.content_ctrl.isReset = true
                         }) {
                             Image(systemName: "arrow.clockwise.circle")
-                            Text("Reset Experiment")
+                            Text("Reset This round")
                         }
                         Toggle(isOn: self.$content_ctrl.isLooped) {
                             Text("Auto loop")
@@ -155,7 +156,7 @@ struct GameView: View {
             }
             
         }
-        .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
+        
     
     }
 }
