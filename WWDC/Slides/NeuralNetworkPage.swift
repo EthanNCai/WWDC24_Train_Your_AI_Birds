@@ -43,10 +43,10 @@ struct NeuralNetworkPage: View {
                                 .font(.title2)
                                 .foregroundColor(.indigo)
                                 .padding(.horizontal)
-                            Text("\n\tWe fisrt need to give each bird in the game an _artificial brain_, which is something called a __neural network__.")
+                            Text("\n\tTo enable the birds to think and fly based on the environment, we start by equipping each bird in the game with an \"artificial brain\" known as a __neural network.__")
                                 .font(.body)
                                 .padding(.horizontal)
-                            Text("\n\tThis brain determines how the bird will decide its behavior based on its external environment. So you can think of a neural network as a __black box__. In our experiment, there are three inputs and two outputs, the inputs are information about the __environment__  and the outputs are the __probabilities of flying or not flying.__")
+                            Text("\n\tThe bird's decision-making is driven by its \"artificial brain,\" which can be thought of as a \"black box\" In our experiment, the brain, or neural network, takes in information about the environment as __INPUT__ and generates __OUTPUT__ that represent the probabilities of flying or not flying.")
                                 .font(.body)
                                 .padding(.horizontal)
                             ZStack{
@@ -67,7 +67,7 @@ struct NeuralNetworkPage: View {
                                 .font(.title2)
                                 .foregroundColor(.indigo)
                                 .padding(.horizontal)
-                            Text("\n\tEach neural network is determined by a set of __numbers__ ( aka __weights__). This set of numbers will guide the neural network on __how to compute inputs into outputs__. \n\n\tSo our __GOAL__ is to find the __OPTIMAL WEIGHTS__  for the neural network that will allow the bird to fly correctly in the columns.")
+                            Text("\n\tEach neural network is represented by a set of numbers called __WEIGHTS__. These weights determine how the neural network processes inputs and produces outputs. Our objective is to find the optimal weights that enable the bird to fly through the columns accurately. Think of it as discovering the perfect formula for the bird's successful flight.")
                                 .font(.body)
                                 .padding(.horizontal)
                         }

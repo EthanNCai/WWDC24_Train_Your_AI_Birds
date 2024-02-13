@@ -62,7 +62,7 @@ struct ObservationView: View {
                             .foregroundColor(.indigo)
                         Spacer()
                     }
-                    Text("this section displayed some round informations")
+                    Text("The information of the previous generation's birds will be displayed here.")
                         .font(.caption2)
                         .fontWeight(.ultraLight)
                     HStack{
@@ -144,7 +144,7 @@ struct ObservationView: View {
                         .padding(2)
                     Spacer()
                 }.foregroundColor(.indigo)
-                Text("this section displayed some round informations, indicating the on-screen bird situation")
+                Text("After the game starts, the bird's status will be displayed here. This will include information about whether the bird has been eliminated and the distance the bird has flown.")
                     .font(.caption2)
                     .fontWeight(.light)
                 BallBoard(balls: self.$content_ctrl.balls)

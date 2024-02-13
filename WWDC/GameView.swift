@@ -31,10 +31,13 @@ struct GameView: View {
             // banner
             
             if self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
-                Text("Set everything up and\nClick \"🔨Start Your Experiment\"\n on upper left To Continue")
+                Text("Tweak the settings whatever you want and then click __\"🔨Start Your Experiment\"__ on upper left to see what happens.")
+                    .padding()
                     .padding()
                     .background(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 10))
+                    .padding()
+                    .padding()
             }else if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode
             {
                 if !content_ctrl.isUserBegin ||  content_ctrl.isGameOver{
@@ -91,18 +94,12 @@ struct GameView: View {
                     
                     // gauges Buttom
                     HStack{
-                        Button(action: {
-                            self.content_ctrl.isReset = true
-                        }) {
-                            Image(systemName: "arrow.clockwise.circle")
-                            Text("Reset This round")
-                        }
+                        
                         Toggle(isOn: self.$content_ctrl.isLooped) {
-                            Text("Auto loop")
+                            Text("Automatically proceed to the next generation：")
                         }.toggleStyle(SwitchToggleStyle())
                             .padding(.horizontal)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(5)
+                            
                     }
                     .padding()
                     

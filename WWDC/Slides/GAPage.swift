@@ -27,28 +27,31 @@ struct GAPage: View {
                     Text("How does a machine learn a good neural network?")
                         .font(.title2)
                         .foregroundColor(.indigo)
-                    Text("\tBut how can we find the optimal neural network weights as explained on the previous page?\n\n\tWe can leverage Darwin's theory of evolution to allow the initially stupid bird to gradually evolve and iterate through constant trial and error. This method of allowing machines to learn is called a genetic algorithm(GA)")
+                    Text("\tUpon realizing that our aim is to discover excellent neural network weights that enable the bird to fly accurately, we must establish a method for the bird to autonomously seek out these desired weights through trial and error. Inspired by Darwin's theory of evolution, we adopt the concept of __\"survival of the fittest,\"__ where the most capable individuals thrive while the less competent ones are eliminated.\n\n\tIn machine learning, this method is known as a __Genetic Algorithm__")
                     
                     .padding(1)
                     
-                    Text("Genetic Algorithm: The best survives...")
+                    Text("Genetic Algorithm: The fittest survives...")
                         .font(.title2)
                         .foregroundColor(.indigo)
                     Image("darvin")
                     .resizable()
                     .aspectRatio( contentMode: .fit)
                     .padding()
+                    .padding(.horizontal)
                     
                 
-                Text("\tAs shown in the picture. Many years ago giraffes did not have long necks. Due to the high foliage in their environment, giraffes with long necks were more likely to survive, thus passing on the long neck excellence gene to the next generation.")
+                Text("\tAs shown above. Long ago, giraffes didn't have long necks. But in their environment filled with tall foliage, giraffes with longer necks were more likely to survive. As a result, they passed on the genetic trait for longer necks to future generations.")
                     
                     .padding(1)
                 
-                HStack{
-                    
-                }
+                Image("darvin_bird")
+                .resizable()
+                .aspectRatio( contentMode: .fit)
+                .padding()
+                .padding(.horizontal)
                 
-                    Text("\tIn genetic algorithms, the ability to adapt to the environment is called __Fitness__. When we train FlappyBrids' neural network, we can set the fitness to the __survival time__ of the birds. In each iteration, we take the best birds that have survived the longest and breed them (cross-reorganization of the weights of their neural networks, and genetic mutation) thus obtaining new offspring birds.\n\n\tTo summarize. What we need is an __initial population__ with random genes, a reasonable __Algorithms for calculating Fitness of individuals__ for selecting superior individuals, and a reasonable __probability of genetic variation__ to increase the randomness. This way we can slowly evolve the superior individuals each round of the game")
+                    Text("\tGenetic algorithms mimic this process. In genetic algorithms, the ability to adapt to the environment is called  \"fitness.\" When training the neural network of Flappy Birds, we can measure fitness based on the birds' \"fitness\" In each iteration, we select the top-performing birds that have survived the longest and breed them by combining their __neural network weights(aka genes)__ through cross-reorganization and introducing genetic mutations. This process generates new offspring birds.\n\n\tTo summarize, we start with an initial population of birds with randomly assigned genes, use an algorithm to evaluate their fitness to identify the best performers, and introduce a reasonable probability of genetic variation to add randomness. This iterative process allows us to gradually evolve the average bird gene quality with each interation.")
                     .font(.body)
                     
                     

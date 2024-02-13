@@ -31,14 +31,14 @@ struct IntroductionView: View {
                     Text("What does this app do?")
                         .font(.title2)
                         .foregroundColor(.indigo)
-                    Text("\tThis is a machine learning experiment playground App. In less than three minutes, this app allows you to quickly understand, play with a machine learning model that automatically plays FlappyBird, and experience the process of training this model from scratch. \n\tIn the process, you will definitely gain a better understanding of machine learning, regardless of whether you have any prior knowledge of machine learning or not!")
+                    Text("\tThis is a machine learning experiment playground app. In less than three minutes, you can easily grasp and interact with a machine learning model that plays Flappy Bird automatically. You will also experience the __ENTIRE TRAINING PROCESS__ of this model, starting from scratch. Regardless of your prior knowledge of machine learning, this app guarantees a better understanding of the machine learning!")
                     .font(.body)
                     .padding(1)
                 
                     Text("What is the Process of the Experience?")
                         .font(.title2)
                         .foregroundColor(.indigo)
-                    Text("\tI'll start with a brief introduction to FlappyBrid\n\tThen I'll give a quick and easy introduction to neural networks as well as genetic algorithms, which are key to training our own machine models.\n\tFinally, you'll be free to tweak any of the parameters in a lab environment I've built for you, and experience the whole process of training your own machine learning model!")
+                    Text("\tWe will start by introducing Flappy Bird.\n\t Then, I'll give you a simple and straightforward explanation of neural networks and genetic algorithms, which are crucial for training our machine learning models. \n\tFinally, you'll have the opportunity to easily tweak the settings in a specially designed lab environment and witness the entire process of training your own machine learning model!")
                     .font(.body)
                     .padding(1)
                         

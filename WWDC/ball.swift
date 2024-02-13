@@ -19,6 +19,7 @@ struct Ball:Identifiable, Hashable{
     var ball_index:Int
     var distance_score:Float = 0
     var fitness_score:Int = 0
+    var fitness_score_v2: Float = 0
     var isActive:Bool = true
     
     
@@ -32,7 +33,7 @@ struct Ball:Identifiable, Hashable{
     var fly_probability: Float = 0.0
     var mlp:SimpleNeuralNetwork
     
-    init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color) {
+    init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color, gene_len: Int) {
         
         self.ballRadius = CGFloat(ball_radius)
         self.ball_node = SKSpriteNode(imageNamed: "bird")

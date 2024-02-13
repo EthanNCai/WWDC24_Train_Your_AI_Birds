@@ -17,7 +17,6 @@ class GameScene: SKScene{
     
     //  hyper-params
     var cloud_speed_index:CGFloat = 0.003
-    var speed_index: CGFloat = 0.005
     var colTimeInterval: Double = 3.0
     var cloudTimeInterval: Double = 3.4
     var jmpTimeInterval: Double = 0.2
@@ -26,7 +25,7 @@ class GameScene: SKScene{
     var outed_tolerance: CGFloat = 8
     var colDistanceInterval: CGFloat {
         
-        return CGFloat((colTimeInterval / gameTickInterval) * speed_index) * self.size.width
+        return CGFloat((colTimeInterval / gameTickInterval) * self.content_ctrl.speed_index) * self.size.width
     }
     var ballXPosition: CGFloat {
         100
@@ -155,7 +154,7 @@ class GameScene: SKScene{
     func updateBallDistScore(){
         for (index, ball) in self.content_ctrl.balls.enumerated(){
             if ball.isActive {
-                self.content_ctrl.balls[index].distance_score += Float(self.speed_index * self.size.width)
+                self.content_ctrl.balls[index].distance_score += Float(self.content_ctrl.speed_index * self.size.width)
             }
         }
         
@@ -173,6 +172,7 @@ class GameScene: SKScene{
                 
                 let col_lower_bounds = col_upper_bounds - self.size.height * self.content_ctrl.difficulty_index
                 
+                
                 if current_height < col_lower_bounds || current_height > col_upper_bounds{
                     continue
                 }else{
@@ -183,19 +183,41 @@ class GameScene: SKScene{
         }
         
     }
+    func update_ball_fitness_scorev2(){
+        for (index, ball) in self.content_ctrl.balls.enumerated(){
+            if ball.isActive {
+            
+                let current_height = ball.ball_node.position.y
+                if self.currently_focus == 0{
+                    return
+                }
+                let colu = childNode(withName: "colu" + String(self.currently_focus))!
+                let col_upper_bounds = colu.position.y
+                
+                let col_lower_bounds = col_upper_bounds - self.size.height * self.content_ctrl.difficulty_index
+                
+                let distance_upper = abs(current_height - col_upper_bounds)
+                let distance_lower = abs(current_height - col_lower_bounds)
+                
+                self.content_ctrl.balls[index].fitness_score_v2 = 100/(Float(distance_lower + distance_upper)/2)
+                
+            }
+        }
+        
+    }
     
     func shift_col_left() {
 
         for col_index in self.onscreen_cols {
             if let col = childNode(withName: "colu" + String(col_index)) as? SKSpriteNode {
-                col.position.x -= self.speed_index * self.size.width
+                col.position.x -= self.content_ctrl.speed_index * self.size.width
                 if col.position.x < -col.size.width-10 {
                     self.removeCol(col_index: col_index)
                 }
             }
             
             if let col = childNode(withName: "cold" + String(col_index)) as? SKSpriteNode {
-                col.position.x -= self.speed_index * self.size.width
+                col.position.x -= self.content_ctrl.speed_index * self.size.width
                     
                 if col.position.x < -col.size.width-10 {
                     self.removeCol(col_index: col_index)
@@ -443,7 +465,7 @@ extension GameScene{
        // print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
             let rand_y_pos = Float.random(in: 0.3...0.7)
-            self.content_ctrl.balls.append(Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red))
+            self.content_ctrl.balls.append(Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red,gene_len: self.content_ctrl.gene_length))
             let ball_node = self.content_ctrl.balls[i].ball_node
             assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
@@ -474,7 +496,7 @@ extension GameScene{
     
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.26)...1)
+        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.3)...1)
         let id = iu - (1+self.content_ctrl.difficulty_index)
         return (iu, id)
     }
@@ -624,16 +646,17 @@ extension GameScene{
         // any time you pressed Reset
         if self.content_ctrl.isReset{
            
-            self.reset_sccordingly()
+            self.reset_accordingly()
         }
         
         // game is over & you opened Auto Loop
-        if self.content_ctrl.isGameOver && !self.content_ctrl.isReset && self.content_ctrl.isLooped{
+        if self.content_ctrl.isGameOver && self.content_ctrl.isLooped && !self.content_ctrl.isGameBegin{
             
             
             // reset logic
             
             if self.content_ctrl.experiment_mode{
+                print("reset:C")
                 self.experiment_reset()                             // game scene reset (incl. generate stuffs)
             }else if self.content_ctrl.display_mode{
                 self.display_reset()
@@ -730,6 +753,7 @@ extension GameScene{
             
             
             // reset logic
+            print("reset:B")
             self.experiment_reset()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
@@ -746,6 +770,7 @@ extension GameScene{
             
             
             // reset logic
+            print("reset:A")
             self.experiment_reset()                             // game scene reset (incl. generate stuffs)
             
             // begin logic
@@ -775,7 +800,7 @@ extension GameScene{
         
         var is_distance_long_enough = false
         for ball in self.content_ctrl.balls{
-            if ball.distance_score >= 600{
+            if ball.distance_score >= Float(self.content_ctrl.size.width) * 0.8{
                 is_distance_long_enough = true
             }
         }
@@ -844,7 +869,7 @@ extension GameScene{
         }
         //self.print_node_obj_info()
     
-        
+        self.content_ctrl.isGameOver = false
         // make sure there's n balls
         assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
     }
@@ -927,12 +952,13 @@ extension GameScene{
         
     }
     
-    func reset_sccordingly(){
+    func reset_accordingly(){
         if self.content_ctrl.play_mode{
             self.play_reset()
         }else if self.content_ctrl.display_mode{
             self.display_reset()
         }else if self.content_ctrl.experiment_mode{
+            print("reset:D")
             self.experiment_reset()
         }
     }

@@ -65,16 +65,29 @@ struct SettingView: View {
                 ScrollView(showsIndicators: true){
                 
                 
+                    
                     HStack(spacing: 1){
                         
-                        Text("Bird & Game settings")
+                        Text("Tips")
                             .font(.title3)
                             
                             .padding(2)
                             .foregroundColor(.indigo)
                         Spacer()
                     }
-                    VStack{
+                    Text("The __Neural Network Weights(aka genes)__ of the birds in the __FIRST__ generation of the experiment are __COMPLETELY RANDOM__.")
+                    HStack(spacing: 1){
+                        
+                        Text("Bird & Environment settings")
+                            .font(.title3)
+                            
+                            .padding(2)
+                            .foregroundColor(.indigo)
+                        Spacer()
+                    }
+                    
+                    
+                    VStack(alignment: .leading){
                         
                             Slider(value: Binding<Double>(
                                 get: { Double(self.content_ctrl.ui_bird_number) },
@@ -90,7 +103,7 @@ struct SettingView: View {
                                 Text("45")
                                 
                             }
-                            Text("In each round, the genes of the bird that flies the furthest will be selected from these birds.")
+                            Text("Larger populations generally have a __higher probability__ of randomly producing the desired __excellent genes__ from the beginning.")
                                 .font(.footnote)
                             Divider()
                         
@@ -99,7 +112,7 @@ struct SettingView: View {
                                 set: { self.content_ctrl.ui_bird_brain_size = Int($0) }
                             ), in: 8...48, step: 2) {
                             
-                                Text("Bird Brain Volumn:\n \(self.content_ctrl.ui_bird_brain_size) (Neurons)")
+                                Text("Bird Brain Capacity:\n \(self.content_ctrl.ui_bird_brain_size) (Neurons)")
                                     .fontWeight(.heavy)
                                     
                             }minimumValueLabel: {
@@ -108,7 +121,7 @@ struct SettingView: View {
                                 Text("Large")
                                 
                             }
-                            Text("The size of the bird, the smaller the bird, the less likely the bird is to hit the column when flying through it.")
+                            Text("The length of the __parameter of the neural network__ behind each bird. A higher brain capacity means that birds are capable of __learning more__, but it also implies __longer learning cycles__ and greater __computational costs__.")
                                 .font(.footnote)
                         
                             Divider()
@@ -127,7 +140,7 @@ struct SettingView: View {
                                 Text("Large")
                                 
                             }
-                            Text("This value controls the size of the spacing between the upper and lower columns; the larger the spacing, the easier it is for the bird to fly past. This value must be larger than the size of the bird")
+                            Text("The gap between the two pillars, the __smaller__ this value, the __more difficult__ it is for the bird to pass through, increasing it will reduce the difficulty.")
                                 .font(.footnote)
                         
                        
@@ -147,7 +160,7 @@ struct SettingView: View {
                             
                         }
                         
-                        Text("This value controls the size of the spacing between the upper and lower columns; the larger the spacing, the easier it is for the bird to fly past. This value must be larger than the size of the bird")
+                        Text("This is the speed at which the pillars move. __The faster they move__, the quicker the bird's reaction speed needs to be, resulting in a __higher difficulty__. Decreasing the speed will lower the difficulty.")
                             .font(.footnote)
                         
                         //Divider()
@@ -175,7 +188,7 @@ struct SettingView: View {
                     }
                     .fontWeight(.heavy)
                     .pickerStyle(.segmented)
-                    Text("In each round, the genes of the bird that flies the furthest will be selected from these birds.")
+                    Text("The number of excellent birds selected in each round, __ALL__ birds in the next round will be produced by the mating of __these selected birds.__")
                         .font(.footnote)
                 
                     
@@ -200,7 +213,7 @@ struct SettingView: View {
                         
                     }
                     
-                    Text("Probability of introducing a mutant gene at normal reproduction after each round of simulation in birds.")
+                    Text("Genetic mutation introduces randomness, which can bring both benefits and drawbacks. A small probability of mutation is advantageous as it allows for the random generation of excellent genes.")
                         .font(.footnote)
                     
                     }

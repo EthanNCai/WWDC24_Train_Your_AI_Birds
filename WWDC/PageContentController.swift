@@ -36,7 +36,7 @@ class PageContentController: ObservableObject {
     
     //Retrive from GAME SCENE
     @Published var ui_bird_number: Int = 12
-    @Published var ui_bird_brain_size: Int = 16
+    @Published var ui_bird_brain_size: Int = 18
     @Published var ui_col_gap: Float = 10
     @Published var ui_selected_best_ratio: best_ratio = .x1
     @Published var ui_mutate_proab: Float = 0.15
@@ -44,13 +44,13 @@ class PageContentController: ObservableObject {
     
     // for GAME SCENE
     var difficulty_index: CGFloat = 0.26
-    var bird_brain_volumn_index: Int = 0
+    
     var col_gap_value_mapping: CGFloat = 0.0
-    var best_bird_needed: Int = 0
-    var bird_number: Int = 0
-    var mutate_proab: Float = 0.0
-    var speed_index: CGFloat = 0.0
-    let gene_length: Int = 10
+    var best_bird_needed: Int = 2
+    var bird_number: Int = 12
+    var mutate_proab: Float = 0.15
+    var speed_index: CGFloat = 0.005
+    var gene_length: Int = 18
     @Published var show_welcome_mat: Bool = true
     
     
@@ -84,8 +84,9 @@ class PageContentController: ObservableObject {
     @Published var avg_fitness_score_trend: Float = 0
     
     
-    // display
+    // display has a fixed gene length -> 18
     var display_mlp: SimpleNeuralNetwork = SimpleNeuralNetwork(hidden_layer_len: 18)
+    
     let count_down: Float = 2.0
     
     init (){
@@ -132,17 +133,17 @@ class PageContentController: ObservableObject {
         // retieve from UI
         self.bird_number = ui_bird_number
         self.mutate_proab = ui_mutate_proab
-        self.col_gap_value_mapping = col_gap_value_mapping(value: self.ui_col_gap)
-        self.bird_brain_volumn_index = self.ui_bird_brain_size
+        self.difficulty_index = col_gap_value_mapping(value: self.ui_col_gap)
+        self.gene_length = self.ui_bird_brain_size
         self.speed_index = self.speed_index_value_mapping(value: self.ui_speed_index)
         self.setBestBirdNumbers()
         
         print("Experiment Infos")
-        print("birdNumber:", bird_number)
-        print("mutateProb:", mutate_proab)
-        print("birdSizeIndex:", col_gap_value_mapping)
-        print("birdSpeedIndex:", bird_brain_volumn_index)
-        print("bestBirdNeeded:", best_bird_needed)
+        print("bird_number:", bird_number)
+        print("mutate_proab:", mutate_proab)
+        print("col_gap_value_mapping:", col_gap_value_mapping)
+        print("gene_len:", gene_length)
+        print("best_bird_needed:", best_bird_needed)
         
     }
     
@@ -168,9 +169,9 @@ class PageContentController: ObservableObject {
             self.balls.append(new_ball)
         }
         
-//        let rand_y_pos = Float.random(in: 0.3...0.7)
-//        let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red)
-//        self.balls.append(new_ball)
+            let rand_y_pos = Float.random(in: 0.3...0.7)
+        let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: self.gene_length)
+            self.balls.append(new_ball)
         
         
         
@@ -273,8 +274,8 @@ class PageContentController: ObservableObject {
         // gap height*0.3
         let inputMin: Float = 0
         let inputMax: Float = 20
-        let outputMin: Float = Float(self.size.height * (0.3 - 0.28))
-        let outputMax: Float = Float(self.size.height * (0.3 - 0.25))
+        let outputMin: Float = Float(0.20)
+        let outputMax: Float = Float(0.35)
         
         let normalizedValue = (value - inputMin) / (inputMax - inputMin)
         let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin
@@ -286,8 +287,8 @@ class PageContentController: ObservableObject {
         // gap height*0.3
         let inputMin: Float = 0
         let inputMax: Float = 20
-        let outputMin: Float = Float(0.004)
-        let outputMax: Float = Float(0.006)
+        let outputMin: Float = Float(0.003)
+        let outputMax: Float = Float(0.007)
         
         let normalizedValue = (value - inputMin) / (inputMax - inputMin)
         let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin
@@ -433,7 +434,6 @@ extension PageContentController{
         isReset = false
         isGameBegin = false
         isUserBegin = false
-        isGameOver = false
         bannerContent = " Tap to begin "
         
     
@@ -465,7 +465,7 @@ extension PageContentController{
         is_on_restricted_area = false
         self.balls.removeAll()
         balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: pretrained_bird_instance))
-        self.bird_brain_volumn_index = 18
+        self.gene_length = 18
         
     }
     
@@ -478,7 +478,7 @@ extension PageContentController{
         isOnSetting = false
         is_on_restricted_area = false
         balls.removeAll()
-        balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red))
+        balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: 8))
         bannerContent = " Tap to try FlappyBrid "
     }
     
