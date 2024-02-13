@@ -26,7 +26,9 @@ struct IntroductionPage: View {
                     IntroductionView()
                     .frame(width: content_ctrl.size.width*1/2,
                             height: content_ctrl.size.height)
-                    GameView(content_ctrl: content_ctrl, scene: scene)
+                    Image("post")
+                        .resizable()
+                        .aspectRatio( contentMode: .fit)
                         .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
                 }
                 if self.content_ctrl.is_show_notice{

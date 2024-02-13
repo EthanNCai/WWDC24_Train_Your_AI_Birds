@@ -234,7 +234,7 @@ class GameScene: SKScene{
 
         // rand size
         let length:CGFloat = 100
-        let coin = Int.random(in: 0...4)
+        let coin = Int.random(in: 1...4)
         let name:String
         if coin == 1{
             name = "cloud_sp"
@@ -474,7 +474,7 @@ extension GameScene{
     
     
     func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.2)...1)
+        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.26)...1)
         let id = iu - (1+self.content_ctrl.difficulty_index)
         return (iu, id)
     }

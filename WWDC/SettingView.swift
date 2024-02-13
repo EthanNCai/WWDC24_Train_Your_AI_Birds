@@ -75,6 +75,7 @@ struct SettingView: View {
                         Spacer()
                     }
                     VStack{
+                        
                             Slider(value: Binding<Double>(
                                 get: { Double(self.content_ctrl.ui_bird_number) },
                                 set: { self.content_ctrl.ui_bird_number = Int($0) }
@@ -128,6 +129,28 @@ struct SettingView: View {
                             }
                             Text("This value controls the size of the spacing between the upper and lower columns; the larger the spacing, the easier it is for the bird to fly past. This value must be larger than the size of the bird")
                                 .font(.footnote)
+                        
+                       
+                    
+                        Slider(value: Binding<Double>(
+                            get: { Double(self.content_ctrl.ui_speed_index) },
+                            set: { self.content_ctrl.ui_speed_index = Float($0) }
+                        ), in: 0...20, step: 1) {
+                        
+                            Text("Column Speed")
+                                .fontWeight(.heavy)
+                                
+                        }minimumValueLabel: {
+                            Text("Slow")
+                        } maximumValueLabel: {
+                            Text("Fast")
+                            
+                        }
+                        
+                        Text("This value controls the size of the spacing between the upper and lower columns; the larger the spacing, the easier it is for the bird to fly past. This value must be larger than the size of the bird")
+                            .font(.footnote)
+                        
+                        //Divider()
                         
                             
                             

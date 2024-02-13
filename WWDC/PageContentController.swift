@@ -40,6 +40,7 @@ class PageContentController: ObservableObject {
     @Published var ui_col_gap: Float = 10
     @Published var ui_selected_best_ratio: best_ratio = .x1
     @Published var ui_mutate_proab: Float = 0.15
+    @Published var ui_speed_index:Float = 10
     
     // for GAME SCENE
     var difficulty_index: CGFloat = 0.26
@@ -48,6 +49,7 @@ class PageContentController: ObservableObject {
     var best_bird_needed: Int = 0
     var bird_number: Int = 0
     var mutate_proab: Float = 0.0
+    var speed_index: CGFloat = 0.0
     let gene_length: Int = 10
     @Published var show_welcome_mat: Bool = true
     
@@ -132,6 +134,7 @@ class PageContentController: ObservableObject {
         self.mutate_proab = ui_mutate_proab
         self.col_gap_value_mapping = col_gap_value_mapping(value: self.ui_col_gap)
         self.bird_brain_volumn_index = self.ui_bird_brain_size
+        self.speed_index = self.speed_index_value_mapping(value: self.ui_speed_index)
         self.setBestBirdNumbers()
         
         print("Experiment Infos")
@@ -272,6 +275,19 @@ class PageContentController: ObservableObject {
         let inputMax: Float = 20
         let outputMin: Float = Float(self.size.height * (0.3 - 0.28))
         let outputMax: Float = Float(self.size.height * (0.3 - 0.25))
+        
+        let normalizedValue = (value - inputMin) / (inputMax - inputMin)
+        let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin
+        
+        return CGFloat(mappedValue)
+    }
+    
+    func speed_index_value_mapping(value: Float) -> CGFloat {
+        // gap height*0.3
+        let inputMin: Float = 0
+        let inputMax: Float = 20
+        let outputMin: Float = Float(0.004)
+        let outputMax: Float = Float(0.006)
         
         let normalizedValue = (value - inputMin) / (inputMax - inputMin)
         let mappedValue = (outputMax - outputMin) * normalizedValue + outputMin

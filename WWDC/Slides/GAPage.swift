@@ -28,16 +28,20 @@ struct GAPage: View {
                         .font(.title2)
                         .foregroundColor(.indigo)
                     Text("\tBut how can we find the optimal neural network weights as explained on the previous page?\n\n\tWe can leverage Darwin's theory of evolution to allow the initially stupid bird to gradually evolve and iterate through constant trial and error. This method of allowing machines to learn is called a genetic algorithm(GA)")
-                    .font(.body)
+                    
                     .padding(1)
                     
                     Text("Genetic Algorithm: The best survives...")
                         .font(.title2)
                         .foregroundColor(.indigo)
                     Image("darvin")
+                    .resizable()
+                    .aspectRatio( contentMode: .fit)
+                    .padding()
+                    
                 
                 Text("\tAs shown in the picture. Many years ago giraffes did not have long necks. Due to the high foliage in their environment, giraffes with long necks were more likely to survive, thus passing on the long neck excellence gene to the next generation.")
-                    .font(.body)
+                    
                     .padding(1)
                 
                 HStack{

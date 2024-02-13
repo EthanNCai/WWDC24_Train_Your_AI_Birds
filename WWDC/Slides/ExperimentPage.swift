@@ -14,7 +14,7 @@ struct ExperimentPage: View {
     var scene: GameScene{
         let scene = GameScene(viewController:content_ctrl)
 
-        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height*0.9)
+        scene.size = CGSize(width: content_ctrl.size.width*1/2, height: content_ctrl.size.height)
         return scene
     }
     
