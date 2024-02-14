@@ -30,15 +30,7 @@ struct GameView: View {
             
             // banner
             
-            if self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
-                Text("Tweak the settings whatever you want and then click __\"🔨Start Your Experiment\"__ on upper left to see what happens.")
-                    .padding()
-                    .padding()
-                    .background(.ultraThinMaterial)
-                    .mask(RoundedRectangle(cornerRadius: 10))
-                    .padding()
-                    .padding()
-            }else if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode
+            if  self.content_ctrl.experiment_mode
             {
                 if !content_ctrl.isUserBegin ||  content_ctrl.isGameOver{
                     VStack{
@@ -80,7 +72,7 @@ struct GameView: View {
                         
                 }
             
-            if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
+            if  self.content_ctrl.experiment_mode{
             // gauges
                 VStack{
                     
@@ -106,7 +98,7 @@ struct GameView: View {
                 }
             
             }
-            if !self.content_ctrl.isOnSetting && self.content_ctrl.experiment_mode{
+            if  self.content_ctrl.experiment_mode{
                 //debug info
                 HStack{
                     VStack{
@@ -133,7 +125,7 @@ struct GameView: View {
                     Spacer()
                 }
             }
-            if !self.content_ctrl.isOnSetting && self.content_ctrl.play_mode{
+            if  self.content_ctrl.play_mode{
                 //debug info
                 HStack{
                     VStack{

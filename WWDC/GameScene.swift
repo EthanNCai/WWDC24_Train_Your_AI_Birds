@@ -548,7 +548,7 @@ extension GameScene{
             UPDATES *Directed* by tick
          */
         let dt_sm = currentTime - self.colGeneratorTimer
-        if  !self.content_ctrl.isGameOver && !self.content_ctrl.isOnSetting{
+        if  !self.content_ctrl.isGameOver {
             
             /* sm-tick update*/
             if dt_sm >= self.gameTickInterval {
@@ -731,10 +731,7 @@ extension GameScene{
          */
         
         
-        // on setting
-        if self.content_ctrl.isOnSetting{
-            return
-        }
+        
         // already tapped OR tapped but gameover
         if self.content_ctrl.isGameBegin && !self.content_ctrl.isGameOver{
             return

@@ -24,145 +24,94 @@ struct ObservationView: View {
                                 .fontWeight(.bold)
                             Text("Test page")
                                 .font(.title3)
-                               
+                            
                         }
                         
                     }
                     
                     .font(.title)
                     .foregroundColor(.pink)
-                    HStack{
+                    
                         Button(action: {
                             self.scene.game_wise_experiment_reset()
-                            withAnimation(){
-                                self.content_ctrl.isOnSetting = true
-                            }
-                            
-                            
                             
                         }){
                             HStack{
-                                Image(systemName: "chevron.left")
-                                Text("Adjust training settings")
-                            }.fontWeight(.heavy)
-                                .padding()
-                            
+                                Image(systemName: "arrow.counterclockwise")
+                                Text("Reset Experiment")
+                            }
+                            .padding(10)
+                            .background(.ultraThinMaterial)
+                            .mask(RoundedRectangle(cornerRadius: 15))
+                            .overlay(){
+                                RoundedRectangle(cornerRadius: 15).stroke(lineWidth: 4).fill(.gray)
+                            }
+                           
+                            .fontWeight(.heavy)
                         }
+                        .padding(5)
+                        .buttonStyle(.plain)
                         
-                        .buttonStyle(.borderedProminent)
-                        .tint(.green)
-                        Spacer()
-                    }
-                    HStack{
                        
-                        Text("Last Bird Generation Info.")
+                    
+                    HStack{
+                        
+                        Text("Generation History")
                             .font(.title3)
-                            
                             .padding(2)
                             .foregroundColor(.indigo)
                         Spacer()
                     }
-                    Text("The information of the previous generation's birds will be displayed here.")
-                        .font(.caption2)
-                        .fontWeight(.ultraLight)
+                    
+                    
+                    
+                    
+                    
+                    Divider()
                     HStack{
                         
-                        if self.content_ctrl.best_distance_score == 0 {
-                            Text("Best Flying Distance: --")
-                        } else {
+                        Text("Bird Status")
+                            .font(.title3)
+                            .foregroundColor(.indigo)
+                            .padding(2)
+                        Spacer()
+                       
+                    }
+                    
+                    HStack{
+                        VStack{
                             
-                            if self.content_ctrl.best_distance_score_trend >= 0{
-                                Text("Best Flying Distance: \(Int(self.content_ctrl.best_distance_score))")
-                                Text("(+\(Int(self.content_ctrl.best_distance_score_trend)))")
-                                    .foregroundColor(.green)
-                            }else{
-                                Text("Best Flying Distance: \(Int(self.content_ctrl.best_distance_score))")
-                                Text("(\(Int(self.content_ctrl.best_distance_score_trend)))")
-                                    .foregroundColor(.red)
-                            }
+                            Image(systemName: "pin")
+                                .fontWeight(.heavy)
+                            Image(systemName: "ruler.fill")
+                                .fontWeight(.heavy)
                         }
-                    }
-                    HStack {
+                        VStack(alignment: .leading){
+                            
+                            Text("=  Bird's total distance (higher the better)")
+                                .fontWeight(.heavy)
+                            Text("=  Bird's average distance to gap (lower the better)")
+                                .fontWeight(.heavy)
+                            
+                        }
                         
-                        if self.content_ctrl.avg_distance_score == 0 {
-                            Text("Avg. Flying Distance: --")
-                        } else {
-                            if self.content_ctrl.avg_distance_score_trend >= 0{
-                                Text("Avg. Flying Distance: \(Int(self.content_ctrl.avg_distance_score))")
-                                Text("(+\(Int(self.content_ctrl.avg_distance_score_trend)))")
-                                    .foregroundColor(.green)
-                            }else{
-                                Text("Avg. Flying Distance: \(Int(self.content_ctrl.avg_distance_score))")
-                                Text("(\(Int(self.content_ctrl.avg_distance_score_trend)))")
-                                    .foregroundColor(.red)
-                            }
-                        }
                     }
+                    BallBoard(balls: self.$content_ctrl.balls)
+                    Divider()
+                    //            HStack{
+                    //                Text("BestGenes")
+                    //                    .font(.title2)
+                    //                    .fontWeight(.heavy)
+                    //                    .padding(2)
+                    //                Spacer()
+                    //            }
+                    //            Text("this place will count the farest bird and display visulize it's gene segment this section displayed some round informations, indicating the on-screen bird situation")
+                    //                .font(.caption2)
+                    //                .fontWeight(.light)
+                    //            GeneBoard()
                     
-                    HStack {
-                        if self.content_ctrl.best_fitness_score == 0 {
-                            Text("Best Fitness Score: --")
-                        } else {
-                            if self.content_ctrl.best_fitness_score_trend >= 0{
-                                Text("Best Fitness Score: \(Int(self.content_ctrl.best_fitness_score))")
-                                Text("(+\(Int(self.content_ctrl.best_fitness_score_trend)))")
-                                    .foregroundColor(.green)
-                            }else{
-                                Text("Best Fitness Score: \(Int(self.content_ctrl.best_fitness_score))")
-                                Text("(\(Int(self.content_ctrl.best_fitness_score_trend)))")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                    }
                     
-                    HStack {
-                        if self.content_ctrl.avg_fitness_score == 0 {
-                            Text("Avg. Fitness Score: --")
-                        } else {
-                            if(self.content_ctrl.avg_fitness_score_trend >= 0)
-                            {
-                                Text("Avg. Fitness Score: \(Int(self.content_ctrl.avg_fitness_score))")
-                                Text("(+\(Int(self.content_ctrl.avg_fitness_score_trend)))")
-                                    .foregroundColor(.green)
-                            }else
-                            {
-                                Text("Avg. Fitness Score: \(Int(self.content_ctrl.avg_fitness_score))")
-                                Text("(\(Int(self.content_ctrl.avg_fitness_score_trend)))")
-                                    .foregroundColor(.red)
-                            }
-                        }
-                    }
                 }
-                
-                
-                Divider()
-                HStack{
-                    
-                    Text("Bird Status")
-                        .font(.title3)
-                        
-                        .padding(2)
-                    Spacer()
-                }.foregroundColor(.indigo)
-                Text("After the game starts, the bird's status will be displayed here. This will include information about whether the bird has been eliminated and the distance the bird has flown.")
-                    .font(.caption2)
-                    .fontWeight(.light)
-                BallBoard(balls: self.$content_ctrl.balls)
-                Divider()
-                //            HStack{
-                //                Text("BestGenes")
-                //                    .font(.title2)
-                //                    .fontWeight(.heavy)
-                //                    .padding(2)
-                //                Spacer()
-                //            }
-                //            Text("this place will count the farest bird and display visulize it's gene segment this section displayed some round informations, indicating the on-screen bird situation")
-                //                .font(.caption2)
-                //                .fontWeight(.light)
-                //            GeneBoard()
-                
-                
-                
             }
             .padding()
             

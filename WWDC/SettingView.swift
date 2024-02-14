@@ -41,9 +41,7 @@ struct SettingView: View {
                 
                     Button(action: {
                         
-                        withAnimation(){
-                            self.content_ctrl.isOnSetting = false
-                        }
+                        
                         self.content_ctrl.done_setting()                        
                         
                     }){

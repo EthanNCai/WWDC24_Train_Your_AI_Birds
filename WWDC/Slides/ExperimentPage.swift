@@ -24,12 +24,9 @@ struct ExperimentPage: View {
             ZStack {
                 HStack { // info panal & game scene
                     HStack{
-                        if content_ctrl.isOnSetting{
-                            SettingView(content_ctrl: self.content_ctrl,scene:scene)
-                        }else
-                        {
+                        
                             ObservationView(content_ctrl: self.content_ctrl, scene: scene)
-                        }
+                        
                     }
                     GameView(content_ctrl: content_ctrl, scene: scene)
                         .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
@@ -51,7 +48,7 @@ struct ExperimentPage: View {
                 content_ctrl.size = geometry.size
             }.onAppear(){
                 scene.game_wise_experiment_reset()
-                content_ctrl.isOnSetting = true
+                
             }
             
             

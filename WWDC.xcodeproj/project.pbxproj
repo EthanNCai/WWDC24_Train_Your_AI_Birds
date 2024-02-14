@@ -10,6 +10,10 @@
 		8B155B592B0C803700D3ACF7 /* PageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B155B582B0C803700D3ACF7 /* PageController.swift */; };
 		8B2D17512B6C01DB00FEB986 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D17502B6C01DB00FEB986 /* Ball.swift */; };
 		8B2D17532B6C198300FEB986 /* GeneBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2D17522B6C198300FEB986 /* GeneBoard.swift */; };
+		8B33CBDE2B7CDAC200C92107 /* ReproductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B33CBDD2B7CDAC200C92107 /* ReproductionView.swift */; };
+		8B33CBE02B7CDAD500C92107 /* ReproductionBirdCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B33CBDF2B7CDAD500C92107 /* ReproductionBirdCard.swift */; };
+		8B33CBE22B7CF8D300C92107 /* LiveAdjustButtom.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B33CBE12B7CF8D300C92107 /* LiveAdjustButtom.swift */; };
+		8B33CBE42B7D01B800C92107 /* BirdCapsuleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B33CBE32B7D01B800C92107 /* BirdCapsuleTest.swift */; };
 		8BAD2A342B77899C00CDFC6F /* Pretrained_Bird_Instance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAD2A332B77899C00CDFC6F /* Pretrained_Bird_Instance.swift */; };
 		8BAD2A362B77D51D00CDFC6F /* IntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAD2A352B77D51D00CDFC6F /* IntroductionView.swift */; };
 		8BAD2A382B78B29E00CDFC6F /* GAPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BAD2A372B78B29E00CDFC6F /* GAPage.swift */; };
@@ -43,6 +47,10 @@
 		8B155B582B0C803700D3ACF7 /* PageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageController.swift; sourceTree = "<group>"; };
 		8B2D17502B6C01DB00FEB986 /* Ball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 		8B2D17522B6C198300FEB986 /* GeneBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneBoard.swift; sourceTree = "<group>"; };
+		8B33CBDD2B7CDAC200C92107 /* ReproductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReproductionView.swift; sourceTree = "<group>"; };
+		8B33CBDF2B7CDAD500C92107 /* ReproductionBirdCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReproductionBirdCard.swift; sourceTree = "<group>"; };
+		8B33CBE12B7CF8D300C92107 /* LiveAdjustButtom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveAdjustButtom.swift; sourceTree = "<group>"; };
+		8B33CBE32B7D01B800C92107 /* BirdCapsuleTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirdCapsuleTest.swift; sourceTree = "<group>"; };
 		8BAD2A332B77899C00CDFC6F /* Pretrained_Bird_Instance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pretrained_Bird_Instance.swift; sourceTree = "<group>"; };
 		8BAD2A352B77D51D00CDFC6F /* IntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionView.swift; sourceTree = "<group>"; };
 		8BAD2A372B78B29E00CDFC6F /* GAPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GAPage.swift; sourceTree = "<group>"; };
@@ -121,6 +129,10 @@
 				8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */,
 				8BE199CE2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift */,
 				8BAD2A332B77899C00CDFC6F /* Pretrained_Bird_Instance.swift */,
+				8B33CBDD2B7CDAC200C92107 /* ReproductionView.swift */,
+				8B33CBDF2B7CDAD500C92107 /* ReproductionBirdCard.swift */,
+				8B33CBE12B7CF8D300C92107 /* LiveAdjustButtom.swift */,
+				8B33CBE32B7D01B800C92107 /* BirdCapsuleTest.swift */,
 				8BCCDCE12B0B40F600040744 /* Assets.xcassets */,
 				8BCCDCE62B0B40F600040744 /* WWDC.entitlements */,
 				8BCCDCE32B0B40F600040744 /* Preview Content */,
@@ -225,7 +237,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B33CBE02B7CDAD500C92107 /* ReproductionBirdCard.swift in Sources */,
 				8BAD2A382B78B29E00CDFC6F /* GAPage.swift in Sources */,
+				8B33CBE22B7CF8D300C92107 /* LiveAdjustButtom.swift in Sources */,
 				8BAD2A3E2B78EEC800CDFC6F /* FlappyBirdPage.swift in Sources */,
 				8BAD2A362B77D51D00CDFC6F /* IntroductionView.swift in Sources */,
 				8BDED9DF2B767C9600A47501 /* NeuralNetworkExplanation.swift in Sources */,
@@ -242,6 +256,7 @@
 				8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */,
 				8BF04A0F2B67D604006DD210 /* PageContentController.swift in Sources */,
 				8BF04A072B67A20A006DD210 /* NeuralNetworkPage.swift in Sources */,
+				8B33CBDE2B7CDAC200C92107 /* ReproductionView.swift in Sources */,
 				8BAD2A402B78F2C000CDFC6F /* FlappyBirdExplainView.swift in Sources */,
 				8BAD2A3A2B78B37B00CDFC6F /* GADetailsPage.swift in Sources */,
 				8BE199CF2B73BC5D00CFD3BA /* NeuralNetworkBreeder.swift in Sources */,
@@ -252,6 +267,7 @@
 				8B2D17512B6C01DB00FEB986 /* Ball.swift in Sources */,
 				8BF04A0D2B67D2FF006DD210 /* GameScene.swift in Sources */,
 				8BF04A052B67A00E006DD210 /* ExperimentPage.swift in Sources */,
+				8B33CBE42B7D01B800C92107 /* BirdCapsuleTest.swift in Sources */,
 				8BE199BA2B73ABC100CFD3BA /* NeuralNetwork.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

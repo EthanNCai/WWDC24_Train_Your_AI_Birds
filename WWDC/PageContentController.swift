@@ -22,7 +22,7 @@ class PageContentController: ObservableObject {
     @Published var isGameBegin:Bool = false
     @Published var isReset:Bool = false
     @Published var isGameOver:Bool = false
-    @Published var isOnSetting:Bool = true
+    //@Published var isOnSetting:Bool = true
     @Published var size:CGSize = .zero
     
     // debug infos
@@ -447,7 +447,7 @@ extension PageContentController{
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        isOnSetting = true
+        //isOnSetting = true
         is_on_restricted_area = false
         balls.removeAll()
         best_balls.removeAll()
@@ -461,7 +461,7 @@ extension PageContentController{
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        isOnSetting = false
+        //isOnSetting = false
         is_on_restricted_area = false
         self.balls.removeAll()
         balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: pretrained_bird_instance))
@@ -475,7 +475,7 @@ extension PageContentController{
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        isOnSetting = false
+        //isOnSetting = false
         is_on_restricted_area = false
         balls.removeAll()
         balls.append(Ball(x: CGFloat(100), y: self.size.height * 0.5, ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: 8))
