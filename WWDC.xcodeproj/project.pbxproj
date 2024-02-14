@@ -52,7 +52,7 @@
 		8BAD2A3F2B78F2C000CDFC6F /* FlappyBirdExplainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlappyBirdExplainView.swift; sourceTree = "<group>"; };
 		8BAD2A412B79249B00CDFC6F /* ExperimentHintView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExperimentHintView.swift; sourceTree = "<group>"; };
 		8BAD2A432B7948BB00CDFC6F /* FourGameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FourGameView.swift; sourceTree = "<group>"; };
-		8BCCDCDA2B0B40F500040744 /* WWDC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WWDC.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8BCCDCDA2B0B40F500040744 /* Train your own bird AI!.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Train your own bird AI!.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WWDCApp.swift; sourceTree = "<group>"; };
 		8BCCDCDF2B0B40F500040744 /* StageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StageView.swift; sourceTree = "<group>"; };
 		8BCCDCE12B0B40F600040744 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -96,7 +96,7 @@
 		8BCCDCDB2B0B40F500040744 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8BCCDCDA2B0B40F500040744 /* WWDC.app */,
+				8BCCDCDA2B0B40F500040744 /* Train your own bird AI!.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,9 +158,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8BCCDCD92B0B40F500040744 /* WWDC */ = {
+		8BCCDCD92B0B40F500040744 /* Train your own bird AI! */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8BCCDCE92B0B40F600040744 /* Build configuration list for PBXNativeTarget "WWDC" */;
+			buildConfigurationList = 8BCCDCE92B0B40F600040744 /* Build configuration list for PBXNativeTarget "Train your own bird AI!" */;
 			buildPhases = (
 				8BCCDCD62B0B40F500040744 /* Sources */,
 				8BCCDCD72B0B40F500040744 /* Frameworks */,
@@ -170,9 +170,9 @@
 			);
 			dependencies = (
 			);
-			name = WWDC;
+			name = "Train your own bird AI!";
 			productName = WWDC;
-			productReference = 8BCCDCDA2B0B40F500040744 /* WWDC.app */;
+			productReference = 8BCCDCDA2B0B40F500040744 /* Train your own bird AI!.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -203,7 +203,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8BCCDCD92B0B40F500040744 /* WWDC */,
+				8BCCDCD92B0B40F500040744 /* Train your own bird AI! */,
 			);
 		};
 /* End PBXProject section */
@@ -438,7 +438,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8BCCDCE92B0B40F600040744 /* Build configuration list for PBXNativeTarget "WWDC" */ = {
+		8BCCDCE92B0B40F600040744 /* Build configuration list for PBXNativeTarget "Train your own bird AI!" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8BCCDCEA2B0B40F600040744 /* Debug */,
