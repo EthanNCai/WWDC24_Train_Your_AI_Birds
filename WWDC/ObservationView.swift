@@ -24,21 +24,19 @@ struct ObservationView: View {
                                 .fontWeight(.bold)
                             Text("Test page")
                                 .font(.title3)
-                            
                         }
-                        
                     }
                     
                     .font(.title)
                     .foregroundColor(.pink)
                     
                         Button(action: {
-                            self.scene.game_wise_experiment_reset()
+                            self.content_ctrl.scene_update_ref!.game_wise_experiment_reset()
                             
                         }){
                             HStack{
                                 Image(systemName: "arrow.counterclockwise")
-                                Text("Reset Experiment")
+                                Text("Reset Everything")
                             }
                             .padding(10)
                             .background(.ultraThinMaterial)
@@ -64,7 +62,7 @@ struct ObservationView: View {
                     }
                     
                     
-                    
+                    BirdCapsuleTest()
                     
                     
                     Divider()
@@ -88,10 +86,21 @@ struct ObservationView: View {
                         }
                         VStack(alignment: .leading){
                             
-                            Text("=  Bird's total distance (higher the better)")
-                                .fontWeight(.heavy)
-                            Text("=  Bird's average distance to gap (lower the better)")
-                                .fontWeight(.heavy)
+                            HStack{
+                                Text("=  Bird's total distance ")
+                                Text("_(Higher the better)_")
+                                    .fontWeight(.heavy)
+                                    .foregroundColor(.blue)
+                            }
+                            
+                            HStack{
+                                Text("=  Bird's average distance to gap ")
+                                Text("_(Lower the better)_")
+                                    .fontWeight(.heavy)
+                                    .foregroundColor(.red)
+                            }
+                           
+                                
                             
                         }
                         

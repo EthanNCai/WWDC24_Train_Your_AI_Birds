@@ -29,7 +29,28 @@ struct IntroductionPage: View {
                     Image("post")
                         .resizable()
                         .aspectRatio( contentMode: .fit)
+                        .mask( RoundedRectangle(cornerRadius: 20))
+                        .overlay(){
+                            RoundedRectangle(cornerRadius: 20).stroke(lineWidth: 5).fill( .red.opacity(0.8))
+                        }
+                        .padding()
+                        .overlay(){
+                            
+                                VStack{
+                                    Text( "Birds' now controlled by itself")
+                                        .foregroundColor(.white)
+                                        .fontWeight(.bold)
+                                        .padding(5)
+                                        .padding(.horizontal)
+                                        .background( .red)
+                                        .mask(RoundedRectangle(cornerRadius: 11))
+                                    Spacer()
+                                    
+                                }
+                            
+                        }
                         .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
+                    
                 }
                 if self.content_ctrl.is_show_notice{
                     NoticeView(content_ctrl: self.content_ctrl)

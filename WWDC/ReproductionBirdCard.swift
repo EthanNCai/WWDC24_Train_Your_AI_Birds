@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ReproductionBirdCard: View {
+    var ball:Ball
+    @Binding var is_selected:Bool
     var body: some View {
         VStack{
             HStack{
@@ -20,7 +22,7 @@ struct ReproductionBirdCard: View {
                         .padding(5)
                         .background(){
                             Circle()
-                                .foregroundColor(.red)
+                                .foregroundColor(self.ball.color)
                         }
                 
                 }
@@ -34,13 +36,16 @@ struct ReproductionBirdCard: View {
                        
                     }.fontWeight(.heavy)
                     VStack(alignment: .leading,spacing: 3){
-                        Gauge(value: 12, in: 0...50, label: {})
-                            .tint(.red)
-                        Gauge(value: 37, in: 0...50, label: {})
+                        Gauge(value: self.ball.norm_distance_score, in: 0...1, label: {})
                             .tint(.blue)
+                        Gauge(value: (1-self.ball.norm_avg_gap_dist_score), in: 0...1, label: {})
+                            .tint(.red)
                        
                     }
                     .frame(maxWidth: 35)
+                    .overlay(){
+                        Color.white.opacity(0.01)
+                    }
                     .fontWeight(.heavy)
                 }
                 
@@ -49,40 +54,40 @@ struct ReproductionBirdCard: View {
             
         }
             .padding()
+            .background(.white.opacity(0.1))
             .mask(RoundedRectangle(cornerRadius: 18))
             .overlay(){
-                RoundedRectangle(cornerRadius: 18).stroke(lineWidth: 5).fill(.green)
+                RoundedRectangle(cornerRadius: 18).stroke(lineWidth: 5).fill(is_selected ? .green : .gray)
             }
             .padding(10)
             .overlay(){
-                HStack{
-                    Spacer()
-                    VStack{
-                        
-                        Image(systemName: "checkmark.circle.fill")
-                            .background(){
-                                Circle()
-                            }
-                            .font(.largeTitle)
-                            .foregroundColor(.green)
-                            .overlay(){
-                                Image(systemName: "checkmark")
-                                    .fontWeight(.heavy)
-                                    .foregroundColor(.white)
-                            }
-                        
-        
-                           
+                if is_selected{
+
+                    HStack{
                         Spacer()
+                        VStack{
+                            
+                            Image(systemName: "checkmark.circle.fill")
+                                .background(){
+                                    Circle()
+                                }
+                                .font(.largeTitle)
+                                .foregroundColor(.green)
+                                .overlay(){
+                                    Image(systemName: "checkmark")
+                                        .fontWeight(.heavy)
+                                        .foregroundColor(.white)
+                                }
+                            
+                            
+                            
+                            Spacer()
+                        }
                     }
                 }
             }
             
+            
     }
 }
 
-struct ReproductionBirdCard_Previews: PreviewProvider {
-    static var previews: some View {
-        ReproductionBirdCard()
-    }
-}

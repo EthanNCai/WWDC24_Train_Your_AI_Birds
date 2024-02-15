@@ -40,8 +40,6 @@ struct SettingView: View {
                 
                 
                     Button(action: {
-                        
-                        
                         self.content_ctrl.done_setting()                        
                         
                     }){

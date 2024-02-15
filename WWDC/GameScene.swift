@@ -57,6 +57,7 @@ class GameScene: SKScene{
     override func didMove(to view: SKView) {
         
         self.physicsBody = SKPhysicsBody(edgeLoopFrom: self.frame)
+        self.content_ctrl.scene_update_ref = self
         makeBackgrounds()
         
     }
@@ -183,6 +184,31 @@ class GameScene: SKScene{
         }
         
     }
+    func update_ball_fitness_score_v2(){
+        for (index, ball) in self.content_ctrl.balls.enumerated(){
+            if ball.isActive {
+            
+                let current_height = ball.ball_node.position.y
+                if self.currently_focus == 0{
+                    return
+                }
+                let colu = childNode(withName: "colu" + String(self.currently_focus))!
+                let col_upper_bounds = colu.position.y
+                
+                let col_lower_bounds = col_upper_bounds - self.size.height * self.content_ctrl.difficulty_index
+                
+                let delta_y_u = abs(Float(current_height - col_upper_bounds))
+                let delta_y_d = abs(Float(current_height - col_lower_bounds))
+                
+                let delta = (delta_y_d + delta_y_u) / 2
+                self.content_ctrl.balls[index].avg_gap_dist_score_list.append(delta)
+                let sum = ball.avg_gap_dist_score_list.reduce(0, +)
+                let avg_delta = Float(sum) / Float(ball.avg_gap_dist_score_list.count)
+                self.content_ctrl.balls[index].avg_gap_dist_score = avg_delta
+            }
+        }
+        
+    }
     func update_ball_fitness_scorev2(){
         for (index, ball) in self.content_ctrl.balls.enumerated(){
             if ball.isActive {
@@ -199,7 +225,7 @@ class GameScene: SKScene{
                 let distance_upper = abs(current_height - col_upper_bounds)
                 let distance_lower = abs(current_height - col_lower_bounds)
                 
-                self.content_ctrl.balls[index].fitness_score_v2 = 100/(Float(distance_lower + distance_upper)/2)
+                self.content_ctrl.balls[index].avg_gap_dist_score = 100/(Float(distance_lower + distance_upper)/2)
                 
             }
         }
@@ -279,7 +305,8 @@ class GameScene: SKScene{
         
         self.newest_col_index += 1
         let col_index = newest_col_index
-        let (pos_index_u,pos_index_d) = colPositionIndexGenerator()
+        let (pos_index_u,pos_index_d) = colPositionIndexGenerator(col_index: col_index)
+        
         let colwidth: CGFloat = 12.0
         let colheight: CGFloat = self.size.height
         var position: CGFloat {
@@ -386,8 +413,14 @@ class GameScene: SKScene{
                 return
             }
         }
+        withAnimation(){
+            self.content_ctrl.is_selecting = true
+        }
+        withAnimation(){
+            self.content_ctrl.isGameOver = true
+        }
         
-        self.content_ctrl.isGameOver = true
+        
         self.content_ctrl.gathering_round_brief()
         self.content_ctrl.set_game_over_flags()
         self.content_ctrl.set_game_over_banner()
@@ -480,8 +513,14 @@ extension GameScene{
         //print("+ parent generated - bird child adding")
         for bird in self.content_ctrl.balls{
             let bird_node = bird.ball_node
+           
             assert(bird_node.parent == nil, "bird parent error")
-            addChild(bird_node)
+            self.addChild(bird_node)
+            
+            
+            
+            
+            //print("added")
         }
         //print("> children.count \(self.children.count)")
         //print("> balls.count \(self.content_ctrl.balls.count)")
@@ -495,10 +534,19 @@ extension GameScene{
 extension GameScene{
     
     
-    func colPositionIndexGenerator() -> (CGFloat, CGFloat) {
-        let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.3)...1)
-        let id = iu - (1+self.content_ctrl.difficulty_index)
-        return (iu, id)
+    
+    
+    func colPositionIndexGenerator(col_index: Int) -> (CGFloat, CGFloat) {
+        if col_index == 1{
+            let iu = CGFloat(0.7)
+            let id = iu - (1+self.content_ctrl.difficulty_index)
+            return (iu, id)
+        }else{
+            let iu = CGFloat.random(in: (self.content_ctrl.difficulty_index*1.3)...1)
+            let id = iu - (1+self.content_ctrl.difficulty_index)
+            return (iu, id)
+        }
+        
     }
     
     func removeCol(col_index: Int){
@@ -573,6 +621,10 @@ extension GameScene{
                     if self.content_ctrl.experiment_mode{
                         
                         self.update_ball_fitness_score()
+                        
+                        self.update_ball_fitness_score_v2()
+                        
+                        self.content_ctrl.get_normalized_scores()
                         
                         self.see_if_we_can_show_the_notice()
                     }
@@ -797,7 +849,7 @@ extension GameScene{
         
         var is_distance_long_enough = false
         for ball in self.content_ctrl.balls{
-            if ball.distance_score >= Float(self.content_ctrl.size.width) * 0.8{
+            if ball.distance_score >= Float(self.content_ctrl.size.width) * 1.2{
                 is_distance_long_enough = true
             }
         }
@@ -829,6 +881,7 @@ extension GameScene{
 extension GameScene{
     func experiment_reset() {
         
+        
         // game scene clean
         print("=====================================")
         print("round \(self.content_ctrl.rounds_count)")
@@ -854,9 +907,8 @@ extension GameScene{
         if self.content_ctrl.rounds_count > 1{
             assert(self.content_ctrl.balls.count == self.content_ctrl.bird_number, "reproduction ball insertion faild, ball number:\(self.content_ctrl.balls.count)")
         }
-        
+        //self.makeBackgrounds()
         makeBackgrounds()
-        
         // regenerate children
         if self.content_ctrl.rounds_count > 1{
             self.join_balls_accordingly()
@@ -864,11 +916,24 @@ extension GameScene{
         }else{
             self.generate_balls_accordingly()
         }
-        //self.print_node_obj_info()
-    
-        self.content_ctrl.isGameOver = false
-        // make sure there's n balls
+        withAnimation(){
+            self.content_ctrl.isGameOver = false
+        }
+        
+        
         assert(self.content_ctrl.bird_number == self.content_ctrl.balls.count ,"ball array count error : \(self.children.count) children(s)")
+    }
+    
+    func generate_bird_accordingly(){
+        if self.content_ctrl.rounds_count > 1{
+           
+            self.join_balls_accordingly()
+//            print("here1")
+            
+        }else{
+            self.generate_balls_accordingly()
+//            print("here2")
+        }
     }
     
     func game_wise_experiment_reset() {

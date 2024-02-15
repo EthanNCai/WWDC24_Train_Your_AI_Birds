@@ -17,9 +17,8 @@ struct Ball:Identifiable, Hashable{
     let ballRadius:CGFloat
     var ball_node:SKSpriteNode
     var ball_index:Int
-    var distance_score:Float = 0
+    
     var fitness_score:Int = 0
-    var fitness_score_v2: Float = 0
     var isActive:Bool = true
     
     
@@ -32,6 +31,16 @@ struct Ball:Identifiable, Hashable{
     var is_jumped: Bool = false
     var fly_probability: Float = 0.0
     var mlp:SimpleNeuralNetwork
+    let color: Color
+    
+    //score
+    var distance_score:Float = 0
+    var avg_gap_dist_score: Float = 0
+    var avg_gap_dist_score_list:[Float] = []
+    
+    var norm_avg_gap_dist_score: Float = 0
+    var norm_distance_score:Float = 0
+    
     
     init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color, gene_len: Int) {
         
@@ -41,9 +50,12 @@ struct Ball:Identifiable, Hashable{
         self.ball_index = ball_index
         self.ball_node.position = CGPoint(x: x, y: y)
         self.ball_node.name = "ball" + String(ball_index)
-        self.ball_node.color = NSColor(ball_color)
+        self.color = Color.random()
+        self.ball_node.color = NSColor(self.color)
+        self.ball_node.colorBlendFactor = 0.5
         self.ball_node.zPosition = -2
         self.mlp = SimpleNeuralNetwork(hidden_layer_len: 18)
+
         
     }
     init(x: CGFloat, y: CGFloat, ball_index:Int, ball_radius: Float, ball_color: Color, mlp: SimpleNeuralNetwork) {
@@ -53,22 +65,17 @@ struct Ball:Identifiable, Hashable{
         self.ball_node.scale(to: CGSize(width: 50, height: 50))
         self.ball_index = ball_index
         self.ball_node.position = CGPoint(x: x, y: y)
-        self.ball_node.name = "ball" + String(ball_index)
-        self.ball_node.color = NSColor(ball_color)
         self.ball_node.zPosition = -2
+        self.ball_node.name = "ball" + String(ball_index)
+        self.color = Color.random()
+        self.ball_node.color = NSColor(self.color)
+        self.ball_node.colorBlendFactor = 0.5
+        
         self.mlp = mlp
         
     }
     
-    mutating func clone_node(){
-        
-        let cloned_ball = SKSpriteNode(imageNamed: "bird")
-        cloned_ball.scale(to: CGSize(width: 50, height: 50))
-        cloned_ball.position = self.ball_node.position
-        self.ball_node.zPosition = -2
-        self.ball_node = cloned_ball
-        
-    }
+   
      
     
     func get_dicision_is_jump(scene_size: CGSize) -> (Float,Bool){
@@ -141,4 +148,14 @@ struct Ball:Identifiable, Hashable{
         print("parameter")
     }
     
+}
+
+extension Color {
+    static func random() -> Color {
+        let red = Double.random(in: 0...1)
+        let green = Double.random(in: 0...1)
+        let blue = Double.random(in: 0...1)
+        
+        return Color(red: red, green: green, blue: blue)
+    }
 }

@@ -8,51 +8,71 @@
 import SwiftUI
 import SpriteKit
 
-struct GameView: View {
-    
+struct GameView: View,Equatable {
+    @Namespace var namespace
     @ObservedObject var content_ctrl = PageContentController()
     @State var isSpeeded = false
     var scene: GameScene
+    
+    static func == (lhs: GameView, rhs: GameView) -> Bool {
+            return lhs.scene == rhs.scene
+        }
+    
     var body: some View {
         ZStack{
             
             // gamelayer
             SpriteView(scene: scene)
-                .mask(RoundedRectangle(cornerRadius: 5))
-                .padding(.vertical,10)
-                .padding(.trailing,10)
-                .onDisappear(){
-                    //self.content_ctrl.controller_reset()
+                .mask(RoundedRectangle(cornerRadius: 20))
+                .overlay(){
+                    RoundedRectangle(cornerRadius: 20).stroke(lineWidth: 5).fill(self.content_ctrl.play_mode ? .green.opacity(0.8) : .red.opacity(0.8))
                 }
-                .onChange(of: scene.size) { newSize in
-                    //self.content_ctrl.controller_reset()
+                .padding()
+                .overlay(){
+                    
+                        VStack{
+                            Text(self.content_ctrl.play_mode ? "Birds' now controlled by you" : "Birds' now controlled by itself")
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                                .padding(5)
+                                .padding(.horizontal)
+                                .background(self.content_ctrl.play_mode ? .green : .red)
+                                .mask(RoundedRectangle(cornerRadius: 11))
+                            Spacer()
+                            
+                        }
+                    
                 }
             
             // banner
             
             if  self.content_ctrl.experiment_mode
             {
-                if !content_ctrl.isUserBegin ||  content_ctrl.isGameOver{
+                if !content_ctrl.isUserBegin {
                     VStack{
                         if !self.content_ctrl.isGameOver{
-                            if self.content_ctrl.rounds_count == 1{
-                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))st. generation")
-                            }else if self.content_ctrl.rounds_count == 2{
-                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))nd. generation")
-                            }else if self.content_ctrl.rounds_count == 3{
-                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))rd. generation")
-                            }else{
-                                Text("Ready to test the \(String(self.content_ctrl.rounds_count))th. generation")
+                            
+                            Text("Ready to test the \(String(self.content_ctrl.rounds_count))th. generation")
+                            Text(content_ctrl.bannerContent)
+                                .fontWeight(.black)
+                        }else if self.content_ctrl.isGameOver && self.content_ctrl.is_selecting{
+                            Text("starting breeding panal...")
+                        }else{
+                            VStack{
+                                ProgressView()
+                                    .padding(1)
+                                Text("Breeding birds...")
                             }
+                            
                         }
-                        Text(content_ctrl.bannerContent)
-                            .fontWeight(.black)
-                            .padding()
                         
                     }
                     .padding()
-                    .background(.ultraThinMaterial)
+                    .background(.ultraThinMaterial.opacity(0.5))
+                    .matchedGeometryEffect(id: "bg1", in: namespace)
                     .mask(RoundedRectangle(cornerRadius: 10))
+                    .matchedGeometryEffect(id: "msk1", in: namespace)
+                    .padding()
                     
                 }
             }else if !self.content_ctrl.isUserBegin && self.content_ctrl.display_mode{
@@ -62,6 +82,7 @@ struct GameView: View {
                     .padding()
                     .background(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 10))
+                    .padding()
                 
             }else if !self.content_ctrl.isUserBegin && self.content_ctrl.play_mode{
                 Text(content_ctrl.bannerContent)
@@ -69,9 +90,10 @@ struct GameView: View {
                     .padding()
                     .background(.ultraThinMaterial)
                     .mask(RoundedRectangle(cornerRadius: 10))
+                    .padding()
                         
                 }
-            
+            /*
             if  self.content_ctrl.experiment_mode{
             // gauges
                 VStack{
@@ -98,7 +120,32 @@ struct GameView: View {
                 }
             
             }
+            */
             if  self.content_ctrl.experiment_mode{
+            // gauges
+                VStack{
+                    
+                    
+                    
+                    
+                    Spacer()
+                        
+                    HStack {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title2)
+                        Text("Speed 12%")
+                        Image(systemName: "plus.circle.fill")
+                            .font(.title2)
+                        
+                    }
+                    .padding()
+                            
+                   
+                    
+                }.padding()
+            
+            }
+            if  self.content_ctrl.experiment_mode && self.content_ctrl.isGameBegin{
                 //debug info
                 HStack{
                     VStack{
@@ -117,13 +164,13 @@ struct GameView: View {
                         }
                         .fontWeight(.black)
                         .padding()
-                        .background(.ultraThinMaterial)
+                        .background(.ultraThinMaterial.opacity(0.5))
                         .mask(RoundedRectangle(cornerRadius: 15))
                         Spacer()
                     }
                     .padding()
                     Spacer()
-                }
+                }.padding()
             }
             if  self.content_ctrl.play_mode{
                 //debug info
@@ -135,14 +182,16 @@ struct GameView: View {
                         }
                         .fontWeight(.black)
                         .padding()
-                        .background(.ultraThinMaterial)
+                        .background(.ultraThinMaterial.opacity(0.5))
                         .mask(RoundedRectangle(cornerRadius: 15))
                         Spacer()
                     }
                     .padding()
                     Spacer()
-                }
+                }.padding()
             }
+            
+            
             
         }
         

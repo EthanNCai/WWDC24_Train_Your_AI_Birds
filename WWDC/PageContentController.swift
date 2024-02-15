@@ -11,11 +11,12 @@ import SwiftUI
 class PageContentController: ObservableObject {
     
     //mode
+    var scene_update_ref:GameScene? = nil
     var display_mode:Bool = false
     var experiment_mode:Bool = false
     var play_mode:Bool = false
     
-    
+    @Published var is_selecting = false
     @Published var is_showed_notice = false
     @Published var is_show_notice = false
     @Published var isUserBegin:Bool = false
@@ -43,14 +44,14 @@ class PageContentController: ObservableObject {
     @Published var ui_speed_index:Float = 10
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.26
+    var difficulty_index: CGFloat = 0.24
     
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 2
     var bird_number: Int = 12
     var mutate_proab: Float = 0.15
     var speed_index: CGFloat = 0.005
-    var gene_length: Int = 18
+    var gene_length: Int = 28
     @Published var show_welcome_mat: Bool = true
     
     
@@ -164,12 +165,12 @@ class PageContentController: ObservableObject {
         
         //save
         for best_ball in self.best_balls{
-            let rand_y_pos = Float.random(in: 0.3...0.7)
+            let rand_y_pos = Float.random(in: 0.4...0.6)
             let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: best_ball.mlp)
             self.balls.append(new_ball)
         }
         
-            let rand_y_pos = Float.random(in: 0.3...0.7)
+            let rand_y_pos = Float.random(in: 0.4...0.6)
         let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: self.gene_length)
             self.balls.append(new_ball)
         
@@ -318,12 +319,17 @@ class PageContentController: ObservableObject {
         DispatchQueue.main.async {
             self.bannerContent = "Counting down 3..."
             DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
-                self.bannerContent = "Counting down 2..."
-                DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
-                    self.bannerContent = "Counting down 1..."
-                    DispatchQueue.main.asyncAfter(deadline: .now() + timeToGo / 3) {
-                        
-                        self.isUserBegin = true
+                if self.isGameBegin{
+                    self.bannerContent = "Counting down 2..."
+                    DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
+                        if self.isGameBegin{
+                            self.bannerContent = "Counting down 1..."
+                            DispatchQueue.main.asyncAfter(deadline: .now() + timeToGo / 3) {
+                                if self.isGameBegin{
+                                    self.isUserBegin = true
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -333,8 +339,6 @@ class PageContentController: ObservableObject {
         DispatchQueue.main.async {
             if self.play_mode{
                 self.bannerContent = "Oops, Tap to restart"
-            }else if self.experiment_mode{
-                self.bannerContent = " Round ended! Touch to test the next generation"
             }
             
         }
@@ -400,6 +404,40 @@ class PageContentController: ObservableObject {
             return (0,0,0,0)
         }
     }
+    
+    func get_normalized_scores(){
+        var dist_scores: [Float] = []
+        var avg_gap_dist_scores: [Float] = []
+        
+        for ball in self.balls{
+            dist_scores.append(ball.distance_score)
+            avg_gap_dist_scores.append(ball.avg_gap_dist_score)
+        }
+        if dist_scores.count == 0 || avg_gap_dist_scores.count == 0{
+            return
+        }
+        
+        let dist_score_max = dist_scores.max()!
+        let dist_score_min = dist_scores.min()!
+        let avg_gap_dist_max = avg_gap_dist_scores.max()!
+        let avg_gap_dist_min = avg_gap_dist_scores.min()!
+        
+        
+        for (index, ball) in self.balls.enumerated(){
+            // mapping
+            let mapped_avg_gap_dist_score =  self.normalization(ball.avg_gap_dist_score, lowerLimit: avg_gap_dist_min, upperLimit: avg_gap_dist_max)
+            let mapped_distance_score =  self.normalization(ball.distance_score, lowerLimit: dist_score_min, upperLimit: dist_score_max)
+            // asign
+            self.balls[index].norm_distance_score = mapped_distance_score
+            self.balls[index].norm_avg_gap_dist_score = mapped_avg_gap_dist_score
+        }
+    }
+    
+    func normalization(_ input: Float, lowerLimit: Float, upperLimit: Float) -> Float {
+        
+        let normalizedData = (input - lowerLimit) / (upperLimit - lowerLimit)
+        return max(0, min(1, normalizedData))
+    }
 }
 
 
@@ -434,7 +472,7 @@ extension PageContentController{
         isReset = false
         isGameBegin = false
         isUserBegin = false
-        bannerContent = " Tap to begin "
+        //bannerContent = " Tap to begin "
         
     
     }
@@ -447,6 +485,7 @@ extension PageContentController{
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
+        is_selecting = false
         //isOnSetting = true
         is_on_restricted_area = false
         balls.removeAll()
