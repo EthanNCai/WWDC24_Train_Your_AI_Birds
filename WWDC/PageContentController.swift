@@ -45,13 +45,12 @@ class PageContentController: ObservableObject {
     @Published var ui_speed_index:Float = 10
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.25
-    
+    var difficulty_index: CGFloat = 0.28
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 2
     var bird_number: Int = 12
     var mutate_proab: Float = 0.10
-    var speed_index: CGFloat = 0.007
+    var speed_index: CGFloat = 0.006
     var gene_length: Int = 28
     @Published var show_welcome_mat: Bool = true
     
@@ -74,6 +73,7 @@ class PageContentController: ObservableObject {
     
     // training
     @Published var best_balls:[Ball] = []
+    @Published var best_balls_suggest:[Ball] = []
     @Published var rounds_count: Int = 0
     
     @Published var best_distance_score: Float = 0
@@ -164,6 +164,16 @@ class PageContentController: ObservableObject {
         self.best_fitneass = sortedBalls[0].fitness_score
     }
     
+    func suggest_best_birds(){
+        //assert(self.balls.count == self.bird_number, "balls array number error: \(self.balls.count)")
+        self.best_balls_suggest.removeAll()
+        let sortedBalls = self.balls.sorted { $0.fitness_score > $1.fitness_score }
+        let count = min(3, sortedBalls.count)
+        for i in 0..<count {
+           self.best_balls_suggest.append(sortedBalls[i])
+        }
+    }
+    
     func generate_round_record(){
         assert(self.balls.count == self.bird_number, "balls array number error: \(self.balls.count)")
         
@@ -201,8 +211,6 @@ class PageContentController: ObservableObject {
             let rand_y_pos = Float.random(in: 0.4...0.6)
         let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: self.gene_length)
             self.balls.append(new_ball)
-        let new_ball_2 = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: self.gene_length)
-            self.balls.append(new_ball_2)
         
         
         
@@ -216,7 +224,7 @@ class PageContentController: ObservableObject {
             
             // select 2 parent for weights
             
-            assert(self.best_balls.count == self.best_bird_needed,"best bird number check")
+  
             
             
             
@@ -357,6 +365,7 @@ class PageContentController: ObservableObject {
                             self.bannerContent = "Counting down 1..."
                             DispatchQueue.main.asyncAfter(deadline: .now() + timeToGo / 3) {
                                 if self.isGameBegin{
+                                    
                                     self.isUserBegin = true
                                 }
                             }
@@ -480,7 +489,7 @@ extension PageContentController{
         // reset don't incluede the setting reset
         if self.rounds_count >= 1 {
             //print("+ fetching best birds")
-            self.fetch_the_best_birds()
+            //self.fetch_the_best_birds()
             self.generate_round_record()
             // print best brid DNA
             self.balls.removeAll()

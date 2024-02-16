@@ -121,31 +121,31 @@ struct GameView: View,Equatable {
             
             }
             */
-            if  self.content_ctrl.experiment_mode{
-            // gauges
-                VStack{
-                    
-                    
-                    
-                    
-                    Spacer()
-                        
-                    HStack {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.title2)
-                        Text("Speed 12%")
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                        
-                    }
-                    .padding()
-                            
-                   
-                    
-                }.padding()
-            
-            }
-            if  self.content_ctrl.experiment_mode && self.content_ctrl.isGameBegin{
+//            if  self.content_ctrl.experiment_mode{
+//            // gauges
+//                VStack{
+//
+//
+//
+//
+//                    Spacer()
+//
+//                    HStack {
+//                        Image(systemName: "minus.circle.fill")
+//                            .font(.title2)
+//                        Text("Speed 12%")
+//                        Image(systemName: "plus.circle.fill")
+//                            .font(.title2)
+//
+//                    }
+//                    .padding()
+//
+//
+//
+//                }.padding()
+//
+//            }
+            if  self.content_ctrl.experiment_mode && self.content_ctrl.isUserBegin{
                 //debug info
                 HStack{
                     VStack{

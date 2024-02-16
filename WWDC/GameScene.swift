@@ -413,6 +413,7 @@ class GameScene: SKScene{
                 return
             }
         }
+        self.content_ctrl.suggest_best_birds()
         withAnimation(){
             self.content_ctrl.is_selecting = true
         }
@@ -498,10 +499,12 @@ extension GameScene{
        // print("+ newly generated - bird child adding")
         for i in 0..<self.content_ctrl.bird_number{
             let rand_y_pos = Float.random(in: 0.3...0.7)
-            self.content_ctrl.balls.append(Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red,gene_len: self.content_ctrl.gene_length))
+            let ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red,mlp: seed_mlps[i])
+            self.content_ctrl.balls.append(ball)
             let ball_node = self.content_ctrl.balls[i].ball_node
             assert(ball_node.parent == nil, "bird parent error")
             addChild(ball_node)
+            
         }
         //print("> children.count \(self.children.count)")
         //print("> balls.count \(self.content_ctrl.balls.count)")

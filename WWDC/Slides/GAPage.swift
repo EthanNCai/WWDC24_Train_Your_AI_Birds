@@ -51,7 +51,7 @@ struct GAPage: View {
                 .padding()
                 .padding(.horizontal)
                 
-                    Text("\tGenetic algorithms mimic this process. In genetic algorithms, the ability to adapt to the environment is called  \"fitness.\" When training the neural network of Flappy Birds, we can measure fitness based on the birds' \"fitness\" In each iteration, we select the top-performing birds that have survived the longest and breed them by combining their __neural network weights(aka genes)__ through cross-reorganization and introducing genetic mutations. This process generates new offspring birds.\n\n\tTo summarize, we start with an initial population of birds with randomly assigned genes, use an algorithm to evaluate their fitness to identify the best performers, and introduce a reasonable probability of genetic variation to add randomness. This iterative process allows us to gradually evolve the average bird gene quality with each interation.")
+                    Text("\tGenetic algorithms mimic this process. In genetic algorithms, the ability to adapt to the environment is called  \"fitness.\" When training the neural network of Flappy Birds, we can measure fitness based on the birds' \"fitness\" In each iteration, we select the top-performing birds that have survived the longest and breed them by combining their __neural network weights(aka genes)__ through cross-reorganization and introducing genetic mutations. This process generates new better offspring birds. so on and so forth\n\n\t As we repeat this process over time, our bird population will become increasingly skilled at playing Flappy Bird!")
                     .font(.body)
                     
                     

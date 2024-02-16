@@ -50,7 +50,7 @@ struct ObservationView: View {
                         .padding(5)
                         .buttonStyle(.plain)
                         
-                       
+                    Text("\t Tips: It is normal for a generation to experience performance decline, and if there is no progress for a long time, it may be necessary to click \"Reset Everything\" to initiate a new training.")
                     
                     HStack{
                         
@@ -61,7 +61,7 @@ struct ObservationView: View {
                         Spacer()
                     }
                     
-                    
+                   
                     BirdCapsuleTest(content_ctrl: self.content_ctrl)
                     
                     

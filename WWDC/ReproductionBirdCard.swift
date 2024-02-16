@@ -10,6 +10,7 @@ import SwiftUI
 struct ReproductionBirdCard: View {
     var ball:Ball
     @Binding var is_selected:Bool
+    @State var show_shadow:Bool = false
     var body: some View {
         VStack{
             HStack{
@@ -24,10 +25,8 @@ struct ReproductionBirdCard: View {
                             Circle()
                                 .foregroundColor(self.ball.color)
                         }
-                
                 }
-                    
-                
+
                 HStack{
                     VStack(alignment: .leading,spacing: 5){
                         Image(systemName: "pin")
@@ -48,14 +47,13 @@ struct ReproductionBirdCard: View {
                     }
                     .fontWeight(.heavy)
                 }
-                
-               
             }
-            
         }
             .padding()
             .background(.white.opacity(0.1))
+            .shadow(radius: show_shadow ? 5 : 0)
             .mask(RoundedRectangle(cornerRadius: 18))
+            
             .overlay(){
                 RoundedRectangle(cornerRadius: 18).stroke(lineWidth: 5).fill(is_selected ? .green : .gray)
             }
@@ -85,6 +83,10 @@ struct ReproductionBirdCard: View {
                         }
                     }
                 }
+            }
+            .onHover{
+                is_hover in
+                show_shadow = is_hover
             }
             
             

@@ -15,7 +15,8 @@ struct ExperimentHintView: View {
                 Text("Welcome to your machine learning playground. ")
                     .font(.title)
                     .fontWeight(.heavy)
-                Text("\tThis is the place you could witness the amazingness of birds learning on their own using genetic algorithms!\n\n\t The experiment offers a number of options for modifying the __bird, the environment, also, the algorithm.__ You are free to explore tweaking them, but it's BEST to start the experiment with the __default settings__ first as a trial before you begin!")
+                Text("\tThis is the place you could witness the amazingness of birds learning on their own using genetic algorithms!\n\n\t The experiment will go through multiple rounds, and after each round, you'll select the best bird to pass down its excellent genes. Typically, it takes around __8 to 10 rounds__ for the birds to become proficient in flying. Let's get started!")
+                Text("\tTry to train a bird that can fly through __8__ columns")
                 Button("Let's Begin！", action: {
                     
                     withAnimation(){

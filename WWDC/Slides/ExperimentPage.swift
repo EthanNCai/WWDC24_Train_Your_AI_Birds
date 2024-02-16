@@ -36,9 +36,9 @@ struct ExperimentPage: View {
                     GameView(content_ctrl: content_ctrl, scene: scene)
                         .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
                 }
-                if self.content_ctrl.is_show_notice{
-                    NoticeView(content_ctrl: self.content_ctrl)
-                }
+//                if self.content_ctrl.is_show_notice{
+//                    NoticeView(content_ctrl: self.content_ctrl)
+//                }
                 if self.content_ctrl.show_welcome_mat{
                     ExperimentHintView(content_ctrl: self.content_ctrl)
                         .padding()

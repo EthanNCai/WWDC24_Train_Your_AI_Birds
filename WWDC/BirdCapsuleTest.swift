@@ -14,13 +14,13 @@ struct BirdCapsuleTest: View {
         ScrollView(.horizontal){
             HStack(spacing: 0){
                 if content_ctrl.round_history.count == 0{
-                    Text("No History, please launch your experiment")
-                        .padding()
+                    Text("_No History, please launch your experiment_")
+                        .padding(5)
                     
                 }else{
                     ForEach(content_ctrl.round_history.reversed()) { round in
                         VStack{
-                            Text("No.\(round.round)")
+                            Text("Gen.\(round.round)")
                             HStack(spacing: 0){
                                 Image(systemName: "pin")
                                 Text("\(round.best_distance_score)")
