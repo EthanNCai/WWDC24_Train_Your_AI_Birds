@@ -8,111 +8,41 @@
 import SwiftUI
 
 struct BirdCapsuleTest: View {
+    @ObservedObject var content_ctrl: PageContentController
     var body: some View {
         
         ScrollView(.horizontal){
             HStack(spacing: 0){
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
+                if content_ctrl.round_history.count == 0{
+                    Text("No History, please launch your experiment")
+                        .padding()
+                    
+                }else{
+                    ForEach(content_ctrl.round_history.reversed()) { round in
+                        VStack{
+                            Text("No.\(round.round)")
+                            HStack(spacing: 0){
+                                Image(systemName: "pin")
+                                Text("\(round.best_distance_score)")
+                            }
+                            if round.score_trend >= 0{
+                                Text("+\(round.score_trend)")
+                                    .font(.footnote)
+                                    .foregroundColor(.green)
+                                    .fontWeight(.heavy)
+                            }else{
+                                Text("\(round.score_trend)")
+                                    .font(.footnote)
+                                    .foregroundColor(.red)
+                                    .fontWeight(.heavy)
+                            }
+                            
+                        }
+                        .padding()
+                        .background(){
+                            Circle().stroke(lineWidth: 5).fill(round.score_trend >= 0 ? .green : .red)
+                        }.padding(.horizontal,8)
                     }
-                }
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-               
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-                
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-                
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
-                }
-                
-                VStack{
-                    Text("No.6")
-                    HStack(spacing: 0){
-                        Image(systemName: "pin")
-                        Text("1243")
-                    }
-                }
-
-                .padding()
-                .background(){
-                    Circle().stroke(lineWidth: 8).fill(.gray)
                 }
                 
             }.padding(7)
@@ -120,8 +50,4 @@ struct BirdCapsuleTest: View {
     }
 }
 
-struct BirdCapsuleTest_Previews: PreviewProvider {
-    static var previews: some View {
-        BirdCapsuleTest()
-    }
-}
+

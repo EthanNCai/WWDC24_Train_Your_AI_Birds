@@ -883,9 +883,9 @@ extension GameScene{
         
         
         // game scene clean
-        print("=====================================")
-        print("round \(self.content_ctrl.rounds_count)")
-        print("=====================================")
+//        print("=====================================")
+//        print("round \(self.content_ctrl.rounds_count)")
+//        print("=====================================")
         self.removeAllChildren()
         self.onscreen_cols.removeAll()
         

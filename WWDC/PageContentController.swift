@@ -15,6 +15,7 @@ class PageContentController: ObservableObject {
     var display_mode:Bool = false
     var experiment_mode:Bool = false
     var play_mode:Bool = false
+    var avg_dist: Int = 0
     
     @Published var is_selecting = false
     @Published var is_showed_notice = false
@@ -44,13 +45,13 @@ class PageContentController: ObservableObject {
     @Published var ui_speed_index:Float = 10
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.24
+    var difficulty_index: CGFloat = 0.25
     
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 2
     var bird_number: Int = 12
-    var mutate_proab: Float = 0.15
-    var speed_index: CGFloat = 0.005
+    var mutate_proab: Float = 0.10
+    var speed_index: CGFloat = 0.007
     var gene_length: Int = 28
     @Published var show_welcome_mat: Bool = true
     
@@ -84,6 +85,8 @@ class PageContentController: ObservableObject {
     @Published var best_fitness_score_trend: Float = 0
     @Published var avg_fitness_score_trend: Float = 0
     
+    // round history
+    @Published var round_history: [Round] = []
     
     // display has a fixed gene length -> 18
     var display_mlp: SimpleNeuralNetwork = SimpleNeuralNetwork(hidden_layer_len: 18)
@@ -161,6 +164,31 @@ class PageContentController: ObservableObject {
         self.best_fitneass = sortedBalls[0].fitness_score
     }
     
+    func generate_round_record(){
+        assert(self.balls.count == self.bird_number, "balls array number error: \(self.balls.count)")
+        
+        var birdsum:Float = 0
+        for birds in self.balls{
+            birdsum += birds.distance_score
+        }
+        var avg_dist:Float = 0
+        if self.balls.count != 0{
+            avg_dist = birdsum / Float(self.balls.count)
+        }
+        
+        let avg_dist_int = Int(avg_dist)
+        let delta = avg_dist_int - self.avg_dist
+        self.avg_dist = avg_dist_int
+        withAnimation(.spring()){
+            self.round_history.append(Round(avg_distance_score: avg_dist_int, score_trend: delta,round: self.rounds_count))
+        }
+            
+        
+        //print(self.round_history)
+        
+        
+    }
+    
     func reproduce(){
         
         //save
@@ -173,6 +201,8 @@ class PageContentController: ObservableObject {
             let rand_y_pos = Float.random(in: 0.4...0.6)
         let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: self.gene_length)
             self.balls.append(new_ball)
+        let new_ball_2 = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, gene_len: self.gene_length)
+            self.balls.append(new_ball_2)
         
         
         
@@ -203,6 +233,7 @@ class PageContentController: ObservableObject {
             let rand_y_pos = Float.random(in: 0.3...0.7)
             let new_ball = Ball(x: CGFloat(100), y: self.size.height * CGFloat(rand_y_pos), ball_index: -1, ball_radius: 15.0, ball_color: .red, mlp: nn_new)
             self.balls.append(new_ball)
+            
             
             /*
                 old codes
@@ -450,22 +481,18 @@ extension PageContentController{
         if self.rounds_count >= 1 {
             //print("+ fetching best birds")
             self.fetch_the_best_birds()
+            self.generate_round_record()
             // print best brid DNA
-            if self.best_balls.indices.contains(0){
-                print("--BEST-MLP--")
-                print("Distence:",self.best_balls[0].distance_score)
-                print("--MLP-BEGINS--")
-                print(self.best_balls[0].mlp.weights_layer1)
-                print(self.best_balls[0].mlp.weights_layer2)
-                print(self.best_balls[0].mlp.bias_layer1)
-                print(self.best_balls[0].mlp.bias_layer2)
-                print("--MLP-ENDS--")
-            }
             self.balls.removeAll()
             //print("+ reproducing")
             self.reproduce()
             self.dropout()
         }
+        if self.rounds_count != 0{
+            // print round infos
+            
+        }
+        
         
             self.rounds_count += 1
         
@@ -489,6 +516,7 @@ extension PageContentController{
         //isOnSetting = true
         is_on_restricted_area = false
         balls.removeAll()
+        round_history.removeAll()
         best_balls.removeAll()
         bannerContent = " Tap to begin "
     

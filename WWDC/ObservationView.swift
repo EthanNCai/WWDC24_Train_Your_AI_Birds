@@ -62,7 +62,7 @@ struct ObservationView: View {
                     }
                     
                     
-                    BirdCapsuleTest()
+                    BirdCapsuleTest(content_ctrl: self.content_ctrl)
                     
                     
                     Divider()
@@ -88,20 +88,11 @@ struct ObservationView: View {
                             
                             HStack{
                                 Text("=  Bird's total distance ")
-                                Text("_(Higher the better)_")
-                                    .fontWeight(.heavy)
-                                    .foregroundColor(.blue)
                             }
                             
                             HStack{
                                 Text("=  Bird's average distance to gap ")
-                                Text("_(Lower the better)_")
-                                    .fontWeight(.heavy)
-                                    .foregroundColor(.red)
                             }
-                           
-                                
-                            
                         }
                         
                     }
