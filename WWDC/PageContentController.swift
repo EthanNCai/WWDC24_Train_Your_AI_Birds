@@ -17,6 +17,16 @@ class PageContentController: ObservableObject {
     var play_mode:Bool = false
     var avg_dist: Int = 0
     
+    
+    // index * width
+    var milestn_index_list:[Float] = [0.5,1.06,1.76]
+    var milestn_distance:[Float] = []
+    @Published var current_milestn: Int = 0
+    var current_best_dist = 0
+    @Published var current_dist_needed = 0
+    //var current_target_distance:Int = 0
+    
+    @Published var is_show_upgrade_banner = false
     @Published var is_selecting = false
     @Published var is_showed_notice = false
     @Published var is_show_notice = false
@@ -45,11 +55,11 @@ class PageContentController: ObservableObject {
     @Published var ui_speed_index:Float = 10
     
     // for GAME SCENE
-    var difficulty_index: CGFloat = 0.28
+    var difficulty_index: CGFloat = 0.27
     var col_gap_value_mapping: CGFloat = 0.0
     var best_bird_needed: Int = 2
     var bird_number: Int = 12
-    var mutate_proab: Float = 0.10
+    var mutate_proab: Float = 0.04
     var speed_index: CGFloat = 0.006
     var gene_length: Int = 28
     @Published var show_welcome_mat: Bool = true
@@ -350,6 +360,23 @@ class PageContentController: ObservableObject {
         
     }
     
+    func target_reached_update(){
+        
+        withAnimation(){
+            self.current_milestn += 1
+        }
+        
+        withAnimation(){
+            self.is_show_upgrade_banner = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            withAnimation(){
+                self.is_show_upgrade_banner = false
+            }
+        }
+    }
+    
     
     func counting_down_set_user_begin() {
         
@@ -357,12 +384,15 @@ class PageContentController: ObservableObject {
         
         DispatchQueue.main.async {
             self.bannerContent = "Counting down 3..."
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
                 if self.isGameBegin{
                     self.bannerContent = "Counting down 2..."
+                    playsound()
                     DispatchQueue.main.asyncAfter(deadline: .now() + (timeToGo / 3)) {
                         if self.isGameBegin{
                             self.bannerContent = "Counting down 1..."
+                            playsound()
                             DispatchQueue.main.asyncAfter(deadline: .now() + timeToGo / 3) {
                                 if self.isGameBegin{
                                     
@@ -486,6 +516,7 @@ extension PageContentController{
     
     func experiment_controller_reset() {
         
+        
         // reset don't incluede the setting reset
         if self.rounds_count >= 1 {
             //print("+ fetching best birds")
@@ -496,6 +527,11 @@ extension PageContentController{
             //print("+ reproducing")
             self.reproduce()
             self.dropout()
+        }else{
+            self.current_milestn = 0
+            for milestn_index in self.milestn_index_list{
+                self.milestn_distance.append(milestn_index * Float(self.size.width))
+            }
         }
         if self.rounds_count != 0{
             // print round infos
@@ -514,14 +550,19 @@ extension PageContentController{
     }
     func experiment_game_wise_controller_reset() {
         
+        self.current_milestn = 0
+        for milestn_index in self.milestn_index_list{
+            self.milestn_distance.append(milestn_index * Float(self.size.width))
+        }
         // reset don't incluede the setting reset
         self.rounds_count = 0
+        is_selecting = false
         isLooped = false
         isReset = false
         isGameBegin = false
         isUserBegin = false
         isGameOver = false
-        is_selecting = false
+        
         //isOnSetting = true
         is_on_restricted_area = false
         balls.removeAll()

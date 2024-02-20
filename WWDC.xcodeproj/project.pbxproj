@@ -28,6 +28,8 @@
 		8BCCDCE22B0B40F600040744 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE12B0B40F600040744 /* Assets.xcassets */; };
 		8BCCDCE52B0B40F600040744 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */; };
 		8BCED69B2B7F2AA6002DD191 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCED69A2B7F2AA6002DD191 /* Round.swift */; };
+		8BCED6B72B825D06002DD191 /* ProgresserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCED6B62B825D06002DD191 /* ProgresserView.swift */; };
+		8BCED6B92B838AF1002DD191 /* SoundPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BCED6B82B838AF1002DD191 /* SoundPlayer.swift */; };
 		8BDED9DD2B7621E200A47501 /* NoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDED9DC2B7621E200A47501 /* NoticeView.swift */; };
 		8BDED9DF2B767C9600A47501 /* NeuralNetworkExplanation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BDED9DE2B767C9600A47501 /* NeuralNetworkExplanation.swift */; };
 		8BE199BA2B73ABC100CFD3BA /* NeuralNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */; };
@@ -68,6 +70,8 @@
 		8BCCDCE42B0B40F600040744 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8BCCDCE62B0B40F600040744 /* WWDC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WWDC.entitlements; sourceTree = "<group>"; };
 		8BCED69A2B7F2AA6002DD191 /* Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
+		8BCED6B62B825D06002DD191 /* ProgresserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgresserView.swift; sourceTree = "<group>"; };
+		8BCED6B82B838AF1002DD191 /* SoundPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundPlayer.swift; sourceTree = "<group>"; };
 		8BDED9DC2B7621E200A47501 /* NoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoticeView.swift; sourceTree = "<group>"; };
 		8BDED9DE2B767C9600A47501 /* NeuralNetworkExplanation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetworkExplanation.swift; sourceTree = "<group>"; };
 		8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeuralNetwork.swift; sourceTree = "<group>"; };
@@ -127,6 +131,7 @@
 				8BE91C6C2B6CE8B400C3FA0F /* BallBoard.swift */,
 				8BF04A0C2B67D2FF006DD210 /* GameScene.swift */,
 				8BCCDCDD2B0B40F500040744 /* WWDCApp.swift */,
+				8BCED6B62B825D06002DD191 /* ProgresserView.swift */,
 				8B2D17502B6C01DB00FEB986 /* Ball.swift */,
 				8BCCDCDF2B0B40F500040744 /* StageView.swift */,
 				8BE199B92B73ABC100CFD3BA /* NeuralNetwork.swift */,
@@ -136,6 +141,7 @@
 				8B33CBDF2B7CDAD500C92107 /* ReproductionBirdCard.swift */,
 				8B33CBE12B7CF8D300C92107 /* LiveAdjustButtom.swift */,
 				8B33CBE32B7D01B800C92107 /* BirdCapsuleTest.swift */,
+				8BCED6B82B838AF1002DD191 /* SoundPlayer.swift */,
 				8BCCDCE12B0B40F600040744 /* Assets.xcassets */,
 				8BCCDCE62B0B40F600040744 /* WWDC.entitlements */,
 				8BCCDCE32B0B40F600040744 /* Preview Content */,
@@ -240,6 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BCED6B72B825D06002DD191 /* ProgresserView.swift in Sources */,
 				8B33CBE02B7CDAD500C92107 /* ReproductionBirdCard.swift in Sources */,
 				8BAD2A382B78B29E00CDFC6F /* GAPage.swift in Sources */,
 				8B33CBE22B7CF8D300C92107 /* LiveAdjustButtom.swift in Sources */,
@@ -254,6 +261,7 @@
 				8BE91C732B6F4BB300C3FA0F /* SettingView.swift in Sources */,
 				8BE91C752B6F550700C3FA0F /* GameView.swift in Sources */,
 				8BE91C712B6F4B9600C3FA0F /* ObservationView.swift in Sources */,
+				8BCED6B92B838AF1002DD191 /* SoundPlayer.swift in Sources */,
 				8BAD2A342B77899C00CDFC6F /* Pretrained_Bird_Instance.swift in Sources */,
 				8BAD2A422B79249B00CDFC6F /* ExperimentHintView.swift in Sources */,
 				8BCCDCDE2B0B40F500040744 /* WWDCApp.swift in Sources */,

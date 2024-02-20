@@ -22,7 +22,7 @@ class GameScene: SKScene{
     var jmpTimeInterval: Double = 0.2
     var gameTickInterval: Double = 0.02
     var ballRadius:CGFloat = 15.0
-    var outed_tolerance: CGFloat = 8
+    var outed_tolerance: CGFloat = 15
     var colDistanceInterval: CGFloat {
         
         return CGFloat((colTimeInterval / gameTickInterval) * self.content_ctrl.speed_index) * self.size.width
@@ -408,24 +408,27 @@ class GameScene: SKScene{
     }
     func checkGameOver(){
         
-        for ball in self.content_ctrl.balls{
-            if ball.isActive == true{
-                return
+        if self.content_ctrl.isUserBegin{
+            
+            
+            for ball in self.content_ctrl.balls{
+                if ball.isActive == true{
+                    return
+                }
             }
+            self.content_ctrl.suggest_best_birds()
+            withAnimation(){
+                self.content_ctrl.is_selecting = true
+            }
+            withAnimation(){
+                self.content_ctrl.isGameOver = true
+            }
+            
+            
+            self.content_ctrl.gathering_round_brief()
+            self.content_ctrl.set_game_over_flags()
+            self.content_ctrl.set_game_over_banner()
         }
-        self.content_ctrl.suggest_best_birds()
-        withAnimation(){
-            self.content_ctrl.is_selecting = true
-        }
-        withAnimation(){
-            self.content_ctrl.isGameOver = true
-        }
-        
-        
-        self.content_ctrl.gathering_round_brief()
-        self.content_ctrl.set_game_over_flags()
-        self.content_ctrl.set_game_over_banner()
-        
         // print best mlp
         
         //print(content_ctrl.)
@@ -630,6 +633,8 @@ extension GameScene{
                         self.content_ctrl.get_normalized_scores()
                         
                         self.see_if_we_can_show_the_notice()
+                        
+                        self.check_if_reach_milestone()
                     }
                     
                     // update focus to *game scene*
@@ -865,6 +870,35 @@ extension GameScene{
         }
     }
     
+    func check_if_reach_milestone(){
+        // 0 -> 0 stars
+        // 1 -> 1 stars
+        // 2 -> 2 stars
+        // 3 -> 3 stars
+        let current_milestn = self.content_ctrl.current_milestn
+        if current_milestn > 2 {
+            return
+        }
+        //print(current_milestn)
+        let target = self.content_ctrl.milestn_distance[current_milestn]
+        //var is_target_hit = false
+        var current_best_dist_temp:Float = 0
+        for ball in self.content_ctrl.balls{
+            if ball.isActive == false{
+                continue
+            }
+            if ball.distance_score >= target{
+                // call some content_ctrl funcs
+                self.content_ctrl.target_reached_update()
+            }
+            if ball.distance_score >= current_best_dist_temp{
+                current_best_dist_temp = ball.distance_score
+            }
+        }
+        self.content_ctrl.current_best_dist = Int(current_best_dist_temp)
+        self.content_ctrl.current_dist_needed = Int(target) - Int(current_best_dist_temp)
+    }
+    
     
     override func touchesBegan(with event: NSEvent) {
         //
@@ -943,7 +977,7 @@ extension GameScene{
         
         // game scene clean
         //print("DEEP RESET")
-        
+        self.content_ctrl.is_selecting = false
         self.removeAllChildren()
         self.onscreen_cols.removeAll()
         
@@ -971,6 +1005,7 @@ extension GameScene{
     }
     func display_reset(){
         // game scene clean
+        self.content_ctrl.bannerContent = "Tap to View"
         self.removeAllChildren()
         self.onscreen_cols.removeAll()
         

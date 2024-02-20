@@ -55,6 +55,7 @@ struct GameView: View,Equatable {
                             Text("Ready to test the \(String(self.content_ctrl.rounds_count))th. generation")
                             Text(content_ctrl.bannerContent)
                                 .fontWeight(.black)
+                            
                         }else if self.content_ctrl.isGameOver && self.content_ctrl.is_selecting{
                             Text("starting breeding panal...")
                         }else{
@@ -73,6 +74,7 @@ struct GameView: View,Equatable {
                     .mask(RoundedRectangle(cornerRadius: 10))
                     .matchedGeometryEffect(id: "msk1", in: namespace)
                     .padding()
+                    .allowsHitTesting(false)
                     
                 }
             }else if !self.content_ctrl.isUserBegin && self.content_ctrl.display_mode{
@@ -171,6 +173,19 @@ struct GameView: View,Equatable {
                     .padding()
                     Spacer()
                 }.padding()
+            }
+            
+            if  self.content_ctrl.experiment_mode && self.content_ctrl.is_show_upgrade_banner{
+                //debug info
+                
+                        Text("🎉Your bird model is making progress!🎉")
+                        .fontWeight(.black)
+                        .padding()
+                        .background(.ultraThinMaterial.opacity(0.5))
+                        .mask(RoundedRectangle(cornerRadius: 15))
+                        
+                    .padding()
+                    .padding()
             }
             if  self.content_ctrl.play_mode{
                 //debug info

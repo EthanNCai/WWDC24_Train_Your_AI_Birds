@@ -33,6 +33,7 @@ struct ExperimentPage: View {
                         ObservationView(content_ctrl: self.content_ctrl, scene: scene)
                         
                     }
+                    
                     GameView(content_ctrl: content_ctrl, scene: scene)
                         .frame(maxWidth: content_ctrl.size.width*1/2,maxHeight: content_ctrl.size.height * (0.9))
                 }
@@ -44,7 +45,7 @@ struct ExperimentPage: View {
                         .padding()
                 }
                 
-                if self.content_ctrl.is_selecting{
+                if self.content_ctrl.is_selecting && self.content_ctrl.isGameOver{
                     ReproductionView(content_ctrl: self.content_ctrl, get_new_scene: self.get_new_scene,scene: self.scene)
                         .padding()
                         .padding()
@@ -66,8 +67,14 @@ struct ExperimentPage: View {
             }
             .onChange(of: geometry.size) { newSize in
                 content_ctrl.size = geometry.size
+                if self.content_ctrl.is_selecting{
+                    self.content_ctrl.is_selecting = false
+                }else{
+                    scene.game_wise_experiment_reset()
+                }
                
-               scene.game_wise_experiment_reset()
+                
+                
             }.onAppear(){
                 //scene.game_wise_experiment_reset()
                 

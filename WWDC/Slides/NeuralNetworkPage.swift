@@ -86,6 +86,8 @@ struct NeuralNetworkPage: View {
             }
             .onChange(of: geometry.size) { newSize in
                 content_ctrl.size = geometry.size
+                
+                self.scene.display_reset()
             }
             .onAppear(){
                 content_ctrl.isGameOver = true

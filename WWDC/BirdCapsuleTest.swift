@@ -22,6 +22,8 @@ struct BirdCapsuleTest: View {
                         VStack{
                             Text("Gen.\(round.round)")
                             HStack(spacing: 0){
+                                Text("avg.")
+                                    .font(.footnote)
                                 Image(systemName: "pin")
                                 Text("\(round.best_distance_score)")
                             }

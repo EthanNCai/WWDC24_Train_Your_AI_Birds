@@ -50,7 +50,19 @@ struct ObservationView: View {
                         .padding(5)
                         .buttonStyle(.plain)
                         
-                    Text("\t Tips: It is normal for a generation to experience performance decline, and if there is no progress for a long time, it may be necessary to click \"Reset Everything\" to initiate a new training.")
+                    //Text("\t Tips: It is normal for a generation to experience performance decline, and if there is no progress for a long time, it may be necessary to click \"Reset Everything\" to initiate a new training.")
+                    
+                  
+                    VStack(alignment: .leading){
+                        
+                        Text("Milestone")
+                            .font(.title3)
+                            .padding(2)
+                            .foregroundColor(.indigo)
+                           
+                        ProgresserView(content_ctrl: self.content_ctrl)
+                    }
+                    
                     
                     HStack{
                         

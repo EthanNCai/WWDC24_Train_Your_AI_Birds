@@ -58,8 +58,9 @@ struct NeuralNetworkExplanation: View {
                     Text("🧠Neural Network")
                         .font(.title2)
                         .fontWeight(.heavy)
-                    Text("(with well learned __weights__)")
+                    Text("(__this is an already trained model for demo.__)")
                         .font(.footnote)
+                        .foregroundColor(.red)
                 }
                     .frame(width: 100,height: 130)
                     .padding()
