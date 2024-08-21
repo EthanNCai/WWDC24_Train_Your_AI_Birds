@@ -1,4 +1,4 @@
-# Train your AI Birds, an macOS educational game.
+# Train your AI Birds, a macOS educational game.
 
 
 Update: 本作品是[Apple WWDC24 Swift Student Challenge](https://developer.apple.com/cn/swift-student-challenge/?cid=ssc-ht) 获奖作品
